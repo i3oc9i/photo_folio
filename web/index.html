@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ivano Coltellacci Photography</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header class="header">
+        <nav class="nav nav-left">
+            <button class="nav-link" data-panel="about">About</button>
+        </nav>
+        <a href="/" class="logo">Ivano Coltellacci Photography</a>
+        <nav class="nav nav-right">
+            <button class="nav-link" data-panel="credits">Credits</button>
+        </nav>
+    </header>
+
+    <main class="gallery" id="gallery">
+        <!-- Photos will be positioned by JavaScript -->
+    </main>
+
+    <!-- About Panel - slides from left -->
+    <aside class="panel panel-left" id="panel-about">
+        <button class="panel-close" aria-label="Close">&times;</button>
+        <div class="panel-content">
+            <h2>About</h2>
+            <p>Fine art photographer exploring the boundaries between reality and imagination through portraiture and conceptual imagery.</p>
+            <p>My work delves into human emotion, vulnerability, and the surreal aspects of existence. Each photograph is a carefully crafted moment that invites viewers to look beyond the surface.</p>
+            <p>Based in [Your City]. Available for collaborations and commissioned work.</p>
+            <div class="contact">
+                <p>Contact: <a href="mailto:email@example.com">email@example.com</a></p>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Credits Panel - slides from right -->
+    <aside class="panel panel-right" id="panel-credits">
+        <button class="panel-close" aria-label="Close">&times;</button>
+        <div class="panel-content">
+            <h2>Credits</h2>
+            <p>All photographs by [Your Name]</p>
+            <p>Models, makeup artists, and collaborators credited individually upon request.</p>
+            <p>All images are protected by copyright. Unauthorized use is prohibited.</p>
+            <div class="credits-note">
+                <p>&copy; 2024 [Your Name]. All rights reserved.</p>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Overlay for panels -->
+    <div class="overlay" id="overlay"></div>
+
+    <!-- Lightbox for fullscreen photos -->
+    <div class="lightbox" id="lightbox">
+        <button class="lightbox-close" aria-label="Close">&times;</button>
+        <img class="lightbox-img" id="lightbox-img" src="" alt="Full size photo">
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,360 @@
+/* Reset and base styles */
+*, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    font-size: 16px;
+}
+
+body {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    background-color: #0a0a0a;
+    color: #e8e8e8;
+    min-height: 100vh;
+    overflow-x: hidden;
+    line-height: 1.6;
+}
+
+/* Header */
+.header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.25rem 2.5rem;
+    background-color: #0a0a0a;
+    border-bottom: 1px solid #1a1a1a;
+}
+
+.logo {
+    font-size: 1.1rem;
+    font-weight: 300;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: #e8e8e8;
+    text-decoration: none;
+    transition: opacity 0.3s ease;
+    text-align: center;
+}
+
+.logo:hover {
+    opacity: 0.7;
+}
+
+.nav {
+    display: flex;
+    min-width: 100px;
+}
+
+.nav-left {
+    justify-content: flex-start;
+}
+
+.nav-right {
+    justify-content: flex-end;
+}
+
+.nav-link {
+    background: none;
+    border: none;
+    font-family: inherit;
+    font-size: 0.875rem;
+    font-weight: 300;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: #e8e8e8;
+    cursor: pointer;
+    transition: opacity 0.3s ease;
+    padding: 0.5rem 0;
+}
+
+.nav-link:hover {
+    opacity: 0.7;
+}
+
+/* Gallery */
+.gallery {
+    position: relative;
+    width: 100%;
+    min-height: 100vh;
+    padding: 6rem 2rem 4rem;
+}
+
+.photo {
+    position: absolute;
+    opacity: 0;
+    transition: opacity 0.8s ease, transform 0.4s ease, box-shadow 0.4s ease;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+}
+
+.photo.loaded {
+    opacity: 1;
+}
+
+.photo {
+    cursor: pointer;
+}
+
+.photo picture {
+    display: block;
+}
+
+.photo img {
+    display: block;
+    pointer-events: none;
+}
+
+/* Landscape photos: width is set on wrapper */
+.photo.landscape img {
+    width: 100%;
+    height: auto;
+}
+
+/* Portrait photos: height is set on wrapper */
+.photo.portrait img {
+    width: auto;
+    height: 100%;
+}
+
+.photo:hover {
+    transform: scale(1.02);
+    box-shadow: 0 8px 50px rgba(0, 0, 0, 0.7);
+    z-index: 50 !important;
+}
+
+/* Slide-in Panels */
+.panel {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    max-width: 450px;
+    height: 100vh;
+    background-color: #111;
+    z-index: 200;
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow-y: auto;
+}
+
+/* About panel - slides from left */
+.panel-left {
+    left: 0;
+    transform: translateX(-100%);
+}
+
+/* Credits panel - slides from right */
+.panel-right {
+    right: 0;
+    transform: translateX(100%);
+}
+
+.panel.open {
+    transform: translateX(0);
+}
+
+/* Close button positioning */
+.panel-left .panel-close {
+    right: 1.5rem;
+}
+
+.panel-right .panel-close {
+    left: 1.5rem;
+}
+
+.panel-close {
+    position: absolute;
+    top: 1.5rem;
+    background: none;
+    border: none;
+    color: #e8e8e8;
+    font-size: 2rem;
+    cursor: pointer;
+    transition: opacity 0.3s ease;
+    line-height: 1;
+    padding: 0.5rem;
+}
+
+.panel-close:hover {
+    opacity: 0.7;
+}
+
+.panel-content {
+    padding: 5rem 3rem 3rem;
+}
+
+.panel-content h2 {
+    font-size: 1.5rem;
+    font-weight: 300;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 2rem;
+    color: #fff;
+}
+
+.panel-content p {
+    margin-bottom: 1.5rem;
+    font-weight: 300;
+    color: #bbb;
+}
+
+.panel-content a {
+    color: #e8e8e8;
+    text-decoration: none;
+    border-bottom: 1px solid #555;
+    transition: border-color 0.3s ease;
+}
+
+.panel-content a:hover {
+    border-color: #e8e8e8;
+}
+
+.contact, .credits-note {
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid #333;
+}
+
+/* Overlay */
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 150;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.4s ease, visibility 0.4s ease;
+}
+
+.overlay.visible {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Lightbox */
+.lightbox {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.95);
+    z-index: 300;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.lightbox.open {
+    opacity: 1;
+    visibility: visible;
+}
+
+.lightbox-img {
+    max-width: 90vw;
+    max-height: 90vh;
+    object-fit: contain;
+    box-shadow: 0 0 60px rgba(0, 0, 0, 0.8);
+}
+
+.lightbox-close {
+    position: absolute;
+    top: 1.5rem;
+    right: 2rem;
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 2.5rem;
+    cursor: pointer;
+    transition: opacity 0.3s ease;
+    line-height: 1;
+    padding: 0.5rem;
+    z-index: 310;
+}
+
+.lightbox-close:hover {
+    opacity: 0.7;
+}
+
+.lightbox-img {
+    cursor: pointer;
+}
+
+/* Loading indicator */
+.loading {
+    position: fixed;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.75rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #555;
+    z-index: 10;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .header {
+        padding: 1rem 1rem;
+    }
+
+    .logo {
+        font-size: 0.75rem;
+        letter-spacing: 0.1em;
+    }
+
+    .nav {
+        min-width: 60px;
+    }
+
+    .nav-link {
+        font-size: 0.7rem;
+    }
+
+    .gallery {
+        padding: 5rem 1rem 3rem;
+    }
+
+    .panel {
+        max-width: 100%;
+    }
+
+    .panel-content {
+        padding: 4rem 2rem 2rem;
+    }
+
+    .photo {
+        min-width: 150px;
+    }
+}
+
+@media (max-width: 480px) {
+    .header {
+        padding: 0.75rem 0.5rem;
+    }
+
+    .logo {
+        font-size: 0.6rem;
+    }
+
+    .nav {
+        min-width: 50px;
+    }
+
+    .nav-link {
+        font-size: 0.65rem;
+        letter-spacing: 0.05em;
+    }
+}
