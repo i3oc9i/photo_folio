@@ -18,7 +18,17 @@ uv run poe dev           # Process images + start server
 
 ## Architecture
 
-**Python (`src/photo_tools/`)**: Image processing pipeline that converts photos to WebP format in three sizes (thumb 400px, medium 800px, full 1600px). Generates `web/assets/images.json` manifest.
+**Python (`src/photo_tools/`)**: Image processing pipeline that converts photos to WebP format. Generates `web/assets/images.json` manifest.
+
+## Asset Sizes
+
+| Size | Max Edge | Purpose |
+|------|----------|---------|
+| `thumb` | 400px | Mobile gallery view |
+| `medium` | 800px | Desktop gallery view |
+| `full` | 1600px | Lightbox (full-screen view) |
+
+Images are resized so the longest edge matches the max size, preserving aspect ratio.
 
 **Website (`web/`)**: Static site with vanilla HTML/CSS/JS. Reads manifest to build gallery dynamically. Uses `<picture>` elements for responsive loading. Lightbox loads full-size images on demand.
 

@@ -7,8 +7,30 @@ const PHOTO_SIZE_MOBILE = 42; // vw for mobile (longest edge)
 // Global state
 let imageManifest = null;
 
+// Splash screen
+function initSplash() {
+    const splash = document.getElementById('splash');
+    const enterBtn = document.getElementById('splash-enter');
+    const gallery = document.getElementById('gallery');
+
+    enterBtn.addEventListener('click', () => {
+        splash.classList.add('hidden');
+
+        // Reveal gallery with dealing effect
+        setTimeout(() => {
+            gallery.classList.add('revealed');
+        }, 200);
+
+        splash.addEventListener('transitionend', () => {
+            splash.style.display = 'none';
+        }, { once: true });
+    });
+}
+
 // Load manifest and initialize
 async function init() {
+    initSplash();
+
     try {
         const response = await fetch(ASSETS_PATH + MANIFEST_FILE);
         imageManifest = await response.json();
@@ -82,12 +104,18 @@ function createGallery() {
         photoWrapper.dataset.imageId = imageData.id;
         photoWrapper.dataset.orientation = imageData.orientation;
 
+        // Random start rotation for dealing effect
+        const startRotation = random(-30, 30);
+        const transitionDelay = index * 0.03; // Staggered delay
+
         // Apply styles
         photoWrapper.style.cssText = `
             top: ${top}vh;
             left: ${left}vw;
-            transform: rotate(${rotation}deg);
+            --start-rotation: ${startRotation}deg;
+            --end-rotation: ${rotation}deg;
             z-index: ${zIndex};
+            transition-delay: ${transitionDelay}s;
         `;
 
         // Create picture element with responsive sources
@@ -296,6 +324,15 @@ function initPanels() {
     });
 
     overlay.addEventListener('click', closeAllPanels);
+
+    // Close panel when mouse leaves
+    panels.forEach(panel => {
+        panel.addEventListener('mouseleave', () => {
+            panel.classList.remove('open');
+            overlay.classList.remove('visible');
+            document.body.style.overflow = '';
+        });
+    });
 
     // Close on Escape key
     document.addEventListener('keydown', (e) => {

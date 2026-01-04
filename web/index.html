@@ -4,14 +4,29 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ivano Coltellacci Photography</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Italiana&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css?v=2">
 </head>
 <body>
+    <!-- Entry/Splash Page -->
+    <div class="splash" id="splash">
+        <div class="splash-content">
+            <h1 class="splash-name">Ivano Coltellacci</h1>
+            <p class="splash-subtitle">fine art photography</p>
+            <button class="splash-enter" id="splash-enter">Enter</button>
+        </div>
+    </div>
+
     <header class="header">
         <nav class="nav nav-left">
             <button class="nav-link" data-panel="about">About</button>
         </nav>
-        <a href="/" class="logo">Ivano Coltellacci Photography</a>
+        <a href="/" class="logo">
+            <span class="logo-name">Ivano Coltellacci</span>
+            <span class="logo-subtitle">fine art photography</span>
+        </a>
         <nav class="nav nav-right">
             <button class="nav-link" data-panel="credits">Credits</button>
         </nav>
