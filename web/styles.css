@@ -230,6 +230,12 @@ body {
     height: 22vw;
 }
 
+/* Square: match short edge of landscape/portrait (~15vw for 3:2 ratio) */
+.photo.square img {
+    width: 15vw;
+    height: 15vw;
+}
+
 .photo:hover {
     transform: scale(1.02);
     box-shadow: 0 8px 50px rgba(0, 0, 0, 0.7);

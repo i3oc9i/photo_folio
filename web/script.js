@@ -58,7 +58,8 @@ function random(min, max) {
     return Math.random() * (max - min) + min;
 }
 
-// Create photo elements with random positioning
+// Create photo elements using organic grid layout
+// Organic grid: base grid positioning with random offsets for natural "scattered on table" feel
 function createGallery() {
     const gallery = document.getElementById('gallery');
     const images = shuffle(imageManifest.images);
@@ -74,21 +75,22 @@ function createGallery() {
         const isMobile = viewportWidth < 768;
         const size = isMobile ? PHOTO_SIZE_MOBILE : PHOTO_SIZE;
 
-        // Tight grid positioning with overlap
-        const columns = isMobile ? 2 : 5;
-        const rowHeight = isMobile ? 22 : 16;
-        const colWidth = isMobile ? 50 : 20;
+        // Organic grid: minimal overlap with natural feel
+        const columns = isMobile ? 2 : 4;
+        const colWidth = isMobile ? 50 : 25;
+        // Row height = photo size, overlap only from random offset
+        const rowHeight = size;
 
         const col = index % columns;
         const row = Math.floor(index / columns);
 
-        // Base grid position
+        // Base grid position - center photos in their cells
         const baseLeft = col * colWidth + (colWidth - size) / 2;
-        const baseTop = 6 + row * rowHeight;
+        const baseTop = 12 + row * rowHeight; // 12vw top margin for header clearance
 
-        // Small random offset for organic feel
-        const offsetX = random(-2, 2);
-        const offsetY = random(-2, 2);
+        // Small random offset creates minimal overlap
+        const offsetX = random(-1, 1);
+        const offsetY = random(-1, 1);
 
         const left = Math.max(1, Math.min(baseLeft + offsetX, 99 - size));
         const top = baseTop + offsetY;
@@ -180,13 +182,7 @@ function initLazyLoading() {
                     img.onload = () => {
                         // Apply class based on orientation (CSS handles sizing)
                         const orientation = photo.dataset.orientation;
-
-                        if (orientation === 'landscape' || orientation === 'square') {
-                            photo.classList.add('landscape');
-                        } else {
-                            photo.classList.add('portrait');
-                        }
-
+                        photo.classList.add(orientation); // 'landscape', 'portrait', or 'square'
                         photo.classList.add('loaded');
                     };
 
@@ -206,16 +202,18 @@ function initLazyLoading() {
     photos.forEach(photo => observer.observe(photo));
 }
 
-// Update gallery height based on grid layout
+// Update gallery height based on organic grid layout
 function updateGalleryHeight() {
     const photos = document.querySelectorAll('.photo');
     const isMobile = window.innerWidth < 768;
-    const columns = isMobile ? 2 : 5;
-    const rowHeight = isMobile ? 22 : 16;
+    const size = isMobile ? PHOTO_SIZE_MOBILE : PHOTO_SIZE;
+    const columns = isMobile ? 2 : 4;
+    const rowHeight = size; // in vw
     const totalRows = Math.ceil(photos.length / columns);
 
     const gallery = document.getElementById('gallery');
-    gallery.style.minHeight = `${8 + totalRows * rowHeight + 15}vh`;
+    // Use vw for consistency with photo sizing (12vw top offset + rows + bottom padding)
+    gallery.style.minHeight = `${12 + totalRows * rowHeight + 10}vw`;
 }
 
 // Lightbox functionality
