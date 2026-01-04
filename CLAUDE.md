@@ -30,7 +30,16 @@ uv run poe dev           # Process images + start server
 
 Images are resized so the longest edge matches the max size, preserving aspect ratio.
 
-**Website (`web/`)**: Static site with vanilla HTML/CSS/JS. Reads manifest to build gallery dynamically. Uses `<picture>` elements for responsive loading. Lightbox loads full-size images on demand.
+**Website (`web/`)**: Static site with vanilla HTML/CSS/JS. Reads manifest to build gallery dynamically. Uses `<picture>` elements for responsive loading.
+
+## Lightbox Navigation
+
+When a photo is clicked, the lightbox opens with a **random sequence** of all photos:
+- **Arrow Right / Click image**: Next photo in sequence
+- **Arrow Left**: Previous photo in sequence
+- **Escape**: Close lightbox (discards sequence)
+
+Each lightbox session generates a new random sequence, starting with the clicked photo.
 
 **Data Flow**:
 ```
