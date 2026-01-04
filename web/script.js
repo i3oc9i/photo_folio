@@ -178,15 +178,12 @@ function initLazyLoading() {
                     img.removeAttribute('data-src');
 
                     img.onload = () => {
-                        // Apply size based on orientation
-                        const size = parseFloat(photo.dataset.size);
+                        // Apply class based on orientation (CSS handles sizing)
                         const orientation = photo.dataset.orientation;
 
                         if (orientation === 'landscape' || orientation === 'square') {
-                            photo.style.width = `${size}vw`;
                             photo.classList.add('landscape');
                         } else {
-                            photo.style.height = `${size}vw`;
                             photo.classList.add('portrait');
                         }
 

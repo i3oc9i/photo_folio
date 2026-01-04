@@ -59,20 +59,21 @@ def get_orientation(width: int, height: int) -> str:
     return "square"
 
 
-def resize_image(img: Image.Image, max_size: int) -> Image.Image:
-    """Resize image so longest edge is max_size, preserving aspect ratio."""
+def resize_image(img: Image.Image, target_size: int) -> Image.Image:
+    """Resize image so longest edge is exactly target_size, preserving aspect ratio."""
     width, height = img.size
 
+    # Always resize to target_size (up or down) for uniform dimensions
     if width >= height:
-        if width <= max_size:
+        if width == target_size:
             return img
-        new_width = max_size
-        new_height = int(height * (max_size / width))
+        new_width = target_size
+        new_height = int(height * (target_size / width))
     else:
-        if height <= max_size:
+        if height == target_size:
             return img
-        new_height = max_size
-        new_width = int(width * (max_size / height))
+        new_height = target_size
+        new_width = int(width * (target_size / height))
 
     return img.resize((new_width, new_height), Image.Resampling.LANCZOS)
 
