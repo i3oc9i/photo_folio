@@ -216,53 +216,80 @@ function updateGalleryHeight() {
     gallery.style.minHeight = `${12 + totalRows * rowHeight + 10}vw`;
 }
 
-// Lightbox functionality
+// Lightbox functionality with random sequence navigation
 function initLightbox() {
     const lightbox = document.getElementById('lightbox');
     const lightboxImg = document.getElementById('lightbox-img');
     const lightboxClose = document.querySelector('.lightbox-close');
     const gallery = document.getElementById('gallery');
 
-    let loadedImageIds = [];
-    let currentId = '';
+    let sequence = [];      // Shuffled array of image IDs for this session
+    let sequenceIndex = 0;  // Current position in sequence
 
-    // Get all loaded image IDs
-    function updateLoadedImages() {
-        loadedImageIds = Array.from(document.querySelectorAll('.photo.loaded'))
+    // Generate random sequence starting with given photo
+    function generateSequence(startId) {
+        // Get all loaded image IDs
+        const loadedIds = Array.from(document.querySelectorAll('.photo.loaded'))
             .map(photo => photo.dataset.imageId)
             .filter(id => id);
+
+        // Shuffle using Fisher-Yates
+        sequence = [...loadedIds];
+        for (let i = sequence.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [sequence[i], sequence[j]] = [sequence[j], sequence[i]];
+        }
+
+        // Move startId to beginning
+        const startIndex = sequence.indexOf(startId);
+        if (startIndex > 0) {
+            sequence.splice(startIndex, 1);
+            sequence.unshift(startId);
+        }
+
+        sequenceIndex = 0;
     }
 
-    // Show random photo (different from current)
-    function showRandomPhoto() {
-        if (loadedImageIds.length <= 1) return;
-        let newId;
-        do {
-            newId = loadedImageIds[Math.floor(Math.random() * loadedImageIds.length)];
-        } while (newId === currentId && loadedImageIds.length > 1);
-        currentId = newId;
-        lightboxImg.src = `${ASSETS_PATH}full/${currentId}.webp`;
+    // Show image at current sequence index
+    function showCurrent() {
+        if (sequence.length === 0) return;
+        lightboxImg.src = `${ASSETS_PATH}full/${sequence[sequenceIndex]}.webp`;
+    }
+
+    // Navigate to next photo in sequence
+    function showNext() {
+        if (sequence.length === 0) return;
+        sequenceIndex = (sequenceIndex + 1) % sequence.length;
+        showCurrent();
+    }
+
+    // Navigate to previous photo in sequence
+    function showPrev() {
+        if (sequence.length === 0) return;
+        sequenceIndex = (sequenceIndex - 1 + sequence.length) % sequence.length;
+        showCurrent();
     }
 
     // Open lightbox when clicking a photo
     gallery.addEventListener('click', (e) => {
         const photo = e.target.closest('.photo');
         if (photo && photo.classList.contains('loaded')) {
-            updateLoadedImages();
-            currentId = photo.dataset.imageId;
-            lightboxImg.src = `${ASSETS_PATH}full/${currentId}.webp`;
+            generateSequence(photo.dataset.imageId);
+            showCurrent();
             lightbox.classList.add('open');
             document.body.style.overflow = 'hidden';
         }
     });
 
-    // Click on image shows random photo
-    lightboxImg.addEventListener('click', showRandomPhoto);
+    // Click on image shows next photo
+    lightboxImg.addEventListener('click', showNext);
 
-    // Close lightbox
+    // Close lightbox and discard sequence
     function closeLightbox() {
         lightbox.classList.remove('open');
         document.body.style.overflow = '';
+        sequence = [];
+        sequenceIndex = 0;
     }
 
     lightboxClose.addEventListener('click', closeLightbox);
@@ -274,14 +301,16 @@ function initLightbox() {
         }
     });
 
-    // Keyboard: Escape closes, any other key shows random
+    // Keyboard navigation
     document.addEventListener('keydown', (e) => {
         if (!lightbox.classList.contains('open')) return;
 
         if (e.key === 'Escape') {
             closeLightbox();
-        } else {
-            showRandomPhoto();
+        } else if (e.key === 'ArrowRight') {
+            showNext();
+        } else if (e.key === 'ArrowLeft') {
+            showPrev();
         }
     });
 }
