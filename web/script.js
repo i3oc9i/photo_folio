@@ -110,9 +110,9 @@ function createGallery() {
         const baseLeft = col * colWidth + (colWidth - size) / 2;
         const baseTop = 12 + row * rowHeight; // 12vw top margin for header clearance
 
-        // Small random offset creates minimal overlap (store for reposition)
-        const offsetX = random(-1, 1);
-        const offsetY = random(-1, 1);
+        // Random offset creates overlap for denser feel (store for reposition)
+        const offsetX = random(-3, 3);
+        const offsetY = random(-3, 3);
 
         const left = Math.max(1, Math.min(baseLeft + offsetX, 99 - size));
         const top = baseTop + offsetY;
