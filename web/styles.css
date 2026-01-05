@@ -218,22 +218,20 @@ body {
     max-height: 100%;
 }
 
-/* Landscape: width = 22vw (longest edge) */
+/* Large screens (≥1024px): 5 columns, 18vw photos */
 .photo.landscape img {
-    width: 22vw;
+    width: 18vw;
     height: auto;
 }
 
-/* Portrait: height = 22vw (longest edge) */
 .photo.portrait img {
     width: auto;
-    height: 22vw;
+    height: 18vw;
 }
 
-/* Square: match short edge of landscape/portrait (~15vw for 3:2 ratio) */
 .photo.square img {
-    width: 15vw;
-    height: 15vw;
+    width: 12vw;
+    height: 12vw;
 }
 
 /* Gallery footer - end indicator */
@@ -428,8 +426,40 @@ body {
     z-index: 10;
 }
 
-/* Responsive */
-@media (max-width: 768px) {
+/* Large screens (1024-1279px): 4 columns, 22vw photos */
+@media (max-width: 1279px) and (min-width: 1024px) {
+    .photo.landscape img {
+        width: 22vw;
+    }
+
+    .photo.portrait img {
+        height: 22vw;
+    }
+
+    .photo.square img {
+        width: 15vw;
+        height: 15vw;
+    }
+}
+
+/* Medium screens (768-1023px): 3 columns, 30vw photos */
+@media (max-width: 1023px) and (min-width: 768px) {
+    .photo.landscape img {
+        width: 30vw;
+    }
+
+    .photo.portrait img {
+        height: 30vw;
+    }
+
+    .photo.square img {
+        width: 20vw;
+        height: 20vw;
+    }
+}
+
+/* Responsive - Small screens (<768px): 2 columns, 42vw photos */
+@media (max-width: 767px) {
     .header {
         padding: 1rem 1rem;
     }

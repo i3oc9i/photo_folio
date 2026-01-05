@@ -1,9 +1,24 @@
 // Photo configuration
 const ASSETS_PATH = 'assets/';
 const MANIFEST_FILE = 'images.json';
-const PHOTO_SIZE = 22; // vw for desktop (longest edge)
-const PHOTO_SIZE_MOBILE = 42; // vw for mobile (longest edge)
 const EAGER_LOAD_COUNT = 12; // First batch to load immediately
+
+// Responsive breakpoints and sizes
+const BREAKPOINTS = {
+    xlarge: { minWidth: 1280, columns: 5, photoSize: 18 },  // 5 columns, 18vw
+    large: { minWidth: 1024, columns: 4, photoSize: 22 },   // 4 columns, 22vw
+    medium: { minWidth: 768, columns: 3, photoSize: 30 },   // 3 columns, 30vw
+    small: { minWidth: 0, columns: 2, photoSize: 42 }       // 2 columns, 42vw
+};
+
+// Get current layout config based on viewport
+function getLayoutConfig() {
+    const width = window.innerWidth;
+    if (width >= BREAKPOINTS.xlarge.minWidth) return BREAKPOINTS.xlarge;
+    if (width >= BREAKPOINTS.large.minWidth) return BREAKPOINTS.large;
+    if (width >= BREAKPOINTS.medium.minWidth) return BREAKPOINTS.medium;
+    return BREAKPOINTS.small;
+}
 
 // Global state
 let imageManifest = null;
@@ -78,22 +93,15 @@ function createGallery() {
     const gallery = document.getElementById('gallery');
     const images = shuffle(imageManifest.images);
 
-    // Calculate gallery dimensions for positioning
-    const viewportWidth = window.innerWidth;
+    // Get responsive layout config
+    const config = getLayoutConfig();
+    const { columns, photoSize: size } = config;
+    const colWidth = 100 / columns;
+    const rowHeight = size;
 
     images.forEach((imageData, index) => {
         const photoWrapper = document.createElement('div');
         photoWrapper.className = 'photo';
-
-        // Get size based on device
-        const isMobile = viewportWidth < 768;
-        const size = isMobile ? PHOTO_SIZE_MOBILE : PHOTO_SIZE;
-
-        // Organic grid: minimal overlap with natural feel
-        const columns = isMobile ? 2 : 4;
-        const colWidth = isMobile ? 50 : 25;
-        // Row height = photo size, overlap only from random offset
-        const rowHeight = size;
 
         const col = index % columns;
         const row = Math.floor(index / columns);
@@ -245,15 +253,13 @@ function initLazyLoading() {
 // Update gallery height based on organic grid layout
 function updateGalleryHeight() {
     const photos = document.querySelectorAll('.photo');
-    const isMobile = window.innerWidth < 768;
-    const size = isMobile ? PHOTO_SIZE_MOBILE : PHOTO_SIZE;
-    const columns = isMobile ? 2 : 4;
-    const rowHeight = size; // in vw
+    const config = getLayoutConfig();
+    const { columns, photoSize: size } = config;
     const totalRows = Math.ceil(photos.length / columns);
 
     const gallery = document.getElementById('gallery');
     // Use vw for consistency with photo sizing (12vw top offset + rows)
-    gallery.style.minHeight = `${12 + totalRows * rowHeight}vw`;
+    gallery.style.minHeight = `${12 + totalRows * size}vw`;
 }
 
 // Lightbox functionality with random sequence navigation
@@ -409,11 +415,9 @@ function initPanels() {
 // Reposition photos based on current viewport
 function repositionPhotos() {
     const photos = document.querySelectorAll('.photo');
-    const viewportWidth = window.innerWidth;
-    const isMobile = viewportWidth < 768;
-    const size = isMobile ? PHOTO_SIZE_MOBILE : PHOTO_SIZE;
-    const columns = isMobile ? 2 : 4;
-    const colWidth = isMobile ? 50 : 25;
+    const config = getLayoutConfig();
+    const { columns, photoSize: size } = config;
+    const colWidth = 100 / columns;
     const rowHeight = size;
 
     photos.forEach((photo, index) => {
@@ -436,17 +440,17 @@ function repositionPhotos() {
     updateGalleryHeight();
 }
 
-// Track layout mode to detect breakpoint crossing
-let currentLayoutMobile = window.innerWidth < 768;
+// Track current layout to detect breakpoint crossing
+let currentLayout = getLayoutConfig();
 
 // Recalculate positions on resize (debounced)
 let resizeTimeout;
 function handleResize() {
     clearTimeout(resizeTimeout);
     resizeTimeout = setTimeout(() => {
-        const isMobile = window.innerWidth < 768;
-        if (isMobile !== currentLayoutMobile) {
-            currentLayoutMobile = isMobile;
+        const newLayout = getLayoutConfig();
+        if (newLayout.columns !== currentLayout.columns) {
+            currentLayout = newLayout;
             repositionPhotos();
         } else {
             updateGalleryHeight();
