@@ -8,10 +8,10 @@ __pycache__/
 uv.lock
 
 # Source photos (not versioned)
-input/
+gallery/
 
 # Generated assets (rebuild with: poe assets)
-web/public/assets/
+web/assets/
 
 # Node.js / Vite
 node_modules/

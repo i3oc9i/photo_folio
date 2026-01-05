@@ -22,8 +22,8 @@ from pathlib import Path
 from PIL import Image
 
 # Configuration - paths relative to project root
-SOURCE_BASE = "input"  # Scan subdirectories as galleries
-OUTPUT_BASE = "web/public/assets"
+SOURCE_BASE = "gallery"  # Scan subdirectories as galleries
+OUTPUT_BASE = "web/assets"
 MANIFEST_FILE = "images.json"
 
 # Output sizes (longest edge in pixels)

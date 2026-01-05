@@ -16,7 +16,7 @@ cd web && npm install    # Install Node.js dependencies
 ## Usage
 
 ```bash
-uv run poe assets        # Process images from input/ to web/assets/
+uv run poe assets        # Process images from gallery/ to web/assets/
 uv run poe assets:force  # Reprocess all images (ignore cache)
 uv run poe serve         # Start Vite dev server
 uv run poe build         # Production build → web/dist/
@@ -25,7 +25,7 @@ uv run poe dev           # Process images + start dev server
 
 ### Workflow
 
-1. Create gallery folders in `input/` (e.g., `input/bw/`, `input/colors/`)
+1. Create gallery folders in `gallery/` (e.g., `gallery/bw/`, `gallery/colors/`)
 2. Drop photos into the folders
 3. Run `uv run poe dev`
 4. Open http://localhost:8080
@@ -35,7 +35,7 @@ uv run poe dev           # Process images + start dev server
 ```
 photo_folio/
 ├── src/photo_tools/       # Python image processing
-├── input/                 # Source photos (not in git)
+├── gallery/                 # Source photos (not in git)
 │   ├── bw/
 │   └── colors/
 └── web/                   # Svelte frontend

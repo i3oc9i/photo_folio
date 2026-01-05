@@ -12,7 +12,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 uv sync --extra dev      # Install Python dependencies
 cd web && npm install    # Install Node.js dependencies
 
-uv run poe assets        # Process images from input/<gallery>/ → web/assets/<gallery>/
+uv run poe assets        # Process images from gallery/<gallery>/ → web/assets/<gallery>/
 uv run poe assets:force  # Reprocess all images (ignore cache)
 uv run poe serve         # Start Vite dev server at http://localhost:8080
 uv run poe build         # Production build → web/dist/
@@ -21,7 +21,7 @@ uv run poe dev           # Process images + start dev server
 
 ## Architecture
 
-**Python (`src/photo_tools/`)**: Image processing pipeline that converts photos to WebP format. Discovers galleries from `input/` subdirectories, generates per-gallery manifests, and auto-updates `config.json` with gallery metadata.
+**Python (`src/photo_tools/`)**: Image processing pipeline that converts photos to WebP format. Discovers galleries from `gallery/` subdirectories, generates per-gallery manifests, and auto-updates `config.json` with gallery metadata.
 
 **Frontend (`web/`)**: Svelte 5 application bundled with Vite.
 
@@ -91,10 +91,10 @@ App.svelte
 
 ## Multi-Gallery System
 
-Each subdirectory in `input/` becomes a separate gallery:
+Each subdirectory in `gallery/` becomes a separate gallery:
 
 ```
-input/
+gallery/
   bw/           → web/assets/bw/{thumb,medium,full}/*.webp + images.json
   colors/       → web/assets/colors/{thumb,medium,full}/*.webp + images.json
   portraits/    → web/assets/portraits/{thumb,medium,full}/*.webp + images.json
@@ -187,7 +187,7 @@ Breakpoints defined in `config.json` and used by the `breakpoint` store. CSS med
 ## Data Flow
 
 ```
-input/<gallery>/*.jpg → process.py → web/assets/<gallery>/{thumb,medium,full}/*.webp
+gallery/<gallery>/*.jpg → process.py → web/assets/<gallery>/{thumb,medium,full}/*.webp
                                    → web/assets/<gallery>/images.json
                                    → web/public/config.json (galleries section updated)
                                           ↓
@@ -200,7 +200,7 @@ config.json ──→ config store ──→ applyTheme() ──→ CSS variable
 
 ## Key Paths
 
-- `input/<gallery>/` - Drop original photos in subdirectories (not in git)
+- `gallery/<gallery>/` - Drop original photos in subdirectories (not in git)
 - `web/assets/<gallery>/` - Generated images per gallery (not in git, rebuild with `poe assets`)
 - `web/public/config.json` - Site configuration (galleries section auto-updated)
 - `web/src/` - Svelte source code
