@@ -3,6 +3,7 @@ const ASSETS_PATH = 'assets/';
 const MANIFEST_FILE = 'images.json';
 const PHOTO_SIZE = 22; // vw for desktop (longest edge)
 const PHOTO_SIZE_MOBILE = 42; // vw for mobile (longest edge)
+const EAGER_LOAD_COUNT = 12; // First batch to load immediately
 
 // Global state
 let imageManifest = null;
@@ -27,6 +28,13 @@ function initSplash() {
     });
 }
 
+// Reshuffle gallery (called when clicking logo)
+function reshuffleGallery() {
+    const gallery = document.getElementById('gallery');
+    gallery.innerHTML = '';
+    createGallery();
+}
+
 // Load manifest and initialize
 async function init() {
     initSplash();
@@ -38,6 +46,12 @@ async function init() {
         initPanels();
         initLightbox();
         window.addEventListener('resize', handleResize);
+
+        // Logo click reshuffles gallery
+        document.querySelector('.logo').addEventListener('click', (e) => {
+            e.preventDefault();
+            reshuffleGallery();
+        });
     } catch (error) {
         console.error('Failed to load image manifest:', error);
     }
@@ -164,44 +178,55 @@ function createGallery() {
     }
 }
 
-// Lazy loading with Intersection Observer
+// Load a single photo's image
+function loadPhoto(photo) {
+    const picture = photo.querySelector('picture');
+    const sources = picture.querySelectorAll('source');
+    const img = picture.querySelector('img');
+
+    // Load sources
+    sources.forEach(source => {
+        if (source.dataset.srcset) {
+            source.srcset = source.dataset.srcset;
+            source.removeAttribute('data-srcset');
+        }
+    });
+
+    // Load image
+    if (img.dataset.src) {
+        img.src = img.dataset.src;
+        img.removeAttribute('data-src');
+
+        img.onload = () => {
+            // Apply class based on orientation (CSS handles sizing)
+            const orientation = photo.dataset.orientation;
+            photo.classList.add(orientation); // 'landscape', 'portrait', or 'square'
+            photo.classList.add('loaded');
+        };
+
+        img.onerror = () => {
+            photo.style.display = 'none';
+        };
+    }
+}
+
+// Lazy loading with Intersection Observer + eager first batch
 function initLazyLoading() {
     const photos = document.querySelectorAll('.photo');
 
+    // Eager load first batch immediately
+    photos.forEach((photo, index) => {
+        if (index < EAGER_LOAD_COUNT) {
+            loadPhoto(photo);
+        }
+    });
+
+    // Lazy load the rest with Intersection Observer
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
-                const photo = entry.target;
-                const picture = photo.querySelector('picture');
-                const sources = picture.querySelectorAll('source');
-                const img = picture.querySelector('img');
-
-                // Load sources
-                sources.forEach(source => {
-                    if (source.dataset.srcset) {
-                        source.srcset = source.dataset.srcset;
-                        source.removeAttribute('data-srcset');
-                    }
-                });
-
-                // Load image
-                if (img.dataset.src) {
-                    img.src = img.dataset.src;
-                    img.removeAttribute('data-src');
-
-                    img.onload = () => {
-                        // Apply class based on orientation (CSS handles sizing)
-                        const orientation = photo.dataset.orientation;
-                        photo.classList.add(orientation); // 'landscape', 'portrait', or 'square'
-                        photo.classList.add('loaded');
-                    };
-
-                    img.onerror = () => {
-                        photo.style.display = 'none';
-                    };
-                }
-
-                observer.unobserve(photo);
+                loadPhoto(entry.target);
+                observer.unobserve(entry.target);
             }
         });
     }, {
@@ -209,7 +234,12 @@ function initLazyLoading() {
         threshold: 0
     });
 
-    photos.forEach(photo => observer.observe(photo));
+    // Only observe photos after the eager batch
+    photos.forEach((photo, index) => {
+        if (index >= EAGER_LOAD_COUNT) {
+            observer.observe(photo);
+        }
+    });
 }
 
 // Update gallery height based on organic grid layout
@@ -424,5 +454,17 @@ function handleResize() {
     }, 250);
 }
 
+// Register Service Worker
+function registerServiceWorker() {
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/sw.js')
+            .then(reg => console.log('SW registered'))
+            .catch(err => console.log('SW registration failed:', err));
+    }
+}
+
 // Initialize on DOM ready
-document.addEventListener('DOMContentLoaded', init);
+document.addEventListener('DOMContentLoaded', () => {
+    init();
+    registerServiceWorker();
+});
