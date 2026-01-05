@@ -16,7 +16,7 @@
     }
   },
   "assets": {
-    "path": "assets/",
+    "path": "assets/gallery/",
     "manifestFile": "images.json"
   },
   "gallery": {

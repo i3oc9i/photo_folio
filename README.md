@@ -34,7 +34,7 @@ uv run poe dev           # Process images + start dev server
 
 ```
 photo_folio/
-├── src/photo_tools/       # Python image processing
+├── src/gallery_builder/       # Python image processing
 ├── gallery/                 # Source photos (not in git)
 │   ├── bw/
 │   └── colors/

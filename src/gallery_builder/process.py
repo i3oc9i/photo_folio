@@ -23,7 +23,7 @@ from PIL import Image
 
 # Configuration - paths relative to project root
 SOURCE_BASE = "gallery"  # Scan subdirectories as galleries
-OUTPUT_BASE = "web/assets"
+OUTPUT_BASE = "web/assets/gallery"
 MANIFEST_FILE = "images.json"
 
 # Output sizes (longest edge in pixels)

@@ -21,7 +21,7 @@ uv run poe dev           # Process images + start dev server
 
 ## Architecture
 
-**Python (`src/photo_tools/`)**: Image processing pipeline that converts photos to WebP format. Discovers galleries from `gallery/` subdirectories, generates per-gallery manifests, and auto-updates `config.json` with gallery metadata.
+**Python (`src/gallery_builder/`)**: Image processing pipeline that converts photos to WebP format. Discovers galleries from `gallery/` subdirectories, generates per-gallery manifests, and auto-updates `config.json` with gallery metadata.
 
 **Frontend (`web/`)**: Svelte 5 application bundled with Vite.
 
