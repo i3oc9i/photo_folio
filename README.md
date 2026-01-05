@@ -1,6 +1,6 @@
 # Ivano Coltellacci Photography Portfolio
 
-A minimal, modern photography portfolio website with optimized image loading.
+A minimal, modern photography portfolio website with optimized image loading and an organic grid layout.
 
 ## Project Structure
 
@@ -9,11 +9,12 @@ my_web_photo/
 ├── pyproject.toml          # Python project config
 ├── src/photo_tools/        # Image processing tools
 ├── input/                  # Source images
-│   └── photos/             # Drop photos here (future: more categories)
+│   └── photos/             # Drop photos here
 ├── web/                    # Website (deployable)
 │   ├── index.html
 │   ├── styles.css
 │   ├── script.js
+│   ├── sw.js               # Service Worker for caching
 │   └── assets/             # Generated optimized images
 └── README.md
 ```
@@ -56,8 +57,31 @@ The `web/` directory is self-contained and can be deployed to any static host:
 
 ## Features
 
-- Responsive image loading (88% bandwidth reduction)
-- Random photo layout with subtle overlaps
-- Click-to-view lightbox with random navigation
-- Slide-in About/Credits panels
-- Dark theme optimized for photography
+### Gallery
+- **Organic grid layout** - Photos arranged in a grid with random offsets for a natural "scattered on table" feel
+- **6 responsive breakpoints** - Adapts from 7 columns (large screens) to 2 columns (mobile)
+- **Smooth transitions** - CSS animations when resizing across breakpoints
+- **Click logo to reshuffle** - Get a new random arrangement without page reload
+
+### Performance
+- **Service Worker caching** - Instant loading on repeat visits, offline support
+- **Eager loading** - First 12 images load immediately
+- **Lazy loading** - Remaining images load as you scroll (800px preload margin)
+- **Responsive images** - Serves appropriate size based on device
+
+### User Experience
+- **Splash screen** - Entry page with photographer name
+- **Lightbox** - Click any photo for fullscreen view with random navigation
+- **Slide-in panels** - About and Credits panels
+- **Dark theme** - Optimized for photography viewing
+
+## Responsive Breakpoints
+
+| Screen Width | Columns | Photo Size |
+|--------------|---------|------------|
+| ≥1600px | 7 | 13vw |
+| 1440-1599px | 6 | 15vw |
+| 1280-1439px | 5 | 18vw |
+| 1024-1279px | 4 | 22vw |
+| 768-1023px | 3 | 30vw |
+| <768px | 2 | 42vw |

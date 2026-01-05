@@ -3,21 +3,20 @@ const ASSETS_PATH = 'assets/';
 const MANIFEST_FILE = 'images.json';
 const EAGER_LOAD_COUNT = 12; // First batch to load immediately
 
-// Responsive breakpoints and sizes
-const BREAKPOINTS = {
-    xlarge: { minWidth: 1280, columns: 5, photoSize: 18 },  // 5 columns, 18vw
-    large: { minWidth: 1024, columns: 4, photoSize: 22 },   // 4 columns, 22vw
-    medium: { minWidth: 768, columns: 3, photoSize: 30 },   // 3 columns, 30vw
-    small: { minWidth: 0, columns: 2, photoSize: 42 }       // 2 columns, 42vw
-};
+// Responsive breakpoints and sizes (7 to 2 columns)
+const BREAKPOINTS = [
+    { minWidth: 1600, columns: 7, photoSize: 13 },  // 7 columns
+    { minWidth: 1440, columns: 6, photoSize: 15 },  // 6 columns
+    { minWidth: 1280, columns: 5, photoSize: 18 },  // 5 columns
+    { minWidth: 1024, columns: 4, photoSize: 22 },  // 4 columns
+    { minWidth: 768, columns: 3, photoSize: 30 },   // 3 columns
+    { minWidth: 0, columns: 2, photoSize: 42 }      // 2 columns
+];
 
 // Get current layout config based on viewport
 function getLayoutConfig() {
     const width = window.innerWidth;
-    if (width >= BREAKPOINTS.xlarge.minWidth) return BREAKPOINTS.xlarge;
-    if (width >= BREAKPOINTS.large.minWidth) return BREAKPOINTS.large;
-    if (width >= BREAKPOINTS.medium.minWidth) return BREAKPOINTS.medium;
-    return BREAKPOINTS.small;
+    return BREAKPOINTS.find(bp => width >= bp.minWidth);
 }
 
 // Global state

@@ -20,6 +20,12 @@ uv run poe dev           # Process images + start server
 
 **Python (`src/photo_tools/`)**: Image processing pipeline that converts photos to WebP format. Generates `web/assets/images.json` manifest.
 
+**Website (`web/`)**: Static site with vanilla HTML/CSS/JS.
+- `index.html` - Page structure, splash screen, panels
+- `styles.css` - Styling with 6 responsive breakpoints
+- `script.js` - Gallery logic, lightbox, Service Worker registration
+- `sw.js` - Service Worker for caching
+
 ## Asset Sizes
 
 | Size | Max Edge | Purpose |
@@ -30,18 +36,45 @@ uv run poe dev           # Process images + start server
 
 Images are resized so the longest edge matches the max size, preserving aspect ratio.
 
-**Website (`web/`)**: Static site with vanilla HTML/CSS/JS. Reads manifest to build gallery dynamically. Uses `<picture>` elements for responsive loading.
+## Responsive Breakpoints
 
-## Lightbox Navigation
+Gallery adapts from 7 columns (large screens) to 2 columns (mobile):
 
-When a photo is clicked, the lightbox opens with a **random sequence** of all photos:
-- **Arrow Right / Click image**: Next photo in sequence
-- **Arrow Left**: Previous photo in sequence
-- **Escape**: Close lightbox (discards sequence)
+| Screen Width | Columns | Photo Size |
+|--------------|---------|------------|
+| ≥1600px | 7 | 13vw |
+| 1440-1599px | 6 | 15vw |
+| 1280-1439px | 5 | 18vw |
+| 1024-1279px | 4 | 22vw |
+| 768-1023px | 3 | 30vw |
+| <768px | 2 | 42vw |
 
-Each lightbox session generates a new random sequence, starting with the clicked photo.
+Breakpoints defined in `script.js` (BREAKPOINTS array) with matching CSS media queries.
 
-**Data Flow**:
+## Key Behaviors
+
+### Splash Screen
+- Shows on every page load/refresh
+- Click "Enter" to reveal gallery with dealing animation
+
+### Gallery
+- **Click logo**: Reshuffles gallery with new random arrangement
+- **Resize window**: Smooth transitions between breakpoints
+- **Hover photo**: Slight scale + shadow effect
+
+### Lightbox Navigation
+- **Click photo**: Opens lightbox with random sequence
+- **Arrow Right / Click image**: Next photo
+- **Arrow Left**: Previous photo
+- **Escape**: Close (discards sequence)
+
+### Performance
+- **Service Worker**: Caches images for offline/fast repeat visits
+- **Eager loading**: First 12 images load immediately
+- **Lazy loading**: Rest load on scroll (800px preload margin)
+
+## Data Flow
+
 ```
 input/photos/*.jpg → process.py → web/assets/{thumb,medium,full}/*.webp
                                 → web/assets/images.json

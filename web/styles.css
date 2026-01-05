@@ -219,20 +219,20 @@ body {
     transition: width 0.3s ease, height 0.3s ease;
 }
 
-/* Large screens (≥1024px): 5 columns, 18vw photos */
+/* Default - XL screens (≥1600px): 7 columns, 13vw photos */
 .photo.landscape img {
-    width: 18vw;
+    width: 13vw;
     height: auto;
 }
 
 .photo.portrait img {
     width: auto;
-    height: 18vw;
+    height: 13vw;
 }
 
 .photo.square img {
-    width: 12vw;
-    height: 12vw;
+    width: 9vw;
+    height: 9vw;
 }
 
 /* Gallery footer - end indicator */
@@ -427,36 +427,32 @@ body {
     z-index: 10;
 }
 
-/* Large screens (1024-1279px): 4 columns, 22vw photos */
-@media (max-width: 1279px) and (min-width: 1024px) {
-    .photo.landscape img {
-        width: 22vw;
-    }
-
-    .photo.portrait img {
-        height: 22vw;
-    }
-
-    .photo.square img {
-        width: 15vw;
-        height: 15vw;
-    }
+/* Large screens (1440-1599px): 6 columns, 15vw photos */
+@media (max-width: 1599px) and (min-width: 1440px) {
+    .photo.landscape img { width: 15vw; }
+    .photo.portrait img { height: 15vw; }
+    .photo.square img { width: 10vw; height: 10vw; }
 }
 
-/* Medium screens (768-1023px): 3 columns, 30vw photos */
+/* Medium-large screens (1280-1439px): 5 columns, 18vw photos */
+@media (max-width: 1439px) and (min-width: 1280px) {
+    .photo.landscape img { width: 18vw; }
+    .photo.portrait img { height: 18vw; }
+    .photo.square img { width: 12vw; height: 12vw; }
+}
+
+/* Medium screens (1024-1279px): 4 columns, 22vw photos */
+@media (max-width: 1279px) and (min-width: 1024px) {
+    .photo.landscape img { width: 22vw; }
+    .photo.portrait img { height: 22vw; }
+    .photo.square img { width: 15vw; height: 15vw; }
+}
+
+/* Small-medium screens (768-1023px): 3 columns, 30vw photos */
 @media (max-width: 1023px) and (min-width: 768px) {
-    .photo.landscape img {
-        width: 30vw;
-    }
-
-    .photo.portrait img {
-        height: 30vw;
-    }
-
-    .photo.square img {
-        width: 20vw;
-        height: 20vw;
-    }
+    .photo.landscape img { width: 30vw; }
+    .photo.portrait img { height: 30vw; }
+    .photo.square img { width: 20vw; height: 20vw; }
 }
 
 /* Responsive - Small screens (<768px): 2 columns, 42vw photos */
