@@ -11,7 +11,7 @@ uv.lock
 input/
 
 # Generated assets (rebuild with: poe assets)
-web/assets/
+web/public/assets/
 
 # Node.js / Vite
 node_modules/
