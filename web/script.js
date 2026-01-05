@@ -1,26 +1,82 @@
-// Photo configuration
-const ASSETS_PATH = 'assets/';
-const MANIFEST_FILE = 'images.json';
-const EAGER_LOAD_COUNT = 12; // First batch to load immediately
-
-// Responsive breakpoints and sizes (7 to 2 columns)
-const BREAKPOINTS = [
-    { minWidth: 1600, columns: 7, photoSize: 13 },  // 7 columns
-    { minWidth: 1440, columns: 6, photoSize: 15 },  // 6 columns
-    { minWidth: 1280, columns: 5, photoSize: 18 },  // 5 columns
-    { minWidth: 1024, columns: 4, photoSize: 22 },  // 4 columns
-    { minWidth: 768, columns: 3, photoSize: 30 },   // 3 columns
-    { minWidth: 0, columns: 2, photoSize: 42 }      // 2 columns
-];
+// Global state
+let config = null;
+let imageManifest = null;
 
 // Get current layout config based on viewport
 function getLayoutConfig() {
     const width = window.innerWidth;
-    return BREAKPOINTS.find(bp => width >= bp.minWidth);
+    return config.breakpoints.find(bp => width >= bp.minWidth);
 }
 
-// Global state
-let imageManifest = null;
+// Apply theme colors as CSS custom properties
+function applyTheme() {
+    const root = document.documentElement;
+    const { colors, fonts, transitions } = config.theme;
+
+    // Colors
+    root.style.setProperty('--color-background', colors.background);
+    root.style.setProperty('--color-background-alt', colors.backgroundAlt);
+    root.style.setProperty('--color-text', colors.text);
+    root.style.setProperty('--color-text-muted', colors.textMuted);
+    root.style.setProperty('--color-text-dim', colors.textDim);
+    root.style.setProperty('--color-text-dimmer', colors.textDimmer);
+    root.style.setProperty('--color-text-dimmest', colors.textDimmest);
+    root.style.setProperty('--color-border', colors.border);
+    root.style.setProperty('--color-border-light', colors.borderLight);
+    root.style.setProperty('--color-panel-text', colors.panelText);
+    root.style.setProperty('--color-overlay', colors.overlay);
+    root.style.setProperty('--color-lightbox-bg', colors.lightboxBg);
+
+    // Fonts
+    root.style.setProperty('--font-heading', fonts.heading);
+    root.style.setProperty('--font-body', fonts.body);
+
+    // Transitions
+    root.style.setProperty('--transition-splash', `${transitions.splash}s`);
+    root.style.setProperty('--transition-gallery', `${transitions.gallery}s`);
+    root.style.setProperty('--transition-panel', `${transitions.panel}s`);
+    root.style.setProperty('--transition-hover', `${transitions.hover}s`);
+    root.style.setProperty('--transition-lightbox', `${transitions.lightbox}s`);
+}
+
+// Populate site content from config
+function populateSiteContent() {
+    const { site, panels } = config;
+
+    // Page title
+    document.title = site.title;
+
+    // Splash screen
+    document.querySelector('.splash-name').textContent = site.name;
+    document.querySelector('.splash-subtitle').textContent = site.subtitle;
+    document.getElementById('splash-enter').textContent = site.enterButtonText;
+
+    // Header logo
+    document.querySelector('.logo-name').textContent = site.name;
+    document.querySelector('.logo-subtitle').textContent = site.subtitle;
+
+    // About panel
+    const aboutPanel = document.getElementById('panel-about');
+    const aboutContent = aboutPanel.querySelector('.panel-content');
+    aboutContent.innerHTML = `
+        <h2>${panels.about.title}</h2>
+        ${panels.about.paragraphs.map(p => `<p>${p}</p>`).join('')}
+        <div class="contact">
+            <p>${panels.about.contact.label}: <a href="mailto:${panels.about.contact.email}">${panels.about.contact.email}</a></p>
+        </div>
+    `;
+
+    // Credits panel
+    const creditsPanel = document.getElementById('panel-credits');
+    const creditsContent = creditsPanel.querySelector('.panel-content');
+    creditsContent.innerHTML = `
+        <h2>${panels.credits.title}</h2>
+        ${panels.credits.paragraphs.map(p => `<p>${p}</p>`).join('')}
+        <div class="credits-note">
+            <p>&copy; ${panels.credits.copyright.year} ${panels.credits.copyright.name}. All rights reserved.</p>
+        </div>
+    `;
+}
 
 // Splash screen
 function initSplash() {
@@ -49,13 +105,23 @@ function reshuffleGallery() {
     createGallery();
 }
 
-// Load manifest and initialize
+// Load config and manifest, then initialize
 async function init() {
-    initSplash();
-
     try {
-        const response = await fetch(ASSETS_PATH + MANIFEST_FILE);
-        imageManifest = await response.json();
+        // Load config first
+        const configResponse = await fetch('config.json');
+        config = await configResponse.json();
+
+        // Apply theme and populate content
+        applyTheme();
+        populateSiteContent();
+
+        initSplash();
+
+        // Load image manifest
+        const manifestResponse = await fetch(config.assets.path + config.assets.manifestFile);
+        imageManifest = await manifestResponse.json();
+
         createGallery();
         initPanels();
         initLightbox();
@@ -67,7 +133,7 @@ async function init() {
             reshuffleGallery();
         });
     } catch (error) {
-        console.error('Failed to load image manifest:', error);
+        console.error('Failed to initialize:', error);
     }
 }
 
@@ -87,14 +153,14 @@ function random(min, max) {
 }
 
 // Create photo elements using organic grid layout
-// Organic grid: base grid positioning with random offsets for natural "scattered on table" feel
 function createGallery() {
     const gallery = document.getElementById('gallery');
     const images = shuffle(imageManifest.images);
+    const { gallery: galleryConfig, site } = config;
 
     // Get responsive layout config
-    const config = getLayoutConfig();
-    const { columns, photoSize: size } = config;
+    const layoutConfig = getLayoutConfig();
+    const { columns, photoSize: size } = layoutConfig;
     const colWidth = 100 / columns;
     const rowHeight = size;
 
@@ -107,17 +173,17 @@ function createGallery() {
 
         // Base grid position - center photos in their cells
         const baseLeft = col * colWidth + (colWidth - size) / 2;
-        const baseTop = 12 + row * rowHeight; // 12vw top margin for header clearance
+        const baseTop = galleryConfig.topMargin + row * rowHeight;
 
-        // Random offset creates overlap for denser feel (store for reposition)
-        const offsetX = random(-3, 3);
-        const offsetY = random(-3, 3);
+        // Random offset creates overlap for denser feel
+        const offsetX = random(galleryConfig.randomOffset.min, galleryConfig.randomOffset.max);
+        const offsetY = random(galleryConfig.randomOffset.min, galleryConfig.randomOffset.max);
 
         const left = Math.max(1, Math.min(baseLeft + offsetX, 99 - size));
         const top = baseTop + offsetY;
 
         // Very subtle rotation
-        const rotation = random(-1, 1);
+        const rotation = random(galleryConfig.rotation.min, galleryConfig.rotation.max);
 
         // Store offsets for responsive repositioning
         photoWrapper.dataset.offsetX = offsetX;
@@ -132,10 +198,10 @@ function createGallery() {
         photoWrapper.dataset.orientation = imageData.orientation;
 
         // Random start rotation for dealing effect
-        const startRotation = random(-30, 30);
-        const transitionDelay = index * 0.03; // Staggered delay
+        const startRotation = random(galleryConfig.dealingRotation.min, galleryConfig.dealingRotation.max);
+        const transitionDelay = index * galleryConfig.dealingDelay;
 
-        // Apply styles (use vw for both top and left for consistency)
+        // Apply styles
         photoWrapper.style.cssText = `
             top: ${top}vw;
             left: ${left}vw;
@@ -150,19 +216,19 @@ function createGallery() {
 
         // Mobile source (thumb)
         const sourceMobile = document.createElement('source');
-        sourceMobile.media = '(max-width: 768px)';
-        sourceMobile.dataset.srcset = `${ASSETS_PATH}thumb/${imageData.id}.webp`;
+        sourceMobile.media = `(max-width: ${config.mobileBreakpoint}px)`;
+        sourceMobile.dataset.srcset = `${config.assets.path}thumb/${imageData.id}.webp`;
         sourceMobile.type = 'image/webp';
 
         // Desktop source (medium)
         const sourceDesktop = document.createElement('source');
-        sourceDesktop.dataset.srcset = `${ASSETS_PATH}medium/${imageData.id}.webp`;
+        sourceDesktop.dataset.srcset = `${config.assets.path}medium/${imageData.id}.webp`;
         sourceDesktop.type = 'image/webp';
 
         // Fallback img
         const img = document.createElement('img');
-        img.dataset.src = `${ASSETS_PATH}medium/${imageData.id}.webp`;
-        img.alt = `Fine art photograph by Ivano Coltellacci`;
+        img.dataset.src = `${config.assets.path}medium/${imageData.id}.webp`;
+        img.alt = site.altTextTemplate;
         img.loading = 'lazy';
 
         picture.appendChild(sourceMobile);
@@ -205,9 +271,8 @@ function loadPhoto(photo) {
         img.removeAttribute('data-src');
 
         img.onload = () => {
-            // Apply class based on orientation (CSS handles sizing)
             const orientation = photo.dataset.orientation;
-            photo.classList.add(orientation); // 'landscape', 'portrait', or 'square'
+            photo.classList.add(orientation);
             photo.classList.add('loaded');
         };
 
@@ -220,10 +285,11 @@ function loadPhoto(photo) {
 // Lazy loading with Intersection Observer + eager first batch
 function initLazyLoading() {
     const photos = document.querySelectorAll('.photo');
+    const eagerCount = config.gallery.eagerLoadCount;
 
     // Eager load first batch immediately
     photos.forEach((photo, index) => {
-        if (index < EAGER_LOAD_COUNT) {
+        if (index < eagerCount) {
             loadPhoto(photo);
         }
     });
@@ -237,13 +303,13 @@ function initLazyLoading() {
             }
         });
     }, {
-        rootMargin: '800px 0px',
+        rootMargin: `${config.gallery.lazyLoadMargin}px 0px`,
         threshold: 0
     });
 
     // Only observe photos after the eager batch
     photos.forEach((photo, index) => {
-        if (index >= EAGER_LOAD_COUNT) {
+        if (index >= eagerCount) {
             observer.observe(photo);
         }
     });
@@ -252,13 +318,12 @@ function initLazyLoading() {
 // Update gallery height based on organic grid layout
 function updateGalleryHeight() {
     const photos = document.querySelectorAll('.photo');
-    const config = getLayoutConfig();
-    const { columns, photoSize: size } = config;
+    const layoutConfig = getLayoutConfig();
+    const { columns, photoSize: size } = layoutConfig;
     const totalRows = Math.ceil(photos.length / columns);
 
     const gallery = document.getElementById('gallery');
-    // Use vw for consistency with photo sizing (12vw top offset + rows)
-    gallery.style.minHeight = `${12 + totalRows * size}vw`;
+    gallery.style.minHeight = `${config.gallery.topMargin + totalRows * size}vw`;
 }
 
 // Lightbox functionality with random sequence navigation
@@ -268,24 +333,20 @@ function initLightbox() {
     const lightboxClose = document.querySelector('.lightbox-close');
     const gallery = document.getElementById('gallery');
 
-    let sequence = [];      // Shuffled array of image IDs for this session
-    let sequenceIndex = 0;  // Current position in sequence
+    let sequence = [];
+    let sequenceIndex = 0;
 
-    // Generate random sequence starting with given photo
     function generateSequence(startId) {
-        // Get all loaded image IDs
         const loadedIds = Array.from(document.querySelectorAll('.photo.loaded'))
             .map(photo => photo.dataset.imageId)
             .filter(id => id);
 
-        // Shuffle using Fisher-Yates
         sequence = [...loadedIds];
         for (let i = sequence.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
             [sequence[i], sequence[j]] = [sequence[j], sequence[i]];
         }
 
-        // Move startId to beginning
         const startIndex = sequence.indexOf(startId);
         if (startIndex > 0) {
             sequence.splice(startIndex, 1);
@@ -295,27 +356,23 @@ function initLightbox() {
         sequenceIndex = 0;
     }
 
-    // Show image at current sequence index
     function showCurrent() {
         if (sequence.length === 0) return;
-        lightboxImg.src = `${ASSETS_PATH}full/${sequence[sequenceIndex]}.webp`;
+        lightboxImg.src = `${config.assets.path}full/${sequence[sequenceIndex]}.webp`;
     }
 
-    // Navigate to next photo in sequence
     function showNext() {
         if (sequence.length === 0) return;
         sequenceIndex = (sequenceIndex + 1) % sequence.length;
         showCurrent();
     }
 
-    // Navigate to previous photo in sequence
     function showPrev() {
         if (sequence.length === 0) return;
         sequenceIndex = (sequenceIndex - 1 + sequence.length) % sequence.length;
         showCurrent();
     }
 
-    // Open lightbox when clicking a photo
     gallery.addEventListener('click', (e) => {
         const photo = e.target.closest('.photo');
         if (photo && photo.classList.contains('loaded')) {
@@ -326,10 +383,8 @@ function initLightbox() {
         }
     });
 
-    // Click on image shows next photo
     lightboxImg.addEventListener('click', showNext);
 
-    // Close lightbox and discard sequence
     function closeLightbox() {
         lightbox.classList.remove('open');
         document.body.style.overflow = '';
@@ -339,14 +394,12 @@ function initLightbox() {
 
     lightboxClose.addEventListener('click', closeLightbox);
 
-    // Click outside image closes lightbox
     lightbox.addEventListener('click', (e) => {
         if (e.target === lightbox) {
             closeLightbox();
         }
     });
 
-    // Keyboard navigation
     document.addEventListener('keydown', (e) => {
         if (!lightbox.classList.contains('open')) return;
 
@@ -367,7 +420,6 @@ function initPanels() {
     const overlay = document.getElementById('overlay');
     const closeButtons = document.querySelectorAll('.panel-close');
 
-    // Open panel
     navLinks.forEach(link => {
         link.addEventListener('click', () => {
             const panelId = link.dataset.panel;
@@ -381,7 +433,6 @@ function initPanels() {
         });
     });
 
-    // Close panel
     function closeAllPanels() {
         panels.forEach(panel => panel.classList.remove('open'));
         overlay.classList.remove('visible');
@@ -394,7 +445,6 @@ function initPanels() {
 
     overlay.addEventListener('click', closeAllPanels);
 
-    // Close panel when mouse leaves
     panels.forEach(panel => {
         panel.addEventListener('mouseleave', () => {
             panel.classList.remove('open');
@@ -403,7 +453,6 @@ function initPanels() {
         });
     });
 
-    // Close on Escape key
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') {
             closeAllPanels();
@@ -414,8 +463,8 @@ function initPanels() {
 // Reposition photos based on current viewport
 function repositionPhotos() {
     const photos = document.querySelectorAll('.photo');
-    const config = getLayoutConfig();
-    const { columns, photoSize: size } = config;
+    const layoutConfig = getLayoutConfig();
+    const { columns, photoSize: size } = layoutConfig;
     const colWidth = 100 / columns;
     const rowHeight = size;
 
@@ -424,7 +473,7 @@ function repositionPhotos() {
         const row = Math.floor(index / columns);
 
         const baseLeft = col * colWidth + (colWidth - size) / 2;
-        const baseTop = 12 + row * rowHeight;
+        const baseTop = config.gallery.topMargin + row * rowHeight;
 
         const offsetX = parseFloat(photo.dataset.offsetX) || 0;
         const offsetY = parseFloat(photo.dataset.offsetY) || 0;
@@ -440,20 +489,18 @@ function repositionPhotos() {
 }
 
 // Track current layout to detect breakpoint crossing
-let currentLayout = getLayoutConfig();
+let currentLayout = null;
 
 // Recalculate positions on resize
 let resizeTimeout;
 function handleResize() {
     const newLayout = getLayoutConfig();
 
-    // Reposition immediately when crossing breakpoints
-    if (newLayout.columns !== currentLayout.columns) {
+    if (!currentLayout || newLayout.columns !== currentLayout.columns) {
         currentLayout = newLayout;
         repositionPhotos();
     }
 
-    // Debounce gallery height updates
     clearTimeout(resizeTimeout);
     resizeTimeout = setTimeout(() => {
         updateGalleryHeight();

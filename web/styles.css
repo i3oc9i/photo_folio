@@ -1,3 +1,26 @@
+/* CSS Custom Properties - defaults (overridden by config.json via JS) */
+:root {
+    --color-background: #0a0a0a;
+    --color-background-alt: #111;
+    --color-text: #e8e8e8;
+    --color-text-muted: #666;
+    --color-text-dim: #888;
+    --color-text-dimmer: #555;
+    --color-text-dimmest: #444;
+    --color-border: #1a1a1a;
+    --color-border-light: #333;
+    --color-panel-text: #bbb;
+    --color-overlay: rgba(0, 0, 0, 0.7);
+    --color-lightbox-bg: rgba(0, 0, 0, 0.95);
+    --font-heading: 'Italiana', serif;
+    --font-body: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    --transition-splash: 0.8s;
+    --transition-gallery: 0.6s;
+    --transition-panel: 0.4s;
+    --transition-hover: 0.3s;
+    --transition-lightbox: 0.3s;
+}
+
 /* Splash/Entry Page */
 .splash {
     position: fixed;
@@ -5,12 +28,12 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: #0a0a0a;
+    background-color: var(--color-background);
     z-index: 500;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: opacity 0.8s ease, visibility 0.8s ease;
+    transition: opacity var(--transition-splash) ease, visibility var(--transition-splash) ease;
 }
 
 .splash.hidden {
@@ -24,41 +47,41 @@
 }
 
 .splash-name {
-    font-family: 'Italiana', serif;
+    font-family: var(--font-heading);
     font-size: 3rem;
     font-weight: 400;
     letter-spacing: 0.2em;
-    color: #e8e8e8;
+    color: var(--color-text);
     margin-bottom: 0.5rem;
 }
 
 .splash-subtitle {
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-family: var(--font-body);
     font-size: 1.6rem;
     font-weight: 300;
     letter-spacing: 0.25em;
     text-transform: lowercase;
-    color: #666;
+    color: var(--color-text-muted);
     margin-bottom: 3rem;
 }
 
 .splash-enter {
     background: none;
-    border: 1px solid #555;
-    color: #888;
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    border: 1px solid var(--color-text-dimmer);
+    color: var(--color-text-dim);
+    font-family: var(--font-body);
     font-size: 0.75rem;
     font-weight: 300;
     letter-spacing: 0.3em;
     text-transform: uppercase;
     padding: 0.75rem 2rem;
     cursor: pointer;
-    transition: color 0.3s ease, border-color 0.3s ease;
+    transition: color var(--transition-hover) ease, border-color var(--transition-hover) ease;
 }
 
 .splash-enter:hover {
-    color: #e8e8e8;
-    border-color: #e8e8e8;
+    color: var(--color-text);
+    border-color: var(--color-text);
 }
 
 @media (max-width: 768px) {
@@ -90,9 +113,9 @@ html {
 }
 
 body {
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    background-color: #0a0a0a;
-    color: #e8e8e8;
+    font-family: var(--font-body);
+    background-color: var(--color-background);
+    color: var(--color-text);
     min-height: 100vh;
     overflow-x: hidden;
     line-height: 1.6;
@@ -109,8 +132,8 @@ body {
     justify-content: space-between;
     align-items: center;
     padding: 1.25rem 2.5rem;
-    background-color: #0a0a0a;
-    border-bottom: 1px solid #1a1a1a;
+    background-color: var(--color-background);
+    border-bottom: 1px solid var(--color-border);
 }
 
 .logo {
@@ -118,7 +141,7 @@ body {
     flex-direction: column;
     align-items: center;
     text-decoration: none;
-    transition: opacity 0.3s ease;
+    transition: opacity var(--transition-hover) ease;
     text-align: center;
     gap: 0.15rem;
 }
@@ -128,20 +151,20 @@ body {
 }
 
 .logo-name {
-    font-family: 'Italiana', serif;
+    font-family: var(--font-heading);
     font-size: 1.3rem;
     font-weight: 400;
     letter-spacing: 0.15em;
-    color: #e8e8e8;
+    color: var(--color-text);
 }
 
 .logo-subtitle {
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-family: var(--font-body);
     font-size: 0.8rem;
     font-weight: 300;
     letter-spacing: 0.2em;
     text-transform: lowercase;
-    color: #666;
+    color: var(--color-text-muted);
 }
 
 .nav {
@@ -165,9 +188,9 @@ body {
     font-weight: 300;
     letter-spacing: 0.15em;
     text-transform: uppercase;
-    color: #e8e8e8;
+    color: var(--color-text);
     cursor: pointer;
-    transition: opacity 0.3s ease;
+    transition: opacity var(--transition-hover) ease;
     padding: 0.5rem 0;
 }
 
@@ -186,7 +209,7 @@ body {
 .photo {
     position: absolute;
     opacity: 0;
-    transition: transform 0.4s ease, box-shadow 0.4s ease, top 0.3s ease, left 0.3s ease;
+    transition: transform var(--transition-panel) ease, box-shadow var(--transition-panel) ease, top var(--transition-hover) ease, left var(--transition-hover) ease;
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
 }
 
@@ -200,7 +223,7 @@ body {
 .gallery.revealed .photo.loaded {
     opacity: 1;
     transform: rotate(var(--end-rotation, 0deg));
-    transition: opacity 0.1s ease, transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+    transition: opacity 0.1s ease, transform var(--transition-gallery) cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .photo {
@@ -216,7 +239,7 @@ body {
     pointer-events: none;
     max-width: 100%;
     max-height: 100%;
-    transition: width 0.3s ease, height 0.3s ease;
+    transition: width var(--transition-hover) ease, height var(--transition-hover) ease;
 }
 
 /* Default - XL screens (≥1600px): 7 columns, 13vw photos */
@@ -239,7 +262,7 @@ body {
 .gallery-footer {
     text-align: center;
     padding: 1rem 2rem 2rem;
-    color: #444;
+    color: var(--color-text-dimmest);
     font-size: 0.75rem;
     font-weight: 300;
     letter-spacing: 0.15em;
@@ -259,9 +282,9 @@ body {
     width: 100%;
     max-width: 450px;
     height: 100vh;
-    background-color: #111;
+    background-color: var(--color-background-alt);
     z-index: 200;
-    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: transform var(--transition-panel) cubic-bezier(0.4, 0, 0.2, 1);
     overflow-y: auto;
 }
 
@@ -295,10 +318,10 @@ body {
     top: 1.5rem;
     background: none;
     border: none;
-    color: #e8e8e8;
+    color: var(--color-text);
     font-size: 2rem;
     cursor: pointer;
-    transition: opacity 0.3s ease;
+    transition: opacity var(--transition-hover) ease;
     line-height: 1;
     padding: 0.5rem;
 }
@@ -323,24 +346,24 @@ body {
 .panel-content p {
     margin-bottom: 1.5rem;
     font-weight: 300;
-    color: #bbb;
+    color: var(--color-panel-text);
 }
 
 .panel-content a {
-    color: #e8e8e8;
+    color: var(--color-text);
     text-decoration: none;
-    border-bottom: 1px solid #555;
-    transition: border-color 0.3s ease;
+    border-bottom: 1px solid var(--color-text-dimmer);
+    transition: border-color var(--transition-hover) ease;
 }
 
 .panel-content a:hover {
-    border-color: #e8e8e8;
+    border-color: var(--color-text);
 }
 
 .contact, .credits-note {
     margin-top: 3rem;
     padding-top: 2rem;
-    border-top: 1px solid #333;
+    border-top: 1px solid var(--color-border-light);
 }
 
 /* Overlay */
@@ -350,11 +373,11 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.7);
+    background-color: var(--color-overlay);
     z-index: 150;
     opacity: 0;
     visibility: hidden;
-    transition: opacity 0.4s ease, visibility 0.4s ease;
+    transition: opacity var(--transition-panel) ease, visibility var(--transition-panel) ease;
 }
 
 .overlay.visible {
@@ -369,14 +392,14 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.95);
+    background-color: var(--color-lightbox-bg);
     z-index: 300;
     display: flex;
     align-items: center;
     justify-content: center;
     opacity: 0;
     visibility: hidden;
-    transition: opacity 0.3s ease, visibility 0.3s ease;
+    transition: opacity var(--transition-lightbox) ease, visibility var(--transition-lightbox) ease;
 }
 
 .lightbox.open {
@@ -400,7 +423,7 @@ body {
     color: #fff;
     font-size: 2.5rem;
     cursor: pointer;
-    transition: opacity 0.3s ease;
+    transition: opacity var(--transition-hover) ease;
     line-height: 1;
     padding: 0.5rem;
     z-index: 310;
@@ -423,7 +446,7 @@ body {
     font-size: 0.75rem;
     letter-spacing: 0.2em;
     text-transform: uppercase;
-    color: #555;
+    color: var(--color-text-dimmer);
     z-index: 10;
 }
 

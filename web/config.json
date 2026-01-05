@@ -1,0 +1,84 @@
+{
+  "site": {
+    "title": "Ivano Coltellacci Photography",
+    "name": "Ivano Coltellacci",
+    "subtitle": "fine art photography",
+    "enterButtonText": "Enter",
+    "altTextTemplate": "Fine art photograph by Ivano Coltellacci"
+  },
+  "assets": {
+    "path": "assets/",
+    "manifestFile": "images.json"
+  },
+  "gallery": {
+    "eagerLoadCount": 12,
+    "topMargin": 12,
+    "lazyLoadMargin": 800,
+    "randomOffset": { "min": -3, "max": 3 },
+    "rotation": { "min": -1, "max": 1 },
+    "dealingRotation": { "min": -30, "max": 30 },
+    "dealingDelay": 0.03
+  },
+  "breakpoints": [
+    { "minWidth": 1600, "columns": 7, "photoSize": 13, "squareSize": 9 },
+    { "minWidth": 1440, "columns": 6, "photoSize": 15, "squareSize": 10 },
+    { "minWidth": 1280, "columns": 5, "photoSize": 18, "squareSize": 12 },
+    { "minWidth": 1024, "columns": 4, "photoSize": 22, "squareSize": 15 },
+    { "minWidth": 768, "columns": 3, "photoSize": 30, "squareSize": 20 },
+    { "minWidth": 0, "columns": 2, "photoSize": 42, "squareSize": 28 }
+  ],
+  "mobileBreakpoint": 768,
+  "panels": {
+    "about": {
+      "title": "About",
+      "paragraphs": [
+        "Fine art photographer exploring the boundaries between reality and imagination through portraiture and conceptual imagery.",
+        "My work delves into human emotion, vulnerability, and the surreal aspects of existence. Each photograph is a carefully crafted moment that invites viewers to look beyond the surface.",
+        "Based in [Your City]. Available for collaborations and commissioned work."
+      ],
+      "contact": {
+        "label": "Contact",
+        "email": "email@example.com"
+      }
+    },
+    "credits": {
+      "title": "Credits",
+      "paragraphs": [
+        "All photographs by [Your Name]",
+        "Models, makeup artists, and collaborators credited individually upon request.",
+        "All images are protected by copyright. Unauthorized use is prohibited."
+      ],
+      "copyright": {
+        "year": 2024,
+        "name": "[Your Name]"
+      }
+    }
+  },
+  "theme": {
+    "colors": {
+      "background": "#0a0a0a",
+      "backgroundAlt": "#111",
+      "text": "#e8e8e8",
+      "textMuted": "#666",
+      "textDim": "#888",
+      "textDimmer": "#555",
+      "textDimmest": "#444",
+      "border": "#1a1a1a",
+      "borderLight": "#333",
+      "panelText": "#bbb",
+      "overlay": "rgba(0, 0, 0, 0.7)",
+      "lightboxBg": "rgba(0, 0, 0, 0.95)"
+    },
+    "fonts": {
+      "heading": "'Italiana', serif",
+      "body": "'Helvetica Neue', Helvetica, Arial, sans-serif"
+    },
+    "transitions": {
+      "splash": 0.8,
+      "gallery": 0.6,
+      "panel": 0.4,
+      "hover": 0.3,
+      "lightbox": 0.3
+    }
+  }
+}
