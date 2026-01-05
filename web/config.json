@@ -29,7 +29,7 @@
   },
   "gallery": {
     "eagerLoadCount": 12,
-    "topMargin": 12,
+    "topMargin": 18,
     "lazyLoadMargin": 800,
     "randomOffset": {
       "min": -3,

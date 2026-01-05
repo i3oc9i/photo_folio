@@ -640,11 +640,11 @@ body {
 
     .gallery-bar {
         top: 3.5rem;
-        padding: 0.4rem 1rem;
+        padding: 0.75rem 1rem;
     }
 
     .gallery-selector-btn {
-        font-size: 0.7rem;
+        font-size: 0.6rem;
     }
 
     .gallery-dropdown {
@@ -657,7 +657,7 @@ body {
     }
 
     .gallery {
-        padding: 6rem 1rem 3rem;
+        padding: 0 1rem 3rem;
     }
 
     .panel {
@@ -710,24 +710,24 @@ body {
 
     .gallery-bar {
         top: 2.75rem;
-        padding: 0.35rem 0.5rem;
+        padding: 0.5rem 0.5rem;
     }
 
     .gallery-selector-btn {
-        font-size: 0.65rem;
+        font-size: 0.6rem;
         letter-spacing: 0.05em;
         gap: 0.3rem;
     }
 
     .gallery-selector-arrow {
-        font-size: 0.5rem;
+        font-size: 0.55rem;
     }
 
     .gallery-dropdown button {
-        font-size: 0.65rem;
+        font-size: 0.75rem;
     }
 
     .gallery {
-        padding: 5rem 1rem 3rem;
+        padding: 0 1rem 3rem;
     }
 }

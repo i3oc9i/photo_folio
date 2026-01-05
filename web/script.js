@@ -661,7 +661,7 @@ function initScrollTop() {
 
     // Scroll to top on click
     scrollBtn.addEventListener('click', () => {
-        window.scrollTo({ top: 0, behavior: 'instant' });
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     });
 }
 
