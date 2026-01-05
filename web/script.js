@@ -4,6 +4,13 @@ let imageManifest = null;
 let currentGallery = null;      // Current gallery ID
 let galleryManifests = {};      // Cache for loaded manifests
 
+// Photo element pool for DOM reuse
+let photoPool = [];              // Array of {element, inUse: boolean}
+let photoPoolByImageId = {};     // Map imageId -> pool entry
+
+// Lightbox cache
+let loadedImageIds = new Set();  // Track loaded images for lightbox
+
 // Get current layout config based on viewport
 function getLayoutConfig() {
     const width = window.innerWidth;
@@ -161,6 +168,10 @@ async function switchGallery(galleryId) {
         galleryManifests[galleryId] = await response.json();
     }
 
+    // Clear pool lookups for old gallery (elements kept for potential reuse)
+    photoPoolByImageId = {};
+    loadedImageIds.clear();
+
     // Update current state
     currentGallery = galleryId;
     imageManifest = galleryManifests[galleryId];
@@ -207,18 +218,22 @@ function reshuffleGallery() {
 
     // Remove revealed class to reset animation state
     gallery.classList.remove('revealed');
-    gallery.innerHTML = '';
 
-    // Recreate gallery
+    // Clear loaded image cache for lightbox
+    loadedImageIds.clear();
+
+    // Recreate gallery with pooled elements
     createGallery();
 
-    // Force browser reflow to reset animation state
-    void gallery.offsetHeight;
-
-    // Trigger dealing animation (longer pause before effect)
-    setTimeout(() => {
-        gallery.classList.add('revealed');
-    }, 500);
+    // Use double-rAF instead of forced reflow
+    // This ensures styles are applied before triggering animation
+    requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+            setTimeout(() => {
+                gallery.classList.add('revealed');
+            }, 300);
+        });
+    });
 }
 
 // Load config and manifest, then initialize
@@ -288,102 +303,213 @@ function random(min, max) {
     return Math.random() * (max - min) + min;
 }
 
-// Create photo elements using organic grid layout
-function createGallery() {
-    const gallery = document.getElementById('gallery');
-    const images = shuffle(imageManifest.images);
-    const { gallery: galleryConfig, site } = config;
+// Update image sources on a photo element
+function updatePhotoSources(element, imageId) {
+    const basePath = `${config.assets.path}${currentGallery}/`;
+    const sources = element.querySelectorAll('source');
+    const img = element.querySelector('img');
 
-    // Get responsive layout config
+    // Reset to lazy state
+    sources[0].removeAttribute('srcset');
+    sources[0].dataset.srcset = `${basePath}thumb/${imageId}.webp`;
+
+    sources[1].removeAttribute('srcset');
+    sources[1].dataset.srcset = `${basePath}medium/${imageId}.webp`;
+
+    img.removeAttribute('src');
+    img.dataset.src = `${basePath}medium/${imageId}.webp`;
+}
+
+// Create a new photo element
+function createPhotoElement(imageData) {
+    const photoWrapper = document.createElement('div');
+    photoWrapper.className = 'photo';
+    photoWrapper.dataset.imageId = imageData.id;
+    photoWrapper.dataset.orientation = imageData.orientation;
+
+    const picture = document.createElement('picture');
+
+    // Mobile source (thumb)
+    const sourceMobile = document.createElement('source');
+    sourceMobile.media = `(max-width: ${config.mobileBreakpoint}px)`;
+    sourceMobile.type = 'image/webp';
+
+    // Desktop source (medium)
+    const sourceDesktop = document.createElement('source');
+    sourceDesktop.type = 'image/webp';
+
+    // Fallback img
+    const img = document.createElement('img');
+    img.alt = config.site.altTextTemplate;
+    img.loading = 'lazy';
+
+    picture.appendChild(sourceMobile);
+    picture.appendChild(sourceDesktop);
+    picture.appendChild(img);
+    photoWrapper.appendChild(picture);
+
+    // Set image paths
+    updatePhotoSources(photoWrapper, imageData.id);
+
+    return photoWrapper;
+}
+
+// Reconfigure a pooled element for a new image
+function reconfigurePhotoElement(element, imageData) {
+    element.dataset.imageId = imageData.id;
+    element.dataset.orientation = imageData.orientation;
+
+    // Remove loaded state to reset
+    element.classList.remove('loaded', 'landscape', 'portrait', 'square');
+
+    // Update sources
+    updatePhotoSources(element, imageData.id);
+}
+
+// Get or create a photo element from the pool
+function getOrCreatePhotoElement(imageData) {
+    const imageId = imageData.id;
+
+    // Check if we have an existing element for this image
+    if (photoPoolByImageId[imageId]) {
+        const poolEntry = photoPoolByImageId[imageId];
+        poolEntry.inUse = true;
+        return poolEntry.element;
+    }
+
+    // Check for unused element in pool
+    const unused = photoPool.find(p => !p.inUse);
+    if (unused) {
+        // Reconfigure existing element for new image
+        reconfigurePhotoElement(unused.element, imageData);
+        unused.inUse = true;
+        delete photoPoolByImageId[unused.element.dataset.imageId];
+        photoPoolByImageId[imageId] = unused;
+        return unused.element;
+    }
+
+    // Create new element (only if pool exhausted)
+    const element = createPhotoElement(imageData);
+    const poolEntry = { element, inUse: true };
+    photoPool.push(poolEntry);
+    photoPoolByImageId[imageId] = poolEntry;
+    return element;
+}
+
+// Compute all positions without touching DOM
+function computeAllPositions(images) {
+    const { gallery: galleryConfig } = config;
     const layoutConfig = getLayoutConfig();
     const { columns, photoSize: size } = layoutConfig;
     const colWidth = 100 / columns;
     const rowHeight = size;
 
-    images.forEach((imageData, index) => {
-        const photoWrapper = document.createElement('div');
-        photoWrapper.className = 'photo';
+    const positions = [];
 
+    for (let index = 0; index < images.length; index++) {
         const col = index % columns;
         const row = Math.floor(index / columns);
 
-        // Base grid position - center photos in their cells
         const baseLeft = col * colWidth + (colWidth - size) / 2;
         const baseTop = galleryConfig.topMargin + row * rowHeight;
 
-        // Random offset creates overlap for denser feel
         const offsetX = random(galleryConfig.randomOffset.min, galleryConfig.randomOffset.max);
         const offsetY = random(galleryConfig.randomOffset.min, galleryConfig.randomOffset.max);
 
         const left = Math.max(1, Math.min(baseLeft + offsetX, 99 - size));
         const top = baseTop + offsetY;
 
-        // Very subtle rotation
         const rotation = random(galleryConfig.rotation.min, galleryConfig.rotation.max);
-
-        // Store offsets for responsive repositioning
-        photoWrapper.dataset.offsetX = offsetX;
-        photoWrapper.dataset.offsetY = offsetY;
-
-        // Alternating z-index for layering
-        const zIndex = (index % 3) + 1;
-
-        // Store data for later use
-        photoWrapper.dataset.size = size;
-        photoWrapper.dataset.imageId = imageData.id;
-        photoWrapper.dataset.orientation = imageData.orientation;
-
-        // Random start rotation for dealing effect
         const startRotation = random(galleryConfig.dealingRotation.min, galleryConfig.dealingRotation.max);
+        const zIndex = (index % 3) + 1;
         const transitionDelay = index * galleryConfig.dealingDelay;
 
-        // Apply styles
-        photoWrapper.style.cssText = `
-            top: ${top}vw;
-            left: ${left}vw;
-            --start-rotation: ${startRotation}deg;
-            --end-rotation: ${rotation}deg;
-            z-index: ${zIndex};
-            transition-delay: ${transitionDelay}s;
-        `;
+        positions.push({
+            left,
+            top,
+            offsetX,
+            offsetY,
+            rotation,
+            startRotation,
+            zIndex,
+            transitionDelay,
+            size
+        });
+    }
 
-        // Create picture element with responsive sources
-        const picture = document.createElement('picture');
+    return positions;
+}
 
-        // Gallery-specific base path
-        const basePath = `${config.assets.path}${currentGallery}/`;
+// Apply positions in batch via requestAnimationFrame
+function applyPositionsBatch(elements, positions) {
+    requestAnimationFrame(() => {
+        for (let i = 0; i < elements.length; i++) {
+            const el = elements[i];
+            const pos = positions[i];
 
-        // Mobile source (thumb)
-        const sourceMobile = document.createElement('source');
-        sourceMobile.media = `(max-width: ${config.mobileBreakpoint}px)`;
-        sourceMobile.dataset.srcset = `${basePath}thumb/${imageData.id}.webp`;
-        sourceMobile.type = 'image/webp';
+            // Store offsets for resize handling
+            el.dataset.offsetX = pos.offsetX;
+            el.dataset.offsetY = pos.offsetY;
+            el.dataset.size = pos.size;
 
-        // Desktop source (medium)
-        const sourceDesktop = document.createElement('source');
-        sourceDesktop.dataset.srcset = `${basePath}medium/${imageData.id}.webp`;
-        sourceDesktop.type = 'image/webp';
+            // Apply all styles at once
+            el.style.cssText = `
+                top: ${pos.top}vw;
+                left: ${pos.left}vw;
+                --start-rotation: ${pos.startRotation}deg;
+                --end-rotation: ${pos.rotation}deg;
+                z-index: ${pos.zIndex};
+                transition-delay: ${pos.transitionDelay}s;
+            `;
+        }
+    });
+}
 
-        // Fallback img
-        const img = document.createElement('img');
-        img.dataset.src = `${basePath}medium/${imageData.id}.webp`;
-        img.alt = site.altTextTemplate;
-        img.loading = 'lazy';
+// Create photo elements using organic grid layout
+function createGallery() {
+    const gallery = document.getElementById('gallery');
+    const images = shuffle(imageManifest.images);
 
-        picture.appendChild(sourceMobile);
-        picture.appendChild(sourceDesktop);
-        picture.appendChild(img);
-        photoWrapper.appendChild(picture);
-        gallery.appendChild(photoWrapper);
+    // Phase 1: Compute all positions in memory (no DOM access)
+    const positions = computeAllPositions(images);
+
+    // Phase 2: Mark all pool entries as unused
+    photoPool.forEach(p => p.inUse = false);
+
+    // Phase 3: Get or create elements
+    const elements = [];
+    const fragment = document.createDocumentFragment();
+
+    for (let i = 0; i < images.length; i++) {
+        const element = getOrCreatePhotoElement(images[i]);
+        elements.push(element);
+
+        // Only append if not already in DOM
+        if (!element.parentNode) {
+            fragment.appendChild(element);
+        }
+    }
+
+    // Phase 4: Remove unused elements from DOM (but keep in pool)
+    photoPool.forEach(p => {
+        if (!p.inUse && p.element.parentNode) {
+            p.element.parentNode.removeChild(p.element);
+        }
     });
 
-    // Initialize lazy loading
+    // Phase 5: Append new elements in single operation
+    gallery.appendChild(fragment);
+
+    // Phase 6: Apply positions in batch
+    applyPositionsBatch(elements, positions);
+
+    // Phase 7: Initialize lazy loading
     initLazyLoading();
 
-    // Update gallery height
+    // Phase 8: Update gallery height
     updateGalleryHeight();
 
-    // Set footer text
+    // Phase 9: Update footer
     const footer = document.getElementById('gallery-footer');
     if (footer) {
         footer.querySelector('.footer-text').textContent = `${images.length} photographs`;
@@ -411,8 +537,12 @@ function loadPhoto(photo) {
 
         img.onload = () => {
             const orientation = photo.dataset.orientation;
+            const imageId = photo.dataset.imageId;
             photo.classList.add(orientation);
             photo.classList.add('loaded');
+
+            // Cache loaded image ID for lightbox
+            loadedImageIds.add(imageId);
         };
 
         img.onerror = () => {
@@ -476,16 +606,16 @@ function initLightbox() {
     let sequenceIndex = 0;
 
     function generateSequence(startId) {
-        const loadedIds = Array.from(document.querySelectorAll('.photo.loaded'))
-            .map(photo => photo.dataset.imageId)
-            .filter(id => id);
+        // Use cached set instead of DOM query
+        sequence = [...loadedImageIds];
 
-        sequence = [...loadedIds];
+        // Fisher-Yates shuffle
         for (let i = sequence.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
             [sequence[i], sequence[j]] = [sequence[j], sequence[i]];
         }
 
+        // Move starting image to front
         const startIndex = sequence.indexOf(startId);
         if (startIndex > 0) {
             sequence.splice(startIndex, 1);
@@ -607,6 +737,8 @@ function repositionPhotos() {
     const colWidth = 100 / columns;
     const rowHeight = size;
 
+    // Read phase: compute all positions first
+    const updates = [];
     photos.forEach((photo, index) => {
         const col = index % columns;
         const row = Math.floor(index / columns);
@@ -620,8 +752,15 @@ function repositionPhotos() {
         const left = Math.max(1, Math.min(baseLeft + offsetX, 99 - size));
         const top = baseTop + offsetY;
 
-        photo.style.top = `${top}vw`;
-        photo.style.left = `${left}vw`;
+        updates.push({ photo, top, left });
+    });
+
+    // Write phase: apply all positions via rAF (avoids layout thrashing)
+    requestAnimationFrame(() => {
+        updates.forEach(({ photo, top, left }) => {
+            photo.style.top = `${top}vw`;
+            photo.style.left = `${left}vw`;
+        });
     });
 
     updateGalleryHeight();

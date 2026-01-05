@@ -128,8 +128,11 @@ Breakpoints defined in `config.json` (breakpoints array) with matching CSS media
 ### Performance
 - **Service Worker**: Caches images for offline/fast repeat visits
 - **Eager loading**: First N images load immediately (configurable)
-- **Lazy loading**: Rest load on scroll (configurable preload margin)
+- **Lazy loading**: Rest load on scroll via Intersection Observer (configurable preload margin)
 - **Manifest caching**: Gallery manifests cached in memory after first load
+- **DOM pooling**: Photo elements reused on reshuffle instead of destroy/recreate
+- **Batched operations**: Position calculations computed in memory, applied via `requestAnimationFrame`
+- **Lightbox caching**: Loaded image IDs cached in Set, avoids DOM queries on lightbox open
 
 ## Data Flow
 
