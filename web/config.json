@@ -9,8 +9,18 @@
   "galleries": {
     "default": "bw",
     "items": {
-      "bw": { "displayName": "Black & White", "order": 1 },
-      "colors": { "displayName": "Colors", "order": 2 }
+      "bw": {
+        "displayName": "Black & White",
+        "order": 1
+      },
+      "colors": {
+        "displayName": "Colors",
+        "order": 2
+      },
+      "divers": {
+        "displayName": "Divers",
+        "order": 3
+      }
     }
   },
   "assets": {
@@ -21,18 +31,57 @@
     "eagerLoadCount": 12,
     "topMargin": 12,
     "lazyLoadMargin": 800,
-    "randomOffset": { "min": -3, "max": 3 },
-    "rotation": { "min": -1, "max": 1 },
-    "dealingRotation": { "min": -30, "max": 30 },
+    "randomOffset": {
+      "min": -3,
+      "max": 3
+    },
+    "rotation": {
+      "min": -1,
+      "max": 1
+    },
+    "dealingRotation": {
+      "min": -30,
+      "max": 30
+    },
     "dealingDelay": 0.03
   },
   "breakpoints": [
-    { "minWidth": 1600, "columns": 7, "photoSize": 13, "squareSize": 9 },
-    { "minWidth": 1440, "columns": 6, "photoSize": 15, "squareSize": 10 },
-    { "minWidth": 1280, "columns": 5, "photoSize": 18, "squareSize": 12 },
-    { "minWidth": 1024, "columns": 4, "photoSize": 22, "squareSize": 15 },
-    { "minWidth": 768, "columns": 3, "photoSize": 30, "squareSize": 20 },
-    { "minWidth": 0, "columns": 2, "photoSize": 42, "squareSize": 28 }
+    {
+      "minWidth": 1600,
+      "columns": 7,
+      "photoSize": 13,
+      "squareSize": 9
+    },
+    {
+      "minWidth": 1440,
+      "columns": 6,
+      "photoSize": 15,
+      "squareSize": 10
+    },
+    {
+      "minWidth": 1280,
+      "columns": 5,
+      "photoSize": 18,
+      "squareSize": 12
+    },
+    {
+      "minWidth": 1024,
+      "columns": 4,
+      "photoSize": 22,
+      "squareSize": 15
+    },
+    {
+      "minWidth": 768,
+      "columns": 3,
+      "photoSize": 30,
+      "squareSize": 20
+    },
+    {
+      "minWidth": 0,
+      "columns": 2,
+      "photoSize": 42,
+      "squareSize": 28
+    }
   ],
   "mobileBreakpoint": 768,
   "panels": {

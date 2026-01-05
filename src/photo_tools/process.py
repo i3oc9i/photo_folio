@@ -68,6 +68,53 @@ def discover_galleries(source_base: Path) -> list[str]:
     return sorted(galleries)
 
 
+def generate_display_name(gallery_name: str) -> str:
+    """Generate display name from directory name (title case with spaces)."""
+    return gallery_name.replace('_', ' ').replace('-', ' ').title()
+
+
+def update_config_galleries(config_path: Path, galleries: list[str]) -> None:
+    """Update config.json galleries section to match discovered galleries."""
+    with open(config_path) as f:
+        config = json.load(f)
+
+    existing_items = config.get('galleries', {}).get('items', {})
+    existing_default = config.get('galleries', {}).get('default')
+
+    # Build new items, preserving existing display names
+    new_items = {}
+    for i, gallery_name in enumerate(galleries, 1):
+        if gallery_name in existing_items:
+            # Preserve existing display name and update order
+            new_items[gallery_name] = {
+                'displayName': existing_items[gallery_name].get(
+                    'displayName', generate_display_name(gallery_name)
+                ),
+                'order': i
+            }
+        else:
+            # Generate new display name
+            new_items[gallery_name] = {
+                'displayName': generate_display_name(gallery_name),
+                'order': i
+            }
+
+    # Determine default gallery
+    if existing_default and existing_default in galleries:
+        new_default = existing_default
+    else:
+        new_default = galleries[0] if galleries else None
+
+    # Update config
+    config['galleries'] = {
+        'default': new_default,
+        'items': new_items
+    }
+
+    with open(config_path, 'w') as f:
+        json.dump(config, f, indent=2)
+
+
 def resize_image(img: Image.Image, target_size: int) -> Image.Image:
     """Resize image so longest edge is exactly target_size, preserving aspect ratio."""
     width, height = img.size
@@ -288,6 +335,12 @@ def main() -> int:
         return 1
 
     print(f"Found {len(galleries)} gallery(ies): {', '.join(galleries)}\n")
+
+    # Update config.json with discovered galleries
+    config_path = project_root / "web" / "config.json"
+    if config_path.exists():
+        update_config_galleries(config_path, galleries)
+        print(f"Updated config.json with {len(galleries)} gallery(ies)\n")
 
     # Process each gallery
     total_processed = 0
