@@ -23,7 +23,7 @@ from PIL import Image
 
 # Configuration - paths relative to project root
 SOURCE_BASE = "gallery"  # Scan subdirectories as galleries
-OUTPUT_BASE = "web/assets/gallery"
+OUTPUT_BASE = "web/public/assets/gallery"
 MANIFEST_FILE = "images.json"
 
 # Output sizes (longest edge in pixels)
@@ -336,11 +336,11 @@ def main() -> int:
 
     print(f"Found {len(galleries)} gallery(ies): {', '.join(galleries)}\n")
 
-    # Update config.json with discovered galleries
-    config_path = project_root / "web" / "public" / "config.json"
+    # Update site.json with discovered galleries
+    config_path = project_root / "web" / "public" / "site.json"
     if config_path.exists():
         update_config_galleries(config_path, galleries)
-        print(f"Updated config.json with {len(galleries)} gallery(ies)\n")
+        print(f"Updated site.json with {len(galleries)} gallery(ies)\n")
 
     # Process each gallery
     total_processed = 0

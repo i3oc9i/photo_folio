@@ -49,14 +49,14 @@ photo_folio/
     │   └── main.js
     ├── public/
     │   ├── assets/        # Generated images (symlink)
-    │   ├── config.json    # Site configuration
+    │   ├── site.json + theme.json    # Site configuration
     │   └── sw.js          # Service worker
     └── dist/              # Production build output
 ```
 
 ## Configuration
 
-Edit `web/public/config.json` to customize the site:
+Edit `web/public/site.json + theme.json` to customize the site:
 
 ```json
 {
@@ -90,7 +90,7 @@ Edit `web/public/config.json` to customize the site:
 }
 ```
 
-See `web/public/config.json` for all available options.
+See `web/public/site.json + theme.json` for all available options.
 
 ## Deploy
 

@@ -1,0 +1,44 @@
+{
+  "site": {
+    "title": "Ivano Coltellacci Photography",
+    "name": "Ivano Coltellacci",
+    "subtitle": "fine art photography",
+    "enterButtonText": "Enter",
+    "altTextTemplate": "Fine art photograph by Ivano Coltellacci"
+  },
+  "galleries": {
+    "default": "color",
+    "items": {
+      "color": {
+        "displayName": "Color",
+        "order": 1
+      }
+    }
+  },
+  "panels": {
+    "about": {
+      "title": "About",
+      "paragraphs": [
+        "Fine art photographer exploring the boundaries between reality and imagination through portraiture and conceptual imagery.",
+        "My work delves into human emotion, vulnerability, and the surreal aspects of existence. Each photograph is a carefully crafted moment that invites viewers to look beyond the surface.",
+        "Based in [Your City]. Available for collaborations and commissioned work."
+      ],
+      "contact": {
+        "label": "Contact",
+        "email": "email@example.com"
+      }
+    },
+    "credits": {
+      "title": "Credits",
+      "paragraphs": [
+        "All photographs by [Your Name]",
+        "Models, makeup artists, and collaborators credited individually upon request.",
+        "All images are protected by copyright. Unauthorized use is prohibited."
+      ],
+      "copyright": {
+        "year": 2024,
+        "name": "[Your Name]"
+      }
+    }
+  }
+}

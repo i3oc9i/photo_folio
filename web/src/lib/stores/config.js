@@ -3,12 +3,17 @@ import { writable } from 'svelte/store';
 // Site configuration store
 export const config = writable(null);
 
-// Load configuration from JSON file
+// Load configuration from JSON files (site.json + theme.json)
 export async function loadConfig() {
-  const response = await fetch('/config.json');
-  const data = await response.json();
-  config.set(data);
-  return data;
+  const [siteRes, themeRes] = await Promise.all([
+    fetch('/site.json'),
+    fetch('/theme.json')
+  ]);
+  const site = await siteRes.json();
+  const theme = await themeRes.json();
+  const merged = { ...site, ...theme };
+  config.set(merged);
+  return merged;
 }
 
 // Apply theme CSS custom properties to document root

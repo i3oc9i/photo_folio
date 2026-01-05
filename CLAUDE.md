@@ -21,7 +21,7 @@ uv run poe dev           # Process images + start dev server
 
 ## Architecture
 
-**Python (`src/gallery_builder/`)**: Image processing pipeline that converts photos to WebP format. Discovers galleries from `gallery/` subdirectories, generates per-gallery manifests, and auto-updates `config.json` with gallery metadata.
+**Python (`src/gallery_builder/`)**: Image processing pipeline that converts photos to WebP format. Discovers galleries from `gallery/` subdirectories, generates per-gallery manifests, and auto-updates `site.json + theme.json` with gallery metadata.
 
 **Frontend (`web/`)**: Svelte 5 application bundled with Vite.
 
@@ -54,8 +54,8 @@ web/
 │   ├── App.svelte           # Root component
 │   └── main.js              # Entry point + service worker registration
 ├── public/
-│   ├── assets/              # Symlink to generated images
-│   ├── config.json          # Site configuration
+│   ├── assets/              # generated galleries
+│   ├── site.json + theme.json          # Site configuration
 │   └── sw.js                # Service Worker for caching
 ├── index.html               # Vite entry point
 ├── vite.config.js
@@ -80,14 +80,14 @@ App.svelte
 
 ## State Management
 
-| Store | Purpose |
-|-------|---------|
-| `config` | Site configuration loaded from config.json |
-| `currentGalleryId` | Active gallery ID, syncs with URL hash |
-| `manifestCache` | Cached gallery manifests (persists across switches) |
-| `currentManifest` | Derived: current gallery's image manifest |
-| `currentLayout` | Derived: responsive layout config from window width |
-| `loadedImageIds` | Set of loaded image IDs for lightbox sequence |
+| Store              | Purpose                                               |
+| ------------------ | ----------------------------------------------------- |
+| `config`           | Site configuration loaded from site.json + theme.json |
+| `currentGalleryId` | Active gallery ID, syncs with URL hash                |
+| `manifestCache`    | Cached gallery manifests (persists across switches)   |
+| `currentManifest`  | Derived: current gallery's image manifest             |
+| `currentLayout`    | Derived: responsive layout config from window width   |
+| `loadedImageIds`   | Set of loaded image IDs for lightbox sequence         |
 
 ## Multi-Gallery System
 
@@ -100,7 +100,8 @@ gallery/
   portraits/    → web/assets/portraits/{thumb,medium,full}/*.webp + images.json
 ```
 
-**Auto-sync**: Running `poe assets` automatically updates `config.json` galleries section:
+**Auto-sync**: Running `poe assets` automatically updates `site.json + theme.json` galleries section:
+
 - New directories are added with auto-generated display names (title case)
 - Existing custom display names are preserved
 - Removed directories are cleaned from config
@@ -110,7 +111,8 @@ gallery/
 
 ## Configuration System
 
-All configurable items are in `web/public/config.json`. Loaded at startup via the `config` store:
+All configurable items are in `web/public/site.json + theme.json`. Loaded at startup via the `config` store:
+
 1. Sets CSS custom properties for theming (`--color-*`, `--font-*`, `--transition-*`)
 2. Populates page content (title, splash, logo, panel text)
 3. Populates gallery selector dropdown
@@ -118,26 +120,26 @@ All configurable items are in `web/public/config.json`. Loaded at startup via th
 
 ### Config Structure
 
-| Section | Purpose |
-|---------|---------|
-| `site` | Name, title, subtitle, button text, alt text template |
-| `galleries` | Default gallery, items with displayName and order (auto-updated by process.py) |
-| `assets` | Path to assets folder, manifest filename |
-| `gallery` | Eager load count, margins, random offsets, rotation ranges |
-| `breakpoints` | Array of responsive layouts (minWidth, columns, photoSize) |
-| `mobileBreakpoint` | Width threshold for mobile image sources |
-| `panels` | About/Credits content, contact info, copyright |
-| `theme.colors` | All color values (background, text variants, borders) |
-| `theme.fonts` | Heading and body font families |
-| `theme.transitions` | Duration values for animations |
+| Section             | Purpose                                                                        |
+| ------------------- | ------------------------------------------------------------------------------ |
+| `site`              | Name, title, subtitle, button text, alt text template                          |
+| `galleries`         | Default gallery, items with displayName and order (auto-updated by process.py) |
+| `assets`            | Path to assets folder, manifest filename                                       |
+| `gallery`           | Eager load count, margins, random offsets, rotation ranges                     |
+| `breakpoints`       | Array of responsive layouts (minWidth, columns, photoSize)                     |
+| `mobileBreakpoint`  | Width threshold for mobile image sources                                       |
+| `panels`            | About/Credits content, contact info, copyright                                 |
+| `theme.colors`      | All color values (background, text variants, borders)                          |
+| `theme.fonts`       | Heading and body font families                                                 |
+| `theme.transitions` | Duration values for animations                                                 |
 
 ## Asset Sizes
 
-| Size | Max Edge | Purpose |
-|------|----------|---------|
-| `thumb` | 400px | Mobile gallery view |
-| `medium` | 800px | Desktop gallery view |
-| `full` | 1600px | Lightbox (full-screen view) |
+| Size     | Max Edge | Purpose                     |
+| -------- | -------- | --------------------------- |
+| `thumb`  | 400px    | Mobile gallery view         |
+| `medium` | 800px    | Desktop gallery view        |
+| `full`   | 1600px   | Lightbox (full-screen view) |
 
 Images are resized so the longest edge matches the max size, preserving aspect ratio.
 
@@ -146,24 +148,26 @@ Images are resized so the longest edge matches the max size, preserving aspect r
 Gallery adapts from 7 columns (large screens) to 2 columns (mobile):
 
 | Screen Width | Columns | Photo Size |
-|--------------|---------|------------|
-| ≥1600px | 7 | 13vw |
-| 1440-1599px | 6 | 15vw |
-| 1280-1439px | 5 | 18vw |
-| 1024-1279px | 4 | 22vw |
-| 768-1023px | 3 | 30vw |
-| <768px | 2 | 42vw |
+| ------------ | ------- | ---------- |
+| ≥1600px      | 7       | 13vw       |
+| 1440-1599px  | 6       | 15vw       |
+| 1280-1439px  | 5       | 18vw       |
+| 1024-1279px  | 4       | 22vw       |
+| 768-1023px   | 3       | 30vw       |
+| <768px       | 2       | 42vw       |
 
-Breakpoints defined in `config.json` and used by the `breakpoint` store. CSS media queries in `global.css` handle photo sizing.
+Breakpoints defined in `site.json + theme.json` and used by the `breakpoint` store. CSS media queries in `global.css` handle photo sizing.
 
 ## Key Behaviors
 
 ### Splash Screen
+
 - Shows on every page load/refresh
 - Click "Enter" to reveal gallery with dealing animation
 - Uses Svelte `fade` transition
 
 ### Gallery
+
 - **Gallery selector**: Dropdown to switch between galleries
 - **Click logo**: Reshuffles current gallery with new random arrangement
 - **Resize window**: Reactive repositioning via `currentLayout` store
@@ -171,12 +175,14 @@ Breakpoints defined in `config.json` and used by the `breakpoint` store. CSS med
 - **URL hash**: `#gallery=<id>` for bookmarking (e.g., `#gallery=bw`)
 
 ### Lightbox Navigation
+
 - **Click photo**: Opens lightbox with random sequence
 - **Arrow Right / Click image**: Next photo
 - **Arrow Left**: Previous photo
 - **Escape**: Close (discards sequence)
 
 ### Performance
+
 - **Service Worker**: Caches images for offline/fast repeat visits
 - **Eager loading**: First N images load immediately (configurable)
 - **Lazy loading**: `lazyload` action with IntersectionObserver
@@ -189,9 +195,9 @@ Breakpoints defined in `config.json` and used by the `breakpoint` store. CSS med
 ```
 gallery/<gallery>/*.jpg → process.py → web/assets/<gallery>/{thumb,medium,full}/*.webp
                                    → web/assets/<gallery>/images.json
-                                   → web/public/config.json (galleries section updated)
+                                   → web/public/site.json + theme.json (galleries section updated)
                                           ↓
-config.json ──→ config store ──→ applyTheme() ──→ CSS variables
+site.json + theme.json ──→ config store ──→ applyTheme() ──→ CSS variables
                     ↓
               gallery store ──→ manifest fetch ──→ Gallery.svelte
                     ↓
@@ -202,7 +208,7 @@ config.json ──→ config store ──→ applyTheme() ──→ CSS variable
 
 - `gallery/<gallery>/` - Drop original photos in subdirectories (not in git)
 - `web/assets/<gallery>/` - Generated images per gallery (not in git, rebuild with `poe assets`)
-- `web/public/config.json` - Site configuration (galleries section auto-updated)
+- `web/public/site.json + theme.json` - Site configuration (galleries section auto-updated)
 - `web/src/` - Svelte source code
 - `web/dist/` - Production build output (deploy this + assets)
 
