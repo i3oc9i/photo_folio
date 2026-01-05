@@ -4,28 +4,90 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-**photo_folio** is a photography portfolio website with Python-based image preprocessing. The site displays photos using an **organic grid** layout (grid-based positioning with random offsets for a natural "scattered on table" feel) with a dark theme. Supports **multiple galleries** based on input subdirectories.
+**photo_folio** is a photography portfolio website built with **Svelte 5** and **Vite**, with Python-based image preprocessing. The site displays photos using an **organic grid** layout (grid-based positioning with random offsets for a natural "scattered on table" feel) with a dark theme. Supports **multiple galleries** based on input subdirectories.
 
 ## Commands
 
 ```bash
-uv sync --extra dev      # Install dependencies including dev tools
+uv sync --extra dev      # Install Python dependencies
+cd web && npm install    # Install Node.js dependencies
+
 uv run poe assets        # Process images from input/<gallery>/ → web/assets/<gallery>/
 uv run poe assets:force  # Reprocess all images (ignore cache)
-uv run poe serve         # Start dev server at http://localhost:8080
-uv run poe dev           # Process images + start server
+uv run poe serve         # Start Vite dev server at http://localhost:8080
+uv run poe build         # Production build → web/dist/
+uv run poe dev           # Process images + start dev server
 ```
 
 ## Architecture
 
 **Python (`src/photo_tools/`)**: Image processing pipeline that converts photos to WebP format. Discovers galleries from `input/` subdirectories, generates per-gallery manifests, and auto-updates `config.json` with gallery metadata.
 
-**Website (`web/`)**: Static site with vanilla HTML/CSS/JS.
-- `config.json` - Centralized configuration (site content, theme, galleries, layout settings)
-- `index.html` - Page structure with placeholder elements (populated from config)
-- `styles.css` - Styling using CSS custom properties (set from config)
-- `script.js` - Loads config, applies theme, gallery switching, lightbox
-- `sw.js` - Service Worker for caching
+**Frontend (`web/`)**: Svelte 5 application bundled with Vite.
+
+```
+web/
+├── src/
+│   ├── lib/
+│   │   ├── components/      # Svelte components
+│   │   │   ├── Splash.svelte
+│   │   │   ├── Header.svelte
+│   │   │   ├── GallerySelector.svelte
+│   │   │   ├── Gallery.svelte
+│   │   │   ├── Photo.svelte
+│   │   │   ├── Panel.svelte
+│   │   │   ├── Overlay.svelte
+│   │   │   ├── Lightbox.svelte
+│   │   │   └── ScrollTopButton.svelte
+│   │   ├── stores/          # Svelte stores
+│   │   │   ├── config.js    # Site configuration
+│   │   │   ├── gallery.js   # Current gallery + manifest cache
+│   │   │   ├── breakpoint.js # Responsive layout detection
+│   │   │   └── loadedImages.js # Loaded image tracking for lightbox
+│   │   ├── actions/
+│   │   │   └── lazyload.js  # IntersectionObserver action
+│   │   ├── utils/
+│   │   │   ├── shuffle.js   # Fisher-Yates shuffle
+│   │   │   └── positions.js # Grid position calculations
+│   │   └── styles/
+│   │       └── global.css   # Global styles + CSS custom properties
+│   ├── App.svelte           # Root component
+│   └── main.js              # Entry point + service worker registration
+├── public/
+│   ├── assets/              # Symlink to generated images
+│   ├── config.json          # Site configuration
+│   └── sw.js                # Service Worker for caching
+├── index.html               # Vite entry point
+├── vite.config.js
+├── svelte.config.js
+└── package.json
+```
+
+## Component Hierarchy
+
+```
+App.svelte
+├── Splash.svelte           # Entry overlay (fade transition)
+├── Header.svelte           # Navigation with logo
+├── GallerySelector.svelte  # Gallery dropdown
+├── Gallery.svelte          # Photo grid container
+│   └── Photo.svelte        # Individual photo (lazy loading)
+├── Panel.svelte            # Slide-in panels (About/Credits)
+├── Overlay.svelte          # Dark backdrop for panels
+├── Lightbox.svelte         # Fullscreen photo viewer
+└── ScrollTopButton.svelte  # Scroll-to-top button
+```
+
+## State Management
+
+| Store | Purpose |
+|-------|---------|
+| `config` | Site configuration loaded from config.json |
+| `currentGalleryId` | Active gallery ID, syncs with URL hash |
+| `manifestCache` | Cached gallery manifests (persists across switches) |
+| `currentManifest` | Derived: current gallery's image manifest |
+| `currentLayout` | Derived: responsive layout config from window width |
+| `loadedImageIds` | Set of loaded image IDs for lightbox sequence |
 
 ## Multi-Gallery System
 
@@ -48,7 +110,7 @@ input/
 
 ## Configuration System
 
-All configurable items are in `web/config.json`. JavaScript loads this at startup and:
+All configurable items are in `web/public/config.json`. Loaded at startup via the `config` store:
 1. Sets CSS custom properties for theming (`--color-*`, `--font-*`, `--transition-*`)
 2. Populates page content (title, splash, logo, panel text)
 3. Populates gallery selector dropdown
@@ -68,18 +130,6 @@ All configurable items are in `web/config.json`. JavaScript loads this at startu
 | `theme.colors` | All color values (background, text variants, borders) |
 | `theme.fonts` | Heading and body font families |
 | `theme.transitions` | Duration values for animations |
-
-### Galleries Config (auto-managed)
-
-```json
-"galleries": {
-  "default": "bw",
-  "items": {
-    "bw": { "displayName": "Black & White", "order": 1 },
-    "colors": { "displayName": "Colors", "order": 2 }
-  }
-}
-```
 
 ## Asset Sizes
 
@@ -104,19 +154,20 @@ Gallery adapts from 7 columns (large screens) to 2 columns (mobile):
 | 768-1023px | 3 | 30vw |
 | <768px | 2 | 42vw |
 
-Breakpoints defined in `config.json` (breakpoints array) with matching CSS media queries in `styles.css`.
+Breakpoints defined in `config.json` and used by the `breakpoint` store. CSS media queries in `global.css` handle photo sizing.
 
 ## Key Behaviors
 
 ### Splash Screen
 - Shows on every page load/refresh
 - Click "Enter" to reveal gallery with dealing animation
+- Uses Svelte `fade` transition
 
 ### Gallery
 - **Gallery selector**: Dropdown to switch between galleries
 - **Click logo**: Reshuffles current gallery with new random arrangement
-- **Resize window**: Smooth transitions between breakpoints
-- **Hover photo**: Slight scale + shadow effect
+- **Resize window**: Reactive repositioning via `currentLayout` store
+- **Hover photo**: Slight scale + shadow effect (CSS)
 - **URL hash**: `#gallery=<id>` for bookmarking (e.g., `#gallery=bw`)
 
 ### Lightbox Navigation
@@ -128,28 +179,37 @@ Breakpoints defined in `config.json` (breakpoints array) with matching CSS media
 ### Performance
 - **Service Worker**: Caches images for offline/fast repeat visits
 - **Eager loading**: First N images load immediately (configurable)
-- **Lazy loading**: Rest load on scroll via Intersection Observer (configurable preload margin)
-- **Manifest caching**: Gallery manifests cached in memory after first load
-- **DOM pooling**: Photo elements reused on reshuffle instead of destroy/recreate
-- **Batched operations**: Position calculations computed in memory, applied via `requestAnimationFrame`
-- **Lightbox caching**: Loaded image IDs cached in Set, avoids DOM queries on lightbox open
+- **Lazy loading**: `lazyload` action with IntersectionObserver
+- **Manifest caching**: Gallery manifests cached in `manifestCache` store
+- **Svelte reactivity**: Efficient DOM updates via keyed `{#each}` blocks
+- **Lightbox caching**: Loaded image IDs tracked in `loadedImageIds` store
 
 ## Data Flow
 
 ```
 input/<gallery>/*.jpg → process.py → web/assets/<gallery>/{thumb,medium,full}/*.webp
                                    → web/assets/<gallery>/images.json
-                                   → web/config.json (galleries section updated)
+                                   → web/public/config.json (galleries section updated)
                                           ↓
-config.json ──────────────────────→ script.js ──→ CSS variables + DOM content
-                                          ↓
-                                   Gallery selector populated
-                                   Manifest loaded per gallery
+config.json ──→ config store ──→ applyTheme() ──→ CSS variables
+                    ↓
+              gallery store ──→ manifest fetch ──→ Gallery.svelte
+                    ↓
+              breakpoint store ──→ currentLayout ──→ position calculations
 ```
 
 ## Key Paths
 
 - `input/<gallery>/` - Drop original photos in subdirectories (not in git)
 - `web/assets/<gallery>/` - Generated images per gallery (not in git, rebuild with `poe assets`)
-- `web/config.json` - Site configuration (galleries section auto-updated)
-- `web/` - Deployable directory for static hosting
+- `web/public/config.json` - Site configuration (galleries section auto-updated)
+- `web/src/` - Svelte source code
+- `web/dist/` - Production build output (deploy this + assets)
+
+## Svelte 5 Patterns Used
+
+- **Runes**: `$state()`, `$derived()`, `$effect()`, `$props()`
+- **Stores**: Writable and derived stores in `src/lib/stores/`
+- **Actions**: `use:lazyload` for IntersectionObserver
+- **Transitions**: `fade`, `fly` from `svelte/transition`
+- **Component binding**: `bind:this` for Gallery reshuffle

@@ -337,7 +337,7 @@ def main() -> int:
     print(f"Found {len(galleries)} gallery(ies): {', '.join(galleries)}\n")
 
     # Update config.json with discovered galleries
-    config_path = project_root / "web" / "config.json"
+    config_path = project_root / "web" / "public" / "config.json"
     if config_path.exists():
         update_config_galleries(config_path, galleries)
         print(f"Updated config.json with {len(galleries)} gallery(ies)\n")

@@ -21,6 +21,26 @@
     --transition-lightbox: 0.3s;
 }
 
+/* Reset and base styles */
+*, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    font-size: 16px;
+}
+
+body {
+    font-family: var(--font-body);
+    background-color: var(--color-background);
+    color: var(--color-text);
+    min-height: 100vh;
+    overflow-x: hidden;
+    line-height: 1.6;
+}
+
 /* Splash/Entry Page */
 .splash {
     position: fixed;
@@ -33,13 +53,6 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: opacity var(--transition-splash) ease, visibility var(--transition-splash) ease;
-}
-
-.splash.hidden {
-    opacity: 0;
-    visibility: hidden;
-    pointer-events: none;
 }
 
 .splash-content {
@@ -101,26 +114,6 @@
     }
 }
 
-/* Reset and base styles */
-*, *::before, *::after {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-html {
-    font-size: 16px;
-}
-
-body {
-    font-family: var(--font-body);
-    background-color: var(--color-background);
-    color: var(--color-text);
-    min-height: 100vh;
-    overflow-x: hidden;
-    line-height: 1.6;
-}
-
 /* Header */
 .header {
     position: fixed;
@@ -144,6 +137,9 @@ body {
     transition: opacity var(--transition-hover) ease;
     text-align: center;
     gap: 0.15rem;
+    cursor: pointer;
+    background: none;
+    border: none;
 }
 
 .logo:hover {
@@ -252,14 +248,14 @@ body {
 .gallery-dropdown {
     position: absolute;
     top: 100%;
-    left: 0;
+    left: 50%;
+    transform: translateX(-50%) translateY(-10px);
     min-width: 150px;
     background: var(--color-background-alt);
     border: 1px solid var(--color-border-light);
     list-style: none;
     opacity: 0;
     visibility: hidden;
-    transform: translateY(-10px);
     transition: opacity var(--transition-hover) ease,
                 transform var(--transition-hover) ease,
                 visibility var(--transition-hover) ease;
@@ -270,7 +266,7 @@ body {
 .gallery-selector.open .gallery-dropdown {
     opacity: 1;
     visibility: visible;
-    transform: translateY(0);
+    transform: translateX(-50%) translateY(0);
 }
 
 .gallery-dropdown li {
@@ -316,6 +312,7 @@ body {
     opacity: 0;
     transition: transform var(--transition-panel) ease, box-shadow var(--transition-panel) ease, top var(--transition-hover) ease, left var(--transition-hover) ease;
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+    cursor: pointer;
 }
 
 /* Before gallery is revealed */
@@ -331,10 +328,6 @@ body {
     transition: opacity 0.1s ease, transform var(--transition-gallery) cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-.photo {
-    cursor: pointer;
-}
-
 .photo picture {
     display: block;
 }
@@ -347,7 +340,7 @@ body {
     transition: width var(--transition-hover) ease, height var(--transition-hover) ease;
 }
 
-/* Default - XL screens (≥1600px): 7 columns, 13vw photos */
+/* Default - XL screens (>=1600px): 7 columns, 13vw photos */
 .photo.landscape img {
     width: 13vw;
     height: auto;
@@ -389,24 +382,17 @@ body {
     height: 100vh;
     background-color: var(--color-background-alt);
     z-index: 200;
-    transition: transform var(--transition-panel) cubic-bezier(0.4, 0, 0.2, 1);
     overflow-y: auto;
 }
 
 /* About panel - slides from left */
 .panel-left {
     left: 0;
-    transform: translateX(-100%);
 }
 
 /* Credits panel - slides from right */
 .panel-right {
     right: 0;
-    transform: translateX(100%);
-}
-
-.panel.open {
-    transform: translateX(0);
 }
 
 /* Close button positioning */
@@ -480,14 +466,6 @@ body {
     height: 100%;
     background-color: var(--color-overlay);
     z-index: 150;
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity var(--transition-panel) ease, visibility var(--transition-panel) ease;
-}
-
-.overlay.visible {
-    opacity: 1;
-    visibility: visible;
 }
 
 /* Lightbox */
@@ -502,14 +480,6 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity var(--transition-lightbox) ease, visibility var(--transition-lightbox) ease;
-}
-
-.lightbox.open {
-    opacity: 1;
-    visibility: visible;
 }
 
 .lightbox-img {
@@ -517,6 +487,7 @@ body {
     max-height: 90vh;
     object-fit: contain;
     box-shadow: 0 0 60px rgba(0, 0, 0, 0.8);
+    cursor: pointer;
 }
 
 .lightbox-close {
@@ -536,10 +507,6 @@ body {
 
 .lightbox-close:hover {
     opacity: 0.7;
-}
-
-.lightbox-img {
-    cursor: pointer;
 }
 
 /* Loading indicator */

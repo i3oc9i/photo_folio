@@ -25,5 +25,7 @@ packages = ["src/photo_tools"]
 [tool.poe.tasks]
 assets = "process-photos"
 "assets:force" = "process-photos --force"
-serve = { shell = "echo 'Serving at http://localhost:8080' && cd web && python -m http.server 8080 2>/dev/null" }
+serve = { shell = "cd web && npm run dev" }
+build = { shell = "cd web && npm run build" }
+preview = { shell = "cd web && npm run preview" }
 dev = ["assets", "serve"]
