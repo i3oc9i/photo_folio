@@ -180,7 +180,7 @@ body {
     position: relative;
     width: 100%;
     min-height: 100vh;
-    padding: 6rem 2rem 4rem;
+    padding: 6rem 2rem 0;
 }
 
 .photo {
@@ -234,6 +234,17 @@ body {
 .photo.square img {
     width: 15vw;
     height: 15vw;
+}
+
+/* Gallery footer - end indicator */
+.gallery-footer {
+    text-align: center;
+    padding: 1rem 2rem 2rem;
+    color: #444;
+    font-size: 0.75rem;
+    font-weight: 300;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
 }
 
 .photo:hover {

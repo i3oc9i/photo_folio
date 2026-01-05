@@ -110,9 +110,9 @@ function createGallery() {
         const startRotation = random(-30, 30);
         const transitionDelay = index * 0.03; // Staggered delay
 
-        // Apply styles
+        // Apply styles (use vw for both top and left for consistency)
         photoWrapper.style.cssText = `
-            top: ${top}vh;
+            top: ${top}vw;
             left: ${left}vw;
             --start-rotation: ${startRotation}deg;
             --end-rotation: ${rotation}deg;
@@ -152,6 +152,12 @@ function createGallery() {
 
     // Update gallery height
     updateGalleryHeight();
+
+    // Set footer text
+    const footer = document.getElementById('gallery-footer');
+    if (footer) {
+        footer.querySelector('.footer-text').textContent = `${images.length} photographs`;
+    }
 }
 
 // Lazy loading with Intersection Observer
@@ -212,8 +218,8 @@ function updateGalleryHeight() {
     const totalRows = Math.ceil(photos.length / columns);
 
     const gallery = document.getElementById('gallery');
-    // Use vw for consistency with photo sizing (12vw top offset + rows + bottom padding)
-    gallery.style.minHeight = `${12 + totalRows * rowHeight + 10}vw`;
+    // Use vw for consistency with photo sizing (12vw top offset + rows)
+    gallery.style.minHeight = `${12 + totalRows * rowHeight}vw`;
 }
 
 // Lightbox functionality with random sequence navigation
