@@ -7,7 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Italiana&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css?v=16">
+    <link rel="stylesheet" href="styles.css?v=24">
 </head>
 <body>
     <!-- Entry/Splash Page -->
@@ -21,15 +21,6 @@
 
     <header class="header">
         <nav class="nav nav-left">
-            <div class="gallery-selector" id="gallery-selector">
-                <button class="gallery-selector-btn" id="gallery-selector-btn">
-                    <span class="gallery-selector-label">Gallery</span>
-                    <span class="gallery-selector-arrow">&#9662;</span>
-                </button>
-                <ul class="gallery-dropdown" id="gallery-dropdown">
-                    <!-- Populated from config.json -->
-                </ul>
-            </div>
             <button class="nav-link" data-panel="about">About</button>
         </nav>
         <a href="/" class="logo">
@@ -40,6 +31,18 @@
             <button class="nav-link" data-panel="credits">Credits</button>
         </nav>
     </header>
+
+    <div class="gallery-bar">
+        <div class="gallery-selector" id="gallery-selector">
+            <button class="gallery-selector-btn" id="gallery-selector-btn">
+                <span class="gallery-selector-label">Gallery</span>
+                <span class="gallery-selector-arrow">&#9662;</span>
+            </button>
+            <ul class="gallery-dropdown" id="gallery-dropdown">
+                <!-- Populated from config.json -->
+            </ul>
+        </div>
+    </div>
 
     <main class="gallery" id="gallery">
         <!-- Photos will be positioned by JavaScript -->
@@ -78,6 +81,6 @@
     <!-- Scroll to top button -->
     <button class="scroll-top" id="scroll-top" aria-label="Scroll to top">&uarr;</button>
 
-    <script src="script.js?v=26"></script>
+    <script src="script.js?v=27"></script>
 </body>
 </html>
