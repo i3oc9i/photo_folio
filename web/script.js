@@ -109,10 +109,13 @@ function reshuffleGallery() {
     // Recreate gallery
     createGallery();
 
-    // Trigger dealing animation after a brief delay
+    // Force browser reflow to reset animation state
+    void gallery.offsetHeight;
+
+    // Trigger dealing animation (same timing as splash screen)
     setTimeout(() => {
         gallery.classList.add('revealed');
-    }, 50);
+    }, 200);
 }
 
 // Load config and manifest, then initialize
