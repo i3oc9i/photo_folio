@@ -9,18 +9,18 @@ Requires:
 - [Node.js](https://nodejs.org/) (v18+) for the Svelte frontend
 
 ```bash
-uv sync --extra dev      # Install Python dependencies
-cd web && npm install    # Install Node.js dependencies
+uv sync --extra dev      # Install Python dependencies (enables poe commands)
+uv run poe init          # Install Node.js dependencies
 ```
 
 ## Usage
 
 ```bash
-uv run poe assets        # Process images from gallery/ to web/assets/
-uv run poe assets:force  # Reprocess all images (ignore cache)
-uv run poe serve         # Start Vite dev server
-uv run poe build         # Production build → web/dist/
-uv run poe dev           # Process images + start dev server
+uv run poe dev              # Process images + start dev server
+uv run poe dev:assets       # Process images from gallery/ to web/public/assets/
+uv run poe dev:assets:force # Reprocess all images (ignore cache)
+uv run poe dev:serve        # Start Vite dev server
+uv run poe dev:build        # Production build → web/dist/
 ```
 
 ### Workflow

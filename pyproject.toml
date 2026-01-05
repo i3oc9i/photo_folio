@@ -23,9 +23,19 @@ build-backend = "hatchling.build"
 packages = ["src/gallery_builder"]
 
 [tool.poe.tasks]
-assets = "build-gallery"
-"assets:force" = "build-gallery --force"
-serve = { shell = "cd web && npm run dev" }
-build = { shell = "cd web && npm run build" }
-preview = { shell = "cd web && npm run preview" }
-dev = ["assets", "serve"]
+# Init (run 'uv sync --extra dev' first to bootstrap poe)
+init = { shell = "cd web && npm install", help = "Install Node dependencies" }
+
+# Dev
+dev = { sequence = ["dev:assets", "dev:serve"], help = "Build assets and start dev server" }
+"dev:assets" = { cmd = "build-gallery", help = "Build gallery assets from source photos" }
+"dev:assets:force" = { cmd = "build-gallery --force", help = "Force rebuild all assets" }
+"dev:serve" = { shell = "cd web && npm run dev", help = "Start Vite dev server" }
+"dev:preview" = { shell = "cd web && npm run preview", help = "Preview production build" }
+"dev:build" = { shell = "cd web && npm run build", help = "Build for production" }
+
+# Clean
+clean = { shell = "rm -rf web/public/assets/*", help = "Remove generated gallery assets" }
+"clean:dist" = { shell = "rm -rf web/dist", help = "Remove production build output" }
+"clean:all" = { shell = "rm -rf web/public/assets/* web/dist web/node_modules && find . -type d -name __pycache__ -exec rm -rf {} + 2>/dev/null || true", help = "Remove all generated files and caches" }
+"clean:reset" = { shell = "rm -rf web/public/assets/* web/dist web/node_modules .venv && find . -type d -name __pycache__ -exec rm -rf {} + 2>/dev/null || true", help = "Full reset: remove everything including .venv" }

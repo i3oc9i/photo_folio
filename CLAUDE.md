@@ -9,14 +9,23 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Commands
 
 ```bash
-uv sync --extra dev      # Install Python dependencies
-cd web && npm install    # Install Node.js dependencies
+# Setup
+uv sync --extra dev         # Install Python dependencies (enables poe commands)
+uv run poe init             # Install Node.js dependencies
 
-uv run poe assets        # Process images from gallery/<gallery>/ → web/assets/<gallery>/
-uv run poe assets:force  # Reprocess all images (ignore cache)
-uv run poe serve         # Start Vite dev server at http://localhost:8080
-uv run poe build         # Production build → web/dist/
-uv run poe dev           # Process images + start dev server
+# Development
+uv run poe dev              # Process images + start dev server
+uv run poe dev:assets       # Process images from gallery/ → web/public/assets/gallery/
+uv run poe dev:assets:force # Reprocess all images (ignore cache)
+uv run poe dev:serve        # Start Vite dev server at http://localhost:8080
+uv run poe dev:build        # Production build → web/dist/
+uv run poe dev:preview      # Preview production build
+
+# Cleanup
+uv run poe clean            # Remove generated gallery assets
+uv run poe clean:dist       # Remove production build output
+uv run poe clean:all        # Remove assets, dist, node_modules, __pycache__
+uv run poe clean:reset      # Full reset including .venv
 ```
 
 ## Architecture
@@ -95,12 +104,12 @@ Each subdirectory in `gallery/` becomes a separate gallery:
 
 ```
 gallery/
-  bw/           → web/assets/bw/{thumb,medium,full}/*.webp + images.json
-  colors/       → web/assets/colors/{thumb,medium,full}/*.webp + images.json
-  portraits/    → web/assets/portraits/{thumb,medium,full}/*.webp + images.json
+  bw/           → web/public/assets/gallery/bw/{thumb,medium,full}/*.webp + images.json
+  colors/       → web/public/assets/gallery/colors/{thumb,medium,full}/*.webp + images.json
+  portraits/    → web/public/assets/gallery/portraits/{thumb,medium,full}/*.webp + images.json
 ```
 
-**Auto-sync**: Running `poe assets` automatically updates `site.json + theme.json` galleries section:
+**Auto-sync**: Running `poe dev:assets` automatically updates `site.json` galleries section:
 
 - New directories are added with auto-generated display names (title case)
 - Existing custom display names are preserved
@@ -193,10 +202,10 @@ Breakpoints defined in `site.json + theme.json` and used by the `breakpoint` sto
 ## Data Flow
 
 ```
-gallery/<gallery>/*.jpg → process.py → web/assets/<gallery>/{thumb,medium,full}/*.webp
-                                   → web/assets/<gallery>/images.json
-                                   → web/public/site.json + theme.json (galleries section updated)
-                                          ↓
+gallery/<name>/*.jpg → process.py → web/public/assets/gallery/<name>/{thumb,medium,full}/*.webp
+                                  → web/public/assets/gallery/<name>/images.json
+                                  → web/public/site.json (galleries section updated)
+                                         ↓
 site.json + theme.json ──→ config store ──→ applyTheme() ──→ CSS variables
                     ↓
               gallery store ──→ manifest fetch ──→ Gallery.svelte
@@ -206,8 +215,8 @@ site.json + theme.json ──→ config store ──→ applyTheme() ──→ C
 
 ## Key Paths
 
-- `gallery/<gallery>/` - Drop original photos in subdirectories (not in git)
-- `web/assets/<gallery>/` - Generated images per gallery (not in git, rebuild with `poe assets`)
+- `gallery/<name>/` - Drop original photos in subdirectories (not in git)
+- `web/public/assets/gallery/<name>/` - Generated images per gallery (not in git, rebuild with `poe dev:assets`)
 - `web/public/site.json + theme.json` - Site configuration (galleries section auto-updated)
 - `web/src/` - Svelte source code
 - `web/dist/` - Production build output (deploy this + assets)
