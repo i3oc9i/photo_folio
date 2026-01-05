@@ -102,6 +102,9 @@ function initSplash() {
 function reshuffleGallery() {
     const gallery = document.getElementById('gallery');
 
+    // Scroll to top immediately
+    window.scrollTo({ top: 0, behavior: 'instant' });
+
     // Remove revealed class to reset animation state
     gallery.classList.remove('revealed');
     gallery.innerHTML = '';
@@ -112,10 +115,10 @@ function reshuffleGallery() {
     // Force browser reflow to reset animation state
     void gallery.offsetHeight;
 
-    // Trigger dealing animation (same timing as splash screen)
+    // Trigger dealing animation (longer pause before effect)
     setTimeout(() => {
         gallery.classList.add('revealed');
-    }, 200);
+    }, 500);
 }
 
 // Load config and manifest, then initialize
@@ -520,6 +523,25 @@ function handleResize() {
     }, 100);
 }
 
+// Scroll to top button
+function initScrollTop() {
+    const scrollBtn = document.getElementById('scroll-top');
+
+    // Show/hide button based on scroll position
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 300) {
+            scrollBtn.classList.add('visible');
+        } else {
+            scrollBtn.classList.remove('visible');
+        }
+    });
+
+    // Scroll to top on click
+    scrollBtn.addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: 'instant' });
+    });
+}
+
 // Register Service Worker
 function registerServiceWorker() {
     if ('serviceWorker' in navigator) {
@@ -532,5 +554,6 @@ function registerServiceWorker() {
 // Initialize on DOM ready
 document.addEventListener('DOMContentLoaded', () => {
     init();
+    initScrollTop();
     registerServiceWorker();
 });
