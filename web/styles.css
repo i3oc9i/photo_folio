@@ -467,6 +467,19 @@ body {
     .photo {
         min-width: 150px;
     }
+
+    .photo.landscape img {
+        width: 42vw;
+    }
+
+    .photo.portrait img {
+        height: 42vw;
+    }
+
+    .photo.square img {
+        width: 28vw;
+        height: 28vw;
+    }
 }
 
 @media (max-width: 480px) {

@@ -88,7 +88,7 @@ function createGallery() {
         const baseLeft = col * colWidth + (colWidth - size) / 2;
         const baseTop = 12 + row * rowHeight; // 12vw top margin for header clearance
 
-        // Small random offset creates minimal overlap
+        // Small random offset creates minimal overlap (store for reposition)
         const offsetX = random(-1, 1);
         const offsetY = random(-1, 1);
 
@@ -97,6 +97,10 @@ function createGallery() {
 
         // Very subtle rotation
         const rotation = random(-1, 1);
+
+        // Store offsets for responsive repositioning
+        photoWrapper.dataset.offsetX = offsetX;
+        photoWrapper.dataset.offsetY = offsetY;
 
         // Alternating z-index for layering
         const zIndex = (index % 3) + 1;
@@ -372,12 +376,51 @@ function initPanels() {
     });
 }
 
+// Reposition photos based on current viewport
+function repositionPhotos() {
+    const photos = document.querySelectorAll('.photo');
+    const viewportWidth = window.innerWidth;
+    const isMobile = viewportWidth < 768;
+    const size = isMobile ? PHOTO_SIZE_MOBILE : PHOTO_SIZE;
+    const columns = isMobile ? 2 : 4;
+    const colWidth = isMobile ? 50 : 25;
+    const rowHeight = size;
+
+    photos.forEach((photo, index) => {
+        const col = index % columns;
+        const row = Math.floor(index / columns);
+
+        const baseLeft = col * colWidth + (colWidth - size) / 2;
+        const baseTop = 12 + row * rowHeight;
+
+        const offsetX = parseFloat(photo.dataset.offsetX) || 0;
+        const offsetY = parseFloat(photo.dataset.offsetY) || 0;
+
+        const left = Math.max(1, Math.min(baseLeft + offsetX, 99 - size));
+        const top = baseTop + offsetY;
+
+        photo.style.top = `${top}vw`;
+        photo.style.left = `${left}vw`;
+    });
+
+    updateGalleryHeight();
+}
+
+// Track layout mode to detect breakpoint crossing
+let currentLayoutMobile = window.innerWidth < 768;
+
 // Recalculate positions on resize (debounced)
 let resizeTimeout;
 function handleResize() {
     clearTimeout(resizeTimeout);
     resizeTimeout = setTimeout(() => {
-        updateGalleryHeight();
+        const isMobile = window.innerWidth < 768;
+        if (isMobile !== currentLayoutMobile) {
+            currentLayoutMobile = isMobile;
+            repositionPhotos();
+        } else {
+            updateGalleryHeight();
+        }
     }, 250);
 }
 
