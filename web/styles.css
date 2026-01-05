@@ -186,7 +186,7 @@ body {
 .photo {
     position: absolute;
     opacity: 0;
-    transition: transform 0.4s ease, box-shadow 0.4s ease;
+    transition: transform 0.4s ease, box-shadow 0.4s ease, top 0.3s ease, left 0.3s ease;
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
 }
 
@@ -216,6 +216,7 @@ body {
     pointer-events: none;
     max-width: 100%;
     max-height: 100%;
+    transition: width 0.3s ease, height 0.3s ease;
 }
 
 /* Large screens (≥1024px): 5 columns, 18vw photos */

@@ -443,19 +443,22 @@ function repositionPhotos() {
 // Track current layout to detect breakpoint crossing
 let currentLayout = getLayoutConfig();
 
-// Recalculate positions on resize (debounced)
+// Recalculate positions on resize
 let resizeTimeout;
 function handleResize() {
+    const newLayout = getLayoutConfig();
+
+    // Reposition immediately when crossing breakpoints
+    if (newLayout.columns !== currentLayout.columns) {
+        currentLayout = newLayout;
+        repositionPhotos();
+    }
+
+    // Debounce gallery height updates
     clearTimeout(resizeTimeout);
     resizeTimeout = setTimeout(() => {
-        const newLayout = getLayoutConfig();
-        if (newLayout.columns !== currentLayout.columns) {
-            currentLayout = newLayout;
-            repositionPhotos();
-        } else {
-            updateGalleryHeight();
-        }
-    }, 250);
+        updateGalleryHeight();
+    }, 100);
 }
 
 // Register Service Worker
