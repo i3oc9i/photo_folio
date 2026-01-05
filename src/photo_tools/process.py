@@ -22,8 +22,8 @@ from pathlib import Path
 from PIL import Image
 
 # Configuration - paths relative to project root
-SOURCE_DIR = "input/photos"
-OUTPUT_DIR = "web/assets"
+SOURCE_BASE = "input"  # Scan subdirectories as galleries
+OUTPUT_BASE = "web/assets"
 MANIFEST_FILE = "images.json"
 
 # Output sizes (longest edge in pixels)
@@ -57,6 +57,15 @@ def get_orientation(width: int, height: int) -> str:
     elif height > width:
         return "portrait"
     return "square"
+
+
+def discover_galleries(source_base: Path) -> list[str]:
+    """Find all gallery subdirectories in input folder."""
+    galleries = []
+    for item in source_base.iterdir():
+        if item.is_dir() and not item.name.startswith('.'):
+            galleries.append(item.name)
+    return sorted(galleries)
 
 
 def resize_image(img: Image.Image, target_size: int) -> Image.Image:
@@ -151,28 +160,30 @@ def clean_orphans(output_dir: Path, valid_ids: set[str]) -> int:
     return removed // len(SIZES)
 
 
-def main() -> int:
-    """Main entry point for CLI."""
-    parser = argparse.ArgumentParser(
-        description="Process images for web portfolio"
-    )
-    parser.add_argument(
-        "--force",
-        action="store_true",
-        help="Reprocess all images"
-    )
-    args = parser.parse_args()
+def clean_orphan_galleries(output_base: Path, valid_galleries: set[str]) -> list[str]:
+    """Remove gallery directories that no longer have source folders."""
+    removed = []
+    if not output_base.exists():
+        return removed
 
-    # Find project root
-    project_root = get_project_root()
-    source_dir = project_root / SOURCE_DIR
-    output_dir = project_root / OUTPUT_DIR
+    for item in output_base.iterdir():
+        if item.is_dir() and not item.name.startswith('.'):
+            if item.name not in valid_galleries:
+                # Remove the entire gallery directory
+                import shutil
+                shutil.rmtree(item)
+                removed.append(item.name)
 
-    if not source_dir.exists():
-        print(f"Error: Source directory '{source_dir}' not found")
-        print(f"Expected path: {source_dir.absolute()}")
-        return 1
+    return removed
 
+
+def process_gallery(
+    gallery_name: str,
+    source_dir: Path,
+    output_dir: Path,
+    force: bool = False
+) -> tuple[int, int, int]:
+    """Process a single gallery. Returns (processed, skipped, errors) counts."""
     # Create output directories
     for size_name in SIZES:
         (output_dir / size_name).mkdir(parents=True, exist_ok=True)
@@ -186,10 +197,8 @@ def main() -> int:
     source_images = sorted(set(source_images))
 
     if not source_images:
-        print(f"No images found in '{source_dir}'")
-        return 1
-
-    print(f"Processing {len(source_images)} images...\n")
+        print(f"  No images found in '{source_dir}'")
+        return 0, 0, 0
 
     # Process images
     processed = 0
@@ -209,14 +218,14 @@ def main() -> int:
         base_name = source_path.stem
         valid_ids.add(base_name)
 
-        status, data = process_image(source_path, base_name, output_dir, args.force)
+        status, data = process_image(source_path, base_name, output_dir, force)
 
         if status == "processed":
-            print(f"✓ {source_path.name} → thumb, medium, full")
+            print(f"  ✓ {source_path.name} → thumb, medium, full")
             processed += 1
             manifest_images.append(data)
         elif status == "skipped":
-            print(f"· {source_path.name} (unchanged)")
+            print(f"  · {source_path.name} (unchanged)")
             skipped += 1
             # Use existing manifest data
             for img in existing_manifest.get("images", []):
@@ -224,13 +233,13 @@ def main() -> int:
                     manifest_images.append(img)
                     break
         else:
-            print(f"✗ {source_path.name} - Error: {data}")
+            print(f"  ✗ {source_path.name} - Error: {data}")
             errors += 1
 
     # Clean orphaned files
     removed = clean_orphans(output_dir, valid_ids)
     if removed > 0:
-        print(f"\n🗑  Removed {removed} orphaned image(s)")
+        print(f"  🗑  Removed {removed} orphaned image(s)")
 
     # Sort manifest
     manifest_images.sort(key=lambda x: x["id"])
@@ -245,26 +254,97 @@ def main() -> int:
     with open(manifest_path, "w") as f:
         json.dump(manifest, f, indent=2)
 
+    return processed, skipped, errors
+
+
+def main() -> int:
+    """Main entry point for CLI."""
+    parser = argparse.ArgumentParser(
+        description="Process images for web portfolio"
+    )
+    parser.add_argument(
+        "--force",
+        action="store_true",
+        help="Reprocess all images"
+    )
+    args = parser.parse_args()
+
+    # Find project root
+    project_root = get_project_root()
+    source_base = project_root / SOURCE_BASE
+    output_base = project_root / OUTPUT_BASE
+
+    if not source_base.exists():
+        print(f"Error: Source directory '{source_base}' not found")
+        print(f"Expected path: {source_base.absolute()}")
+        return 1
+
+    # Discover galleries (subdirectories in input/)
+    galleries = discover_galleries(source_base)
+
+    if not galleries:
+        print(f"No gallery directories found in '{source_base}'")
+        print("Create subdirectories (e.g., input/bw/, input/colors/) with images.")
+        return 1
+
+    print(f"Found {len(galleries)} gallery(ies): {', '.join(galleries)}\n")
+
+    # Process each gallery
+    total_processed = 0
+    total_skipped = 0
+    total_errors = 0
+    total_source_size = 0
+    total_output_size = 0
+
+    for gallery_name in galleries:
+        source_dir = source_base / gallery_name
+        output_dir = output_base / gallery_name
+
+        # Count source images for this gallery
+        source_images = []
+        for ext in SUPPORTED_EXTENSIONS:
+            source_images.extend(source_dir.glob(f"*{ext}"))
+            source_images.extend(source_dir.glob(f"*{ext.upper()}"))
+        source_images = list(set(source_images))
+
+        print(f"[{gallery_name}] Processing {len(source_images)} images...")
+
+        processed, skipped, errors = process_gallery(
+            gallery_name, source_dir, output_dir, args.force
+        )
+
+        total_processed += processed
+        total_skipped += skipped
+        total_errors += errors
+
+        # Calculate sizes for this gallery
+        total_source_size += sum(p.stat().st_size for p in source_images)
+        for size_name in SIZES:
+            size_dir = output_dir / size_name
+            if size_dir.exists():
+                total_output_size += sum(p.stat().st_size for p in size_dir.glob("*.webp"))
+
+        print()
+
+    # Clean orphaned galleries
+    removed_galleries = clean_orphan_galleries(output_base, set(galleries))
+    if removed_galleries:
+        print(f"🗑  Removed orphaned galleries: {', '.join(removed_galleries)}\n")
+
     # Summary
-    print(f"\n{'='*50}")
-    print(f"Done: {processed} processed, {skipped} skipped, {errors} errors")
-    print(f"Manifest: {manifest_path}")
+    print(f"{'='*50}")
+    print(f"Done: {total_processed} processed, {total_skipped} skipped, {total_errors} errors")
 
     # Size report
-    source_size = sum(p.stat().st_size for p in source_images) / (1024 * 1024)
-    output_size = 0
-    for size_name in SIZES:
-        size_dir = output_dir / size_name
-        if size_dir.exists():
-            output_size += sum(p.stat().st_size for p in size_dir.glob("*.webp"))
-    output_size = output_size / (1024 * 1024)
+    source_mb = total_source_size / (1024 * 1024)
+    output_mb = total_output_size / (1024 * 1024)
 
-    print(f"\nSize: {source_size:.1f}MB (source) → {output_size:.1f}MB (optimized)")
-    if source_size > 0:
-        savings = (1 - output_size / source_size) * 100
+    print(f"\nTotal size: {source_mb:.1f}MB (source) → {output_mb:.1f}MB (optimized)")
+    if source_mb > 0:
+        savings = (1 - output_mb / source_mb) * 100
         print(f"Savings: {savings:.0f}% reduction")
 
-    return 0 if errors == 0 else 1
+    return 0 if total_errors == 0 else 1
 
 
 if __name__ == "__main__":

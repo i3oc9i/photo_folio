@@ -6,6 +6,13 @@
     "enterButtonText": "Enter",
     "altTextTemplate": "Fine art photograph by Ivano Coltellacci"
   },
+  "galleries": {
+    "default": "bw",
+    "items": {
+      "bw": { "displayName": "Black & White", "order": 1 },
+      "colors": { "displayName": "Colors", "order": 2 }
+    }
+  },
   "assets": {
     "path": "assets/",
     "manifestFile": "images.json"

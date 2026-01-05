@@ -1,6 +1,8 @@
 // Global state
 let config = null;
 let imageManifest = null;
+let currentGallery = null;      // Current gallery ID
+let galleryManifests = {};      // Cache for loaded manifests
 
 // Get current layout config based on viewport
 function getLayoutConfig() {
@@ -78,6 +80,104 @@ function populateSiteContent() {
     `;
 }
 
+// Get gallery ID from URL hash
+function getGalleryFromHash() {
+    const hash = window.location.hash;
+    const match = hash.match(/gallery=([^&]+)/);
+    if (match && config.galleries.items[match[1]]) {
+        return match[1];
+    }
+    return null;
+}
+
+// Initialize gallery selector dropdown
+function initGallerySelector() {
+    const selector = document.getElementById('gallery-selector');
+    const btn = document.getElementById('gallery-selector-btn');
+    const dropdown = document.getElementById('gallery-dropdown');
+
+    // Populate dropdown from config
+    const sortedGalleries = Object.entries(config.galleries.items)
+        .sort((a, b) => a[1].order - b[1].order);
+
+    dropdown.innerHTML = sortedGalleries.map(([id, data]) =>
+        `<li><button data-gallery="${id}">${data.displayName}</button></li>`
+    ).join('');
+
+    // Toggle dropdown
+    btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        selector.classList.toggle('open');
+    });
+
+    // Handle selection
+    dropdown.addEventListener('click', (e) => {
+        const galleryBtn = e.target.closest('button[data-gallery]');
+        if (galleryBtn) {
+            const galleryId = galleryBtn.dataset.gallery;
+            switchGallery(galleryId);
+            selector.classList.remove('open');
+        }
+    });
+
+    // Close on outside click
+    document.addEventListener('click', (e) => {
+        if (!selector.contains(e.target)) {
+            selector.classList.remove('open');
+        }
+    });
+
+    // Close on escape
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            selector.classList.remove('open');
+        }
+    });
+}
+
+// Update gallery selector label to show current gallery
+function updateGallerySelectorLabel() {
+    const label = document.querySelector('.gallery-selector-label');
+    label.textContent = config.galleries.items[currentGallery].displayName;
+
+    // Update active state in dropdown
+    document.querySelectorAll('.gallery-dropdown button').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.gallery === currentGallery);
+    });
+}
+
+// Switch to a different gallery
+async function switchGallery(galleryId) {
+    if (!config.galleries.items[galleryId]) return;
+    if (galleryId === currentGallery) return;
+
+    // Update URL hash
+    window.location.hash = `gallery=${galleryId}`;
+
+    // Load manifest if not cached
+    if (!galleryManifests[galleryId]) {
+        const manifestUrl = `${config.assets.path}${galleryId}/${config.assets.manifestFile}`;
+        const response = await fetch(manifestUrl);
+        galleryManifests[galleryId] = await response.json();
+    }
+
+    // Update current state
+    currentGallery = galleryId;
+    imageManifest = galleryManifests[galleryId];
+
+    // Update UI
+    updateGallerySelectorLabel();
+    reshuffleGallery();
+}
+
+// Handle URL hash changes (browser back/forward)
+function handleHashChange() {
+    const hashGallery = getGalleryFromHash();
+    if (hashGallery && hashGallery !== currentGallery) {
+        switchGallery(hashGallery);
+    }
+}
+
 // Splash screen
 function initSplash() {
     const splash = document.getElementById('splash');
@@ -133,15 +233,35 @@ async function init() {
         populateSiteContent();
 
         initSplash();
+        initGallerySelector();
 
-        // Load image manifest
-        const manifestResponse = await fetch(config.assets.path + config.assets.manifestFile);
-        imageManifest = await manifestResponse.json();
+        // Determine initial gallery from hash or config default
+        const hashGallery = getGalleryFromHash();
+        const initialGallery = hashGallery || config.galleries.default ||
+            Object.keys(config.galleries.items)[0];
+
+        // Load initial gallery manifest
+        const manifestUrl = `${config.assets.path}${initialGallery}/${config.assets.manifestFile}`;
+        const manifestResponse = await fetch(manifestUrl);
+        galleryManifests[initialGallery] = await manifestResponse.json();
+
+        // Set current gallery state
+        currentGallery = initialGallery;
+        imageManifest = galleryManifests[initialGallery];
+
+        // Update URL hash if not already set
+        if (!hashGallery) {
+            window.location.hash = `gallery=${initialGallery}`;
+        }
+
+        // Update selector label
+        updateGallerySelectorLabel();
 
         createGallery();
         initPanels();
         initLightbox();
         window.addEventListener('resize', handleResize);
+        window.addEventListener('hashchange', handleHashChange);
 
         // Logo click reshuffles gallery
         document.querySelector('.logo').addEventListener('click', (e) => {
@@ -230,20 +350,23 @@ function createGallery() {
         // Create picture element with responsive sources
         const picture = document.createElement('picture');
 
+        // Gallery-specific base path
+        const basePath = `${config.assets.path}${currentGallery}/`;
+
         // Mobile source (thumb)
         const sourceMobile = document.createElement('source');
         sourceMobile.media = `(max-width: ${config.mobileBreakpoint}px)`;
-        sourceMobile.dataset.srcset = `${config.assets.path}thumb/${imageData.id}.webp`;
+        sourceMobile.dataset.srcset = `${basePath}thumb/${imageData.id}.webp`;
         sourceMobile.type = 'image/webp';
 
         // Desktop source (medium)
         const sourceDesktop = document.createElement('source');
-        sourceDesktop.dataset.srcset = `${config.assets.path}medium/${imageData.id}.webp`;
+        sourceDesktop.dataset.srcset = `${basePath}medium/${imageData.id}.webp`;
         sourceDesktop.type = 'image/webp';
 
         // Fallback img
         const img = document.createElement('img');
-        img.dataset.src = `${config.assets.path}medium/${imageData.id}.webp`;
+        img.dataset.src = `${basePath}medium/${imageData.id}.webp`;
         img.alt = site.altTextTemplate;
         img.loading = 'lazy';
 
@@ -374,7 +497,7 @@ function initLightbox() {
 
     function showCurrent() {
         if (sequence.length === 0) return;
-        lightboxImg.src = `${config.assets.path}full/${sequence[sequenceIndex]}.webp`;
+        lightboxImg.src = `${config.assets.path}${currentGallery}/full/${sequence[sequenceIndex]}.webp`;
     }
 
     function showNext() {
