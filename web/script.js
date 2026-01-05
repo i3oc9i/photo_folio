@@ -101,8 +101,18 @@ function initSplash() {
 // Reshuffle gallery (called when clicking logo)
 function reshuffleGallery() {
     const gallery = document.getElementById('gallery');
+
+    // Remove revealed class to reset animation state
+    gallery.classList.remove('revealed');
     gallery.innerHTML = '';
+
+    // Recreate gallery
     createGallery();
+
+    // Trigger dealing animation after a brief delay
+    setTimeout(() => {
+        gallery.classList.add('revealed');
+    }, 50);
 }
 
 // Load config and manifest, then initialize
