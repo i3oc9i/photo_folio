@@ -5,12 +5,14 @@ A minimal photography portfolio built with **Svelte 5** and **Vite**. Features a
 ## Setup
 
 Requires:
+
 - [uv](https://docs.astral.sh/uv/) for Python package management
 - [Node.js](https://nodejs.org/) (v18+) for the Svelte frontend
 
 ```bash
-uv sync --extra dev      # Install Python dependencies (enables poe commands)
-uv run poe init          # Install Node.js dependencies
+uv venv             # Create virtual environment (first time only)
+uv sync --extra dev # Install Python dependencies (enables poe commands)
+uv run poe init     # Install Node.js dependencies
 ```
 
 ## Usage

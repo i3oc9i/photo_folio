@@ -10,8 +10,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ```bash
 # Setup
-uv sync --extra dev         # Install Python dependencies (enables poe commands)
-uv run poe init             # Install Node.js dependencies
+uv venv             # Create virtual environment (first time only)
+uv sync --extra dev # Install Python dependencies (enables poe commands)
+uv run poe init     # Install Node.js dependencies
 
 # Development
 uv run poe dev              # Process images + start dev server
