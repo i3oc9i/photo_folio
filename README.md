@@ -1,6 +1,6 @@
-# Ivano Coltellacci Photography Portfolio
+# photo_folio
 
-A minimal, modern photography portfolio website with optimized image loading and an organic grid layout.
+A minimal photography portfolio with organic grid layout, optimized image loading, and dark theme.
 
 ## Setup
 
@@ -55,3 +55,7 @@ See `web/config.json` for all available options.
 ## Deploy
 
 The `web/` directory is self-contained and can be deployed to any static host (GitHub Pages, Netlify, Vercel, etc.).
+
+## License
+
+MIT
