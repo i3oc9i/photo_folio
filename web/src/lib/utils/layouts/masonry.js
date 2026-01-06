@@ -50,6 +50,7 @@ export function computeMasonryPositions(images, breakpointLayout, galleryConfig,
       offsetX: 0,
       offsetY: 0,
       size,
+      height: photoHeight,
       rotation: 0,
       startRotation: 0,
       delay: i * dealingDelay,
@@ -66,17 +67,15 @@ export function computeMasonryPositions(images, breakpointLayout, galleryConfig,
 export function calculateMasonryHeight(positions, breakpointLayout, galleryConfig, layoutConfig) {
   if (positions.length === 0) return 100;
 
-  const { gutter = 1.5 } = layoutConfig || {};
+  const { bottomMargin = 1 } = galleryConfig || {};
 
   let maxBottom = 0;
   for (const pos of positions) {
-    // Estimate height based on typical aspect ratios
-    const photoHeight = breakpointLayout.photoSize * 1.2;
-    const bottom = pos.top + photoHeight;
+    const bottom = pos.top + pos.height;
     if (bottom > maxBottom) {
       maxBottom = bottom;
     }
   }
 
-  return maxBottom + 5;
+  return maxBottom + bottomMargin;
 }

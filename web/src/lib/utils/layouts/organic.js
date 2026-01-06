@@ -64,6 +64,7 @@ export function computeOrganicPositions(images, breakpointLayout, galleryConfig,
       offsetX,
       offsetY,
       size,
+      height: estimatedHeight,
       rotation: endRotation,
       startRotation,
       delay: i * dealingDelay,
@@ -77,16 +78,18 @@ export function computeOrganicPositions(images, breakpointLayout, galleryConfig,
 /**
  * Calculate total gallery height for organic layout
  */
-export function calculateOrganicHeight(positions, breakpointLayout) {
+export function calculateOrganicHeight(positions, breakpointLayout, galleryConfig) {
   if (positions.length === 0) return 100;
+
+  const { bottomMargin = 1 } = galleryConfig;
 
   let maxBottom = 0;
   for (const pos of positions) {
-    const estimatedBottom = pos.top + breakpointLayout.photoSize * 1.5;
-    if (estimatedBottom > maxBottom) {
-      maxBottom = estimatedBottom;
+    const bottom = pos.top + pos.height;
+    if (bottom > maxBottom) {
+      maxBottom = bottom;
     }
   }
 
-  return maxBottom + 5;
+  return maxBottom + bottomMargin;
 }
