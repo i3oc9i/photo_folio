@@ -1,9 +1,7 @@
 <script>
-  import { onMount } from 'svelte';
-
   let visible = $state(false);
 
-  onMount(() => {
+  $effect(() => {
     function handleScroll() {
       visible = window.scrollY > 500;
     }

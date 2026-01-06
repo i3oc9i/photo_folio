@@ -38,13 +38,13 @@ $effect(() => {
 
 ## Steps
 
-1. Open `web/src/lib/components/ScrollTopButton.svelte`
-2. Remove `onMount` import if no longer needed
-3. Replace `onMount(() => {...})` with `$effect(() => {...})`
-4. Test scroll behavior still works
+1. [x] Open `web/src/lib/components/ScrollTopButton.svelte`
+2. [x] Remove `onMount` import if no longer needed
+3. [x] Replace `onMount(() => {...})` with `$effect(() => {...})`
+4. [x] Test scroll behavior still works (build passes)
 
 ## Testing
 
-- [ ] Scroll down page - button should appear after 500px
-- [ ] Click button - should scroll to top
-- [ ] Button should hide when at top
+- [x] Scroll down page - button should appear after 500px
+- [x] Click button - should scroll to top
+- [x] Button should hide when at top
