@@ -7,6 +7,7 @@ Instructions for Claude Code when working with this repository.
 1. **Never commit automatically** - Only commit when explicitly requested.
 2. **Update technical documentation** - After significant technical changes, update relevant documentation in `docs/`.
 3. **Update README.md** - After changes affecting configuration or usage.
+4. **Feature workflow** - For non-trivial changes, create a feature file in `features/backlog/` before implementing. See `features/README.md` for workflow.
 
 ## Project Summary
 
@@ -22,6 +23,7 @@ Photography portfolio: **Svelte 5 + Vite** (frontend) + **Python** (image proces
 | `web/public/theme.json` | Theme/styling config |
 | `web/src/lib/` | Svelte components, stores, utils |
 | `src/gallery_builder/` | Python image processing |
+| `features/` | Feature planning files (backlog → in-progress → done) |
 
 ## Commands
 
