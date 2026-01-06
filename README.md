@@ -1,6 +1,6 @@
 # photo_folio
 
-A minimal photography portfolio built with **Svelte 5** and **Vite**. Features an organic grid layout, optimized image loading, and dark theme.
+A minimal photography portfolio built with **Svelte 5** and **Vite**. Features multiple layout styles (organic grid, masonry), optimized image loading, and dark theme.
 
 ## Setup
 
@@ -69,9 +69,10 @@ Edit `web/public/site.json + theme.json` to customize the site:
   },
   "galleries": {
     "default": "bw",
+    "defaultLayout": "organic",
     "items": {
-      "bw": { "displayName": "Black & White", "order": 1 },
-      "colors": { "displayName": "Colors", "order": 2 }
+      "bw": { "displayName": "Black & White", "order": 1, "layout": "organic" },
+      "colors": { "displayName": "Colors", "order": 2, "layout": "masonry" }
     }
   },
   "panels": {
@@ -91,6 +92,10 @@ Edit `web/public/site.json + theme.json` to customize the site:
   }
 }
 ```
+
+**Layout types:**
+- `organic` - Scattered photos with random offsets and rotation (default)
+- `masonry` - Pinterest-style clean grid layout
 
 See `web/public/site.json + theme.json` for all available options.
 

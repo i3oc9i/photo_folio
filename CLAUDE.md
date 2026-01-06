@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-**photo_folio** is a photography portfolio website built with **Svelte 5** and **Vite**, with Python-based image preprocessing. The site displays photos using an **organic grid** layout (grid-based positioning with random offsets for a natural "scattered on table" feel) with a dark theme. Supports **multiple galleries** based on input subdirectories.
+**photo_folio** is a photography portfolio website built with **Svelte 5** and **Vite**, with Python-based image preprocessing. The site displays photos using configurable **layout styles** (organic grid or masonry) with a dark theme. Supports **multiple galleries** based on input subdirectories, each with its own layout style.
 
 ## Commands
 
@@ -58,7 +58,11 @@ web/
 │   │   │   └── lazyload.js  # IntersectionObserver action
 │   │   ├── utils/
 │   │   │   ├── shuffle.js   # Fisher-Yates shuffle
-│   │   │   └── positions.js # Grid position calculations
+│   │   │   ├── positions.js # Legacy wrapper for layouts
+│   │   │   └── layouts/     # Layout algorithms
+│   │   │       ├── index.js   # Layout registry
+│   │   │       ├── organic.js # Scattered photos layout
+│   │   │       └── masonry.js # Pinterest-style layout
 │   │   └── styles/
 │   │       └── global.css   # Global styles + CSS custom properties
 │   ├── App.svelte           # Root component
@@ -119,6 +123,57 @@ gallery/
 
 **Gallery selector**: Dropdown in secondary header bar allows switching galleries. URL hash (`#gallery=bw`) enables bookmarking specific galleries.
 
+## Layout System
+
+Each gallery can use a different layout style. Configured via `site.json`:
+
+```json
+{
+  "galleries": {
+    "defaultLayout": "organic",
+    "items": {
+      "portraits": { "displayName": "Portraits", "order": 1, "layout": "organic" },
+      "street": { "displayName": "Street", "order": 2, "layout": "masonry" }
+    }
+  }
+}
+```
+
+### Available Layouts
+
+| Layout    | Description                                                    | Config (`theme.json`)                     |
+| --------- | -------------------------------------------------------------- | ----------------------------------------- |
+| `organic` | Scattered photos with random offsets/rotation ("table" feel)   | `randomOffset`, `rotation`, `dealingRotation`, `dealingDelay` |
+| `masonry` | Pinterest-style clean grid, no rotation                        | `gutter`, `dealingDelay`                  |
+
+Layout-specific parameters are in `theme.json` under `gallery.layouts`:
+
+```json
+{
+  "gallery": {
+    "layouts": {
+      "organic": {
+        "randomOffset": { "min": -3, "max": 3 },
+        "rotation": { "min": -1, "max": 1 },
+        "dealingRotation": { "min": -30, "max": 30 },
+        "dealingDelay": 0.03
+      },
+      "masonry": {
+        "gutter": 1.5,
+        "dealingDelay": 0.02
+      }
+    }
+  }
+}
+```
+
+### Adding New Layouts
+
+1. Create `web/src/lib/utils/layouts/<name>.js` with `compute<Name>Positions()` and `calculate<Name>Height()`
+2. Register in `layouts/index.js`
+3. Add config in `theme.json` under `gallery.layouts.<name>`
+4. Add CSS styles in `global.css` (`.photo.layout-<name>`, `.gallery.layout-<name>`)
+
 ## Configuration System
 
 All configurable items are in `web/public/site.json + theme.json`. Loaded at startup via the `config` store:
@@ -130,18 +185,19 @@ All configurable items are in `web/public/site.json + theme.json`. Loaded at sta
 
 ### Config Structure
 
-| Section             | Purpose                                                                        |
-| ------------------- | ------------------------------------------------------------------------------ |
-| `site`              | Name, title, subtitle, button text, alt text template                          |
-| `galleries`         | Default gallery, items with displayName and order (auto-updated by process.py) |
-| `assets`            | Path to assets folder, manifest filename                                       |
-| `gallery`           | Eager load count, margins, random offsets, rotation ranges                     |
-| `breakpoints`       | Array of responsive layouts (minWidth, columns, photoSize)                     |
-| `mobileBreakpoint`  | Width threshold for mobile image sources                                       |
-| `panels`            | About/Credits content, contact info, copyright                                 |
-| `theme.colors`      | All color values (background, text variants, borders)                          |
-| `theme.fonts`       | Heading and body font families                                                 |
-| `theme.transitions` | Duration values for animations                                                 |
+| Section             | Purpose                                                                              |
+| ------------------- | ------------------------------------------------------------------------------------ |
+| `site`              | Name, title, subtitle, button text, alt text template                                |
+| `galleries`         | Default gallery, defaultLayout, items with displayName, order, layout (per-gallery)  |
+| `assets`            | Path to assets folder, manifest filename                                             |
+| `gallery`           | Eager load count, margins, and nested `layouts` config for each layout type          |
+| `gallery.layouts`   | Per-layout settings: `organic` (offsets, rotation), `masonry` (gutter)               |
+| `breakpoints`       | Array of responsive layouts (minWidth, columns, photoSize)                           |
+| `mobileBreakpoint`  | Width threshold for mobile image sources                                             |
+| `panels`            | About/Credits content, contact info, copyright                                       |
+| `theme.colors`      | All color values (background, text variants, borders)                                |
+| `theme.fonts`       | Heading and body font families                                                       |
+| `theme.transitions` | Duration values for animations                                                       |
 
 ## Asset Sizes
 
