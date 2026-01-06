@@ -61,20 +61,20 @@ const scaledHeight = photoHeight * scale;
 
 ## Implementation Steps
 
-1. [ ] Add `scaleRandom` config to `theme.json` with default `{ min: 1, max: 1 }`
-2. [ ] In `masonry.js`, extract `scaleRandom` from `layoutConfig` with fallback defaults
-3. [ ] Add deterministic `getPhotoScale(index, min, max)` function
-4. [ ] Apply scale factor to `photoWidth` and `photoHeight` calculations
-5. [ ] Adjust `left` position to center scaled photos within column
-6. [ ] Update `docs/layout-masonry.md` with new config option and examples
+1. [x] Add `scaleRandom` config to `theme.json` with default `{ min: 1, max: 1 }`
+2. [x] In `masonry.js`, extract `scaleRandom` from `layoutConfig` with fallback defaults
+3. [x] Add deterministic `getPhotoScale(index, min, max)` function
+4. [x] Apply scale factor to `photoWidth` and `photoHeight` calculations
+5. [x] Adjust `left` position to center scaled photos within column
+6. [x] Update `docs/layout-masonry.md` with new config option and examples
 
 ## Testing
 
-- [ ] Verify default config (min: 1, max: 1) produces identical layout to current
-- [ ] Test with various ranges (0.9-1.1, 0.95-1.05) - visual check for variety
-- [ ] Confirm layout is stable across page reloads (deterministic)
-- [ ] Check responsive behavior across breakpoints
-- [ ] Verify scaled photos don't overlap or create gaps
+- [x] Verify default config (min: 1, max: 1) produces identical layout to current
+- [x] Test with various ranges (0.9-1.1, 0.95-1.05) - visual check for variety
+- [x] Confirm layout is stable across page reloads (deterministic)
+- [x] Check responsive behavior across breakpoints
+- [x] Verify scaled photos don't overlap or create gaps
 
 ## Dependencies
 

@@ -20,8 +20,9 @@
         "spacing": 2
       },
       "masonry": {
-        "gutter": 1.5,
-        "dealingDelay": 0.03
+        "gutter": 1.0,
+        "dealingDelay": 0.03,
+        "scaleRandom": { "min": 1.1, "max": 2.1 }
       }
     }
   },

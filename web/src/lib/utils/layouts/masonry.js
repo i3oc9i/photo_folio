@@ -1,19 +1,36 @@
 /**
+ * Deterministic scale factor based on photo index
+ * Uses sine-based hash for well-distributed values across consecutive indices
+ */
+function getPhotoScale(index, min, max) {
+  if (min === max) return min;
+  // Sine-based hash produces well-distributed values for any index
+  const seed = Math.abs(Math.sin(index * 12.9898 + 78.233) * 43758.5453) % 1;
+  return min + seed * (max - min);
+}
+
+/**
  * Compute positions for masonry (Pinterest-style) layout
- * Clean, aligned grid with preserved aspect ratios and no random offsets
+ * Clean, aligned grid with preserved aspect ratios and optional random scaling
  */
 export function computeMasonryPositions(images, breakpointLayout, galleryConfig, layoutConfig) {
   const positions = [];
   const { columns, photoSize, squareSize } = breakpointLayout;
   const { topMargin, leftMargin = 1, rightMargin = 1 } = galleryConfig;
-  const { gutter = 1.5, dealingDelay = 0.02 } = layoutConfig;
+  const { gutter = 1.5, dealingDelay = 0.02, scaleRandom = { min: 1, max: 1 } } = layoutConfig;
+
+  // Normalize scale values (swap if min > max)
+  const scaleMin = Math.min(scaleRandom.min, scaleRandom.max);
+  const scaleMax = Math.max(scaleRandom.min, scaleRandom.max);
 
   const availableWidth = 100 - leftMargin - rightMargin;
   const columnWidth = availableWidth / columns;
   const columnHeights = new Array(columns).fill(0);
 
-  // Calculate actual photo width based on column width minus gutter
-  const photoWidth = columnWidth - gutter;
+  // Max photo width (column minus gutter) - this is what scale=max produces
+  const maxPhotoWidth = columnWidth - gutter;
+  // Base width: at max scale, photo fills maxPhotoWidth; at min scale, it's smaller
+  const basePhotoWidth = maxPhotoWidth / scaleMax;
 
   for (let i = 0; i < images.length; i++) {
     const image = images[i];
@@ -28,24 +45,26 @@ export function computeMasonryPositions(images, breakpointLayout, galleryConfig,
       }
     }
 
-    // Position centered within column (no random offset)
-    const left = leftMargin + shortestColumn * columnWidth + (gutter / 2);
-    const top = topMargin + columnHeights[shortestColumn];
-
-    // Use calculated photo width for masonry (ignores breakpoint photoSize)
-    const size = photoWidth;
+    // Apply deterministic scale factor
+    const scale = getPhotoScale(i, scaleMin, scaleMax);
+    const scaledWidth = basePhotoWidth * scale;
 
     // Calculate height based on aspect ratio
-    let photoHeight;
+    let scaledHeight;
     if (image.orientation === 'landscape') {
-      photoHeight = size * 0.67;
+      scaledHeight = scaledWidth * 0.67;
     } else if (image.orientation === 'portrait') {
-      photoHeight = size * 1.5;
+      scaledHeight = scaledWidth * 1.5;
     } else {
-      photoHeight = size;
+      scaledHeight = scaledWidth;
     }
 
-    columnHeights[shortestColumn] += photoHeight + gutter;
+    // Center scaled photo within column slot
+    const centerOffset = (maxPhotoWidth - scaledWidth) / 2;
+    const left = leftMargin + shortestColumn * columnWidth + (gutter / 2) + centerOffset;
+    const top = topMargin + columnHeights[shortestColumn];
+
+    columnHeights[shortestColumn] += scaledHeight + gutter;
 
     positions.push({
       id: image.id,
@@ -53,9 +72,9 @@ export function computeMasonryPositions(images, breakpointLayout, galleryConfig,
       top,
       offsetX: 0,
       offsetY: 0,
-      size,
-      width: photoWidth,
-      height: photoHeight,
+      size: scaledWidth,
+      width: scaledWidth,
+      height: scaledHeight,
       rotation: 0,
       startRotation: 0,
       delay: i * dealingDelay,

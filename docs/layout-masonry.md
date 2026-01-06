@@ -136,6 +136,34 @@ export function computeMasonryPositions(images, breakpointLayout, galleryConfig,
 |-----------|------|---------|-------------|
 | `gutter` | number | 1.5 | Space between photos in vw units |
 | `dealingDelay` | number | 0.03 | Delay between each photo's fade-in (seconds) |
+| `scaleRandom` | object | `{ min: 1, max: 1 }` | Random scale range for photo sizing |
+
+### Random Scale
+
+The `scaleRandom` option adds subtle size variation to photos for a more organic look:
+
+```json
+"masonry": {
+  "gutter": 1.5,
+  "dealingDelay": 0.03,
+  "scaleRandom": { "min": 0.8, "max": 1 }
+}
+```
+
+| Value | Effect |
+|-------|--------|
+| `min: 1, max: 1` | No scaling (default, uniform grid) |
+| `min: 0.9, max: 1` | Subtle variation (90% to 100%) |
+| `min: 0.8, max: 1` | Noticeable variation (80% to 100%) |
+| `min: 0.7, max: 1` | Strong variation (70% to 100%) |
+
+**Behavior:**
+- Scale values must be **≤ 1** (photos scale down from normal size)
+- `1.0` = full column width, smaller values = proportionally smaller
+- Scale is **deterministic** - same photo always gets same scale (based on index)
+- Applies to both width and height **proportionally** (aspect ratio preserved)
+- Scaled photos are **centered** within their column slot
+- Values > 1 are clamped to 1 to prevent overlap
 
 ## Comparison with Organic Layout
 
