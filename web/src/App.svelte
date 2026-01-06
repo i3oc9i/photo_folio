@@ -14,12 +14,12 @@
   // Stores
   import { config as configStore, loadConfig, applyTheme } from '$lib/stores/config.js';
   import {
-    currentGalleryId,
-    currentManifest,
+    getCurrentGalleryId,
+    getCurrentManifest,
     switchGallery,
     initGallery,
     getGalleryFromHash
-  } from '$lib/stores/gallery.js';
+  } from '$lib/stores/gallery.svelte.js';
 
   // State
   let config = $state(null);
@@ -38,24 +38,14 @@
   // Gallery component reference (using $state to silence warning, though not strictly reactive)
   let galleryComponent = $state(null);
 
-  // Store subscriptions (runes mode doesn't auto-subscribe with $)
-  let galleryId = $state(null);
-  let manifest = $state(null);
+  // Reactive state from gallery store (accessed via getters in $derived)
+  let galleryId = $derived(getCurrentGalleryId());
+  let manifest = $derived(getCurrentManifest());
 
   // Gallery path for lightbox
   let galleryPath = $derived(
     config && galleryId ? `${config.assets.path}${galleryId}/` : ''
   );
-
-  // Store subscriptions via $effect
-  $effect(() => {
-    const unsubGalleryId = currentGalleryId.subscribe(v => galleryId = v);
-    const unsubManifest = currentManifest.subscribe(v => manifest = v);
-    return () => {
-      unsubGalleryId();
-      unsubManifest();
-    };
-  });
 
   // Event listeners via $effect
   $effect(() => {
