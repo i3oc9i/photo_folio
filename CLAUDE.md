@@ -18,6 +18,7 @@ uv run poe init     # Install Node.js dependencies
 uv run poe dev              # Process images + start dev server
 uv run poe dev:assets       # Process images from gallery/ → web/public/assets/gallery/
 uv run poe dev:assets:force # Reprocess all images (ignore cache)
+# Image processing uses -j 8 by default. Override: build-gallery -j 0 (auto) or -j N
 uv run poe dev:serve        # Start Vite dev server at http://localhost:8080
 uv run poe dev:build        # Production build → web/dist/
 uv run poe dev:preview      # Preview production build
