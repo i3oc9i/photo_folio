@@ -11,7 +11,8 @@ uv.lock
 gallery/
 
 # Generated assets (rebuild with: poe assets)
-web/public/assets/
+web/public/assets/*
+!web/public/assets/socials/
 
 # Node.js / Vite
 node_modules/

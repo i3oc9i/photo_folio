@@ -112,8 +112,11 @@ Configuration is split into two files in `web/public/`:
       "title": "About",
       "paragraphs": ["Your bio paragraph 1...", "Paragraph 2..."],
       "contact": {
+        "label": "Contact",
         "email": "you@example.com",
-        "instagram": "yourhandle"
+        "instagram": "@yourhandle",
+        "twitter": "",
+        "facebook": ""
       }
     },
     "credits": {
@@ -121,12 +124,28 @@ Configuration is split into two files in `web/public/`:
       "copyright": {
         "year": 2024,
         "name": "Your Name"
-      },
-      "credits": ["Built with Svelte"]
+      }
     }
   }
 }
 ```
+
+### Contact Links
+
+The About panel displays social icons for any configured contact links. Only links with values are shown.
+
+| Field       | Format                | Example                    |
+| ----------- | --------------------- | -------------------------- |
+| `email`     | Email address         | `you@example.com`          |
+| `instagram` | Handle or URL         | `@yourhandle` or full URL  |
+| `twitter`   | Handle or URL         | `@yourhandle` or full URL  |
+| `facebook`  | Username or URL       | `yourpage` or full URL     |
+| `linkedin`  | Username or URL       | `yourprofile` or full URL  |
+| `youtube`   | Channel handle or URL | `@yourchannel` or full URL |
+| `pinterest` | Username or URL       | `yourprofile` or full URL  |
+| `behance`   | Username or URL       | `yourprofile` or full URL  |
+
+Empty (`""`) fields are hidden. Handles are auto-converted to URLs.
 
 ### theme.json
 
@@ -155,14 +174,14 @@ Configuration is split into two files in `web/public/`:
 
 Global parameters in `theme.json` under `gallery`:
 
-| Parameter | Unit | Description |
-| --------- | ---- | ----------- |
+| Parameter        | Unit  | Description                                    |
+| ---------------- | ----- | ---------------------------------------------- |
 | `eagerLoadCount` | count | Images to load immediately before lazy loading |
-| `topMargin` | vw | Space between headers and first row |
-| `bottomMargin` | vw | Space between last row and footer |
-| `leftMargin` | vw | Space from left edge to photos |
-| `rightMargin` | vw | Space from right edge to photos |
-| `lazyLoadMargin` | px | Distance from viewport to start loading |
+| `topMargin`      | vw    | Space between headers and first row            |
+| `bottomMargin`   | vw    | Space between last row and footer              |
+| `leftMargin`     | vw    | Space from left edge to photos                 |
+| `rightMargin`    | vw    | Space from right edge to photos                |
+| `lazyLoadMargin` | px    | Distance from viewport to start loading        |
 
 ## Layouts
 
@@ -181,14 +200,14 @@ Scattered photos with random offsets and rotation - like photos spread on a tabl
 
 Configuration in `theme.json` under `gallery.layouts.organic`:
 
-| Parameter | Type | Description |
-| --------- | ---- | ----------- |
-| `randomOffset.min/max` | vw | Random X/Y offset range (negative = left/up) |
-| `rotation.min/max` | degrees | Final rotation range (subtle tilt effect) |
-| `zIndex.min/max` | integer | Stacking order (higher = on top, creates depth) |
-| `dealingRotation.min/max` | degrees | Initial rotation for dealing animation |
-| `dealingDelay` | seconds | Delay between photos appearing |
-| `spacing` | vw | Vertical spacing between photos |
+| Parameter                 | Type    | Description                                     |
+| ------------------------- | ------- | ----------------------------------------------- |
+| `randomOffset.min/max`    | vw      | Random X/Y offset range (negative = left/up)    |
+| `rotation.min/max`        | degrees | Final rotation range (subtle tilt effect)       |
+| `zIndex.min/max`          | integer | Stacking order (higher = on top, creates depth) |
+| `dealingRotation.min/max` | degrees | Initial rotation for dealing animation          |
+| `dealingDelay`            | seconds | Delay between photos appearing                  |
+| `spacing`                 | vw      | Vertical spacing between photos                 |
 
 ### Masonry Layout
 
@@ -196,10 +215,10 @@ Pinterest-style clean grid layout, no rotation.
 
 Configuration in `theme.json` under `gallery.layouts.masonry`:
 
-| Parameter | Type | Description |
-| --------- | ---- | ----------- |
-| `gutter` | vw | Space between photos (horizontal and vertical) |
-| `dealingDelay` | seconds | Delay between photos appearing |
+| Parameter      | Type    | Description                                    |
+| -------------- | ------- | ---------------------------------------------- |
+| `gutter`       | vw      | Space between photos (horizontal and vertical) |
+| `dealingDelay` | seconds | Delay between photos appearing                 |
 
 ## Responsive Breakpoints
 
@@ -218,11 +237,11 @@ Gallery adapts columns based on screen width. Configure in `theme.json` under `b
 
 Images are processed into three sizes:
 
-| Size | Max Edge | Purpose |
-| ---- | -------- | ------- |
-| `thumb` | 400px | Mobile gallery view |
-| `medium` | 800px | Desktop gallery view |
-| `full` | 1600px | Lightbox (fullscreen) |
+| Size     | Max Edge | Purpose               |
+| -------- | -------- | --------------------- |
+| `thumb`  | 400px    | Mobile gallery view   |
+| `medium` | 800px    | Desktop gallery view  |
+| `full`   | 1600px   | Lightbox (fullscreen) |
 
 Images are resized so the longest edge matches the max size, preserving aspect ratio.
 

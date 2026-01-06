@@ -509,6 +509,46 @@ body {
     border-top: 1px solid var(--color-border-light);
 }
 
+.contact-label {
+    margin-bottom: 1rem;
+    color: var(--color-text-dim);
+}
+
+.social-links {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.social-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    border: none;
+    border-radius: 50%;
+    background-color: var(--color-border-light);
+    transition: background-color var(--transition-hover) ease, transform var(--transition-hover) ease;
+}
+
+.social-link:hover {
+    background-color: var(--color-text-dimmer);
+    transform: scale(1.1);
+}
+
+.social-icon {
+    width: 1.25rem;
+    height: 1.25rem;
+    filter: invert(1);
+    opacity: 0.9;
+    transition: opacity var(--transition-hover) ease;
+}
+
+.social-link:hover .social-icon {
+    opacity: 1;
+}
+
 /* Overlay */
 .overlay {
     position: fixed;
