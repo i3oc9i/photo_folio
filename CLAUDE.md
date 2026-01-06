@@ -147,11 +147,13 @@ Each gallery can use a different layout style. Configured via `site.json`:
 | `organic` | Scattered photos with random offsets/rotation ("table" feel)   | `randomOffset`, `rotation`, `dealingRotation`, `dealingDelay` |
 | `masonry` | Pinterest-style clean grid, no rotation                        | `gutter`, `dealingDelay`                  |
 
-Layout-specific parameters are in `theme.json` under `gallery.layouts`:
+Gallery and layout parameters are in `theme.json` under `gallery`:
 
 ```json
 {
   "gallery": {
+    "topMargin": 1,
+    "bottomMargin": 1,
     "layouts": {
       "organic": {
         "randomOffset": { "min": -3, "max": 3 },
@@ -167,6 +169,9 @@ Layout-specific parameters are in `theme.json` under `gallery.layouts`:
   }
 }
 ```
+
+- `topMargin`: Space between headers and first row of photos (in vw units)
+- `bottomMargin`: Space between last row of photos and footer (in vw units)
 
 ### Adding New Layouts
 
@@ -191,7 +196,7 @@ All configurable items are in `web/public/site.json + theme.json`. Loaded at sta
 | `site`              | Name, title, subtitle, button text, alt text template                                |
 | `galleries`         | Default gallery, defaultLayout, items with displayName, order, layout (per-gallery)  |
 | `assets`            | Path to assets folder, manifest filename                                             |
-| `gallery`           | Eager load count, margins, and nested `layouts` config for each layout type          |
+| `gallery`           | Eager load count, topMargin/bottomMargin (vw), and nested `layouts` config           |
 | `gallery.layouts`   | Per-layout settings: `organic` (offsets, rotation), `masonry` (gutter)               |
 | `breakpoints`       | Array of responsive layouts (minWidth, columns, photoSize)                           |
 | `mobileBreakpoint`  | Width threshold for mobile image sources                                             |
