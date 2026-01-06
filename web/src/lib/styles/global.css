@@ -376,6 +376,22 @@ body {
     z-index: 50 !important;
 }
 
+/* Organic photos use calculated width from layout */
+.photo.layout-organic img {
+    width: var(--photo-width) !important;
+    height: auto !important;
+}
+
+.photo.layout-organic.portrait img {
+    width: auto !important;
+    height: var(--photo-width) !important;
+}
+
+.photo.layout-organic.square img {
+    width: var(--photo-width) !important;
+    height: var(--photo-width) !important;
+}
+
 /* ========================================
    LAYOUT: Masonry (Pinterest-style)
    Clean, aligned grid without rotation

@@ -142,36 +142,72 @@ Each gallery can use a different layout style. Configured via `site.json`:
 
 ### Available Layouts
 
-| Layout    | Description                                                    | Config (`theme.json`)                     |
-| --------- | -------------------------------------------------------------- | ----------------------------------------- |
-| `organic` | Scattered photos with random offsets/rotation ("table" feel)   | `randomOffset`, `rotation`, `dealingRotation`, `dealingDelay` |
-| `masonry` | Pinterest-style clean grid, no rotation                        | `gutter`, `dealingDelay`                  |
+| Layout    | Description                                                    |
+| --------- | -------------------------------------------------------------- |
+| `organic` | Scattered photos with random offsets/rotation ("table" feel)   |
+| `masonry` | Pinterest-style clean grid, no rotation                        |
 
-Gallery and layout parameters are in `theme.json` under `gallery`:
+### Gallery Configuration (`theme.json`)
+
+All gallery parameters are in `theme.json` under `gallery`:
 
 ```json
 {
   "gallery": {
+    "eagerLoadCount": 12,
     "topMargin": 1,
     "bottomMargin": 1,
+    "leftMargin": 3,
+    "rightMargin": 3,
+    "lazyLoadMargin": 800,
     "layouts": {
       "organic": {
         "randomOffset": { "min": -3, "max": 3 },
-        "rotation": { "min": -1, "max": 1 },
+        "rotation": { "min": -5, "max": 5 },
+        "zIndex": { "min": 1, "max": 10 },
         "dealingRotation": { "min": -30, "max": 30 },
-        "dealingDelay": 0.03
+        "dealingDelay": 0.03,
+        "spacing": 2
       },
       "masonry": {
         "gutter": 1.5,
-        "dealingDelay": 0.02
+        "dealingDelay": 0.03
       }
     }
   }
 }
 ```
 
-- `topMargin`: Space between headers and first row of photos (in vw units)
-- `bottomMargin`: Space between last row of photos and footer (in vw units)
+#### Global Gallery Parameters
+
+| Parameter | Unit | Description |
+| --------- | ---- | ----------- |
+| `eagerLoadCount` | count | Number of images to load immediately (before lazy loading kicks in) |
+| `topMargin` | vw | Space between headers and first row of photos |
+| `bottomMargin` | vw | Space between last row of photos and footer |
+| `leftMargin` | vw | Space from left edge of viewport to photos |
+| `rightMargin` | vw | Space from right edge of viewport to photos |
+| `lazyLoadMargin` | px | Distance from viewport to start loading images (IntersectionObserver rootMargin) |
+
+#### Organic Layout Parameters
+
+| Parameter | Type | Description |
+| --------- | ---- | ----------- |
+| `randomOffset.min/max` | vw | Random X/Y offset range for scattered positioning (negative = left/up, positive = right/down) |
+| `rotation.min/max` | degrees | Final rotation range for each photo (subtle tilt effect) |
+| `zIndex.min/max` | integer | Random z-index range for photo stacking (higher = on top, creates depth) |
+| `dealingRotation.min/max` | degrees | Initial rotation for dealing animation (larger = more dramatic spin) |
+| `dealingDelay` | seconds | Delay between each photo appearing (cascading effect) |
+| `spacing` | vw | Vertical spacing between photos in column (also affects calculated photo width) |
+
+#### Masonry Layout Parameters
+
+| Parameter | Type | Description |
+| --------- | ---- | ----------- |
+| `gutter` | vw | Space between photos (both horizontal and vertical) |
+| `dealingDelay` | seconds | Delay between each photo appearing (cascading effect) |
+
+**Note:** Both layouts calculate photo width dynamically based on available space (`100 - leftMargin - rightMargin`) divided by columns, minus spacing/gutter. This ensures photos never overflow regardless of margin settings.
 
 ### Adding New Layouts
 
@@ -196,9 +232,9 @@ All configurable items are in `web/public/site.json + theme.json`. Loaded at sta
 | `site`              | Name, title, subtitle, button text, alt text template                                |
 | `galleries`         | Default gallery, defaultLayout, items with displayName, order, layout (per-gallery)  |
 | `assets`            | Path to assets folder, manifest filename                                             |
-| `gallery`           | Eager load count, topMargin/bottomMargin (vw), and nested `layouts` config           |
-| `gallery.layouts`   | Per-layout settings: `organic` (offsets, rotation), `masonry` (gutter)               |
-| `breakpoints`       | Array of responsive layouts (minWidth, columns, photoSize)                           |
+| `gallery`           | Margins, eager load count, lazy load margin, and nested `layouts` config             |
+| `gallery.layouts`   | Per-layout settings: `organic` (offsets, rotation, zIndex, spacing), `masonry` (gutter) |
+| `breakpoints`       | Array of responsive layouts (minWidth, columns, photoSize, squareSize)               |
 | `mobileBreakpoint`  | Width threshold for mobile image sources                                             |
 | `panels`            | About/Credits content, contact info, copyright                                       |
 | `theme.colors`      | All color values (background, text variants, borders)                                |

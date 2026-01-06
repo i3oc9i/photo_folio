@@ -8,11 +8,14 @@ export function computeOrganicPositions(images, breakpointLayout, galleryConfig,
   const positions = [];
   const { columns, photoSize, squareSize } = breakpointLayout;
   const { topMargin, leftMargin = 1, rightMargin = 1 } = galleryConfig;
-  const { randomOffset, rotation, dealingRotation, dealingDelay, spacing = 2 } = layoutConfig;
+  const { randomOffset, rotation, dealingRotation, dealingDelay, spacing = 2, zIndex = { min: 1, max: 10 } } = layoutConfig;
 
   const availableWidth = 100 - leftMargin - rightMargin;
   const columnWidth = availableWidth / columns;
   const columnHeights = new Array(columns).fill(0);
+
+  // Calculate actual photo width based on column width minus spacing
+  const photoWidth = columnWidth - spacing;
 
   // Account for negative random offset so topMargin is always respected as minimum clear space
   const offsetBuffer = Math.abs(randomOffset.min);
@@ -43,17 +46,20 @@ export function computeOrganicPositions(images, breakpointLayout, galleryConfig,
     const endRotation = randomInRange(rotation.min, rotation.max);
     const startRotation = randomInRange(dealingRotation.min, dealingRotation.max);
 
-    // Determine size based on orientation
-    const size = image.orientation === 'square' ? squareSize : photoSize;
+    // Use calculated photo width for all orientations
+    const size = photoWidth;
 
-    // Estimate height for column tracking
+    // Generate random z-index for photo stacking effect
+    const photoZIndex = Math.floor(randomInRange(zIndex.min, zIndex.max + 1));
+
+    // Estimate height for column tracking based on orientation
     let estimatedHeight;
     if (image.orientation === 'landscape') {
-      estimatedHeight = size * 0.67;
+      estimatedHeight = photoWidth * 0.67;
     } else if (image.orientation === 'portrait') {
-      estimatedHeight = size * 1.5;
+      estimatedHeight = photoWidth * 1.5;
     } else {
-      estimatedHeight = size;
+      estimatedHeight = photoWidth;
     }
 
     columnHeights[shortestColumn] += estimatedHeight + spacing;
@@ -65,10 +71,12 @@ export function computeOrganicPositions(images, breakpointLayout, galleryConfig,
       offsetX,
       offsetY,
       size,
+      width: photoWidth,
       height: estimatedHeight,
       rotation: endRotation,
       startRotation,
       delay: i * dealingDelay,
+      zIndex: photoZIndex,
       layoutType: 'organic'
     });
   }
