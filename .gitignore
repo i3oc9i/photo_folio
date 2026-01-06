@@ -33,4 +33,6 @@ yarn-error.log*
 .idea/
 .vscode/
 *.swp
-.claude/
+# Claude Code (keep commands, ignore local settings)
+.claude/*
+!.claude/commands/
