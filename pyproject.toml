@@ -44,8 +44,8 @@ init = { shell = "cd web && npm install", help = "Install Node dependencies" }
 
 # Dev
 dev = { sequence = ["dev:assets", "dev:serve"], help = "Build assets and start dev server" }
-"dev:assets" = { cmd = "build-gallery", help = "Build gallery assets from source photos" }
-"dev:assets:force" = { cmd = "build-gallery --force", help = "Force rebuild all assets" }
+"dev:assets" = { cmd = "build-gallery -j 8", help = "Build gallery assets from source photos" }
+"dev:assets:force" = { cmd = "build-gallery --force -j 8", help = "Force rebuild all assets" }
 "dev:serve" = { shell = "cd web && npm run dev", help = "Start Vite dev server" }
 "dev:preview" = { shell = "cd web && npm run preview", help = "Preview production build" }
 "dev:build" = { shell = "cd web && npm run build", help = "Build for production" }

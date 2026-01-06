@@ -6,16 +6,18 @@ Converts images from source/photos/ to optimized WebP format
 with multiple sizes for responsive loading.
 
 Usage:
-    uv run process-photos [--force]
+    uv run process-photos [--force] [-j JOBS]
 
 Options:
-    --force     Reprocess all images, even if unchanged
+    --force         Reprocess all images, even if unchanged
+    -j, --jobs N    Number of parallel jobs (default: 1, 0 = auto)
 """
 
 import argparse
 import json
 import os
 import sys
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -238,7 +240,8 @@ def process_gallery(
     gallery_name: str,
     source_dir: Path,
     output_dir: Path,
-    force: bool = False
+    force: bool = False,
+    jobs: int = 1
 ) -> tuple[int, int, int]:
     """Process a single gallery. Returns (processed, skipped, errors) counts."""
     # Create output directories
@@ -271,27 +274,40 @@ def process_gallery(
         with open(manifest_path) as f:
             existing_manifest = json.load(f)
 
+    # Build valid_ids first (needed for orphan cleanup)
     for source_path in source_images:
-        base_name = source_path.stem
-        valid_ids.add(base_name)
+        valid_ids.add(source_path.stem)
 
-        status, data = process_image(source_path, base_name, output_dir, force)
+    # Determine worker count
+    max_workers = jobs if jobs > 0 else (os.cpu_count() or 4)
 
-        if status == "processed":
-            print(f"  ✓ {source_path.name} → thumb, medium, full")
-            processed += 1
-            manifest_images.append(data)
-        elif status == "skipped":
-            print(f"  · {source_path.name} (unchanged)")
-            skipped += 1
-            # Use existing manifest data
-            for img in existing_manifest.get("images", []):
-                if img["id"] == base_name:
-                    manifest_images.append(img)
-                    break
-        else:
-            print(f"  ✗ {source_path.name} - Error: {data}")
-            errors += 1
+    # Process images (parallel or sequential based on jobs)
+    with ThreadPoolExecutor(max_workers=max_workers) as executor:
+        futures = {
+            executor.submit(process_image, path, path.stem, output_dir, force): path
+            for path in source_images
+        }
+
+        for future in as_completed(futures):
+            source_path = futures[future]
+            base_name = source_path.stem
+            status, data = future.result()
+
+            if status == "processed":
+                print(f"  ✓ {source_path.name} → thumb, medium, full")
+                processed += 1
+                manifest_images.append(data)
+            elif status == "skipped":
+                print(f"  · {source_path.name} (unchanged)")
+                skipped += 1
+                # Use existing manifest data
+                for img in existing_manifest.get("images", []):
+                    if img["id"] == base_name:
+                        manifest_images.append(img)
+                        break
+            else:
+                print(f"  ✗ {source_path.name} - Error: {data}")
+                errors += 1
 
     # Clean orphaned files
     removed = clean_orphans(output_dir, valid_ids)
@@ -323,6 +339,12 @@ def main() -> int:
         "--force",
         action="store_true",
         help="Reprocess all images"
+    )
+    parser.add_argument(
+        "-j", "--jobs",
+        type=int,
+        default=1,
+        help="Number of parallel jobs (default: 1, use 0 for auto based on CPU count)"
     )
     args = parser.parse_args()
 
@@ -373,7 +395,7 @@ def main() -> int:
         print(f"[{gallery_name}] Processing {len(source_images)} images...")
 
         processed, skipped, errors = process_gallery(
-            gallery_name, source_dir, output_dir, args.force
+            gallery_name, source_dir, output_dir, args.force, args.jobs
         )
 
         total_processed += processed
