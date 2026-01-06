@@ -91,7 +91,24 @@
   }
 
   function handleLogoClick() {
-    galleryComponent?.triggerReshuffle();
+    const delay = (config.theme.transitions.reshuffleDelay || 0) * 1000;
+
+    if (window.scrollY > 0) {
+      // Scroll to top first, then reshuffle after scroll completes + delay
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+
+      // Wait for scroll to complete before reshuffling
+      const checkScrollComplete = () => {
+        if (window.scrollY === 0) {
+          setTimeout(() => galleryComponent?.triggerReshuffle(), delay);
+        } else {
+          requestAnimationFrame(checkScrollComplete);
+        }
+      };
+      requestAnimationFrame(checkScrollComplete);
+    } else {
+      galleryComponent?.triggerReshuffle();
+    }
   }
 
   function handleGallerySelect(galleryId) {

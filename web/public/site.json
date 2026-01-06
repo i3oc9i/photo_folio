@@ -44,7 +44,11 @@
     },
     "credits": {
       "title": "Credits",
-      "paragraphs": ["All photographs by Ivano Coltellacci.", " ", "All images are protected by copyright. Unauthorized use is prohibited."],
+      "paragraphs": [
+        "All photographs by Ivano Coltellacci.",
+        " ",
+        "All images are protected by copyright. Unauthorized use is prohibited."
+      ],
       "copyright": {
         "year": 2026,
         "name": "Ivano Coltellacci"

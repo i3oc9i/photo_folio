@@ -260,6 +260,21 @@ Configure in `theme.json` under `theme.colors`:
 }
 ```
 
+## Transitions
+
+Configure animation timings in `theme.json` under `theme.transitions`:
+
+| Parameter        | Unit    | Description                                         |
+| ---------------- | ------- | --------------------------------------------------- |
+| `splash`         | seconds | Splash screen fade duration                         |
+| `gallery`        | seconds | Gallery transition duration                         |
+| `panel`          | seconds | Side panel slide duration                           |
+| `hover`          | seconds | Hover effect duration                               |
+| `lightbox`       | seconds | Lightbox open/close duration                        |
+| `reshuffleDelay` | seconds | Delay after scroll-to-top before gallery reshuffles |
+
+**Note:** Clicking the site title reshuffles the gallery. If scrolled down, it first scrolls to top, waits for `reshuffleDelay`, then reshuffles.
+
 ## Deployment
 
 Build for production:

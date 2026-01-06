@@ -87,7 +87,8 @@
       "gallery": 0.6,
       "panel": 0.4,
       "hover": 0.3,
-      "lightbox": 0.3
+      "lightbox": 0.3,
+      "reshuffleDelay": 0.3
     }
   }
 }
