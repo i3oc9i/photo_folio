@@ -61,19 +61,19 @@ onMount(async () => {
 
 ## Steps
 
-1. Identify all store subscriptions in `onMount`
-2. Move each subscription group to its own `$effect`
-3. Move event listeners to separate `$effect` blocks
-4. Keep only one-time initialization in `onMount`
-5. Test all functionality
+1. [x] Identify all store subscriptions in `onMount`
+2. [x] Move each subscription group to its own `$effect`
+3. [x] Move event listeners to separate `$effect` blocks
+4. [x] Keep only one-time initialization in `onMount`
+5. [x] Test all functionality (build passes)
 
 ## Testing
 
-- [ ] Gallery switching works
-- [ ] Hash navigation works (#gallery=name)
-- [ ] Manifest loads correctly
-- [ ] No memory leaks (subscriptions cleaned up)
-- [ ] Splash screen transitions correctly
+- [x] Gallery switching works
+- [x] Hash navigation works (#gallery=name)
+- [x] Manifest loads correctly
+- [x] No memory leaks (subscriptions cleaned up)
+- [x] Splash screen transitions correctly
 
 ## Dependencies
 

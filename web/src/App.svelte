@@ -47,12 +47,24 @@
     config && galleryId ? `${config.assets.path}${galleryId}/` : ''
   );
 
-  // Load configuration on mount
-  onMount(async () => {
-    // Subscribe to stores (runes mode doesn't auto-subscribe)
+  // Store subscriptions via $effect
+  $effect(() => {
     const unsubGalleryId = currentGalleryId.subscribe(v => galleryId = v);
     const unsubManifest = currentManifest.subscribe(v => manifest = v);
+    return () => {
+      unsubGalleryId();
+      unsubManifest();
+    };
+  });
 
+  // Event listeners via $effect
+  $effect(() => {
+    window.addEventListener('hashchange', handleHashChange);
+    return () => window.removeEventListener('hashchange', handleHashChange);
+  });
+
+  // Load configuration on mount (one-time initialization)
+  onMount(async () => {
     try {
       config = await loadConfig();
       applyTheme(config.theme);
@@ -61,15 +73,6 @@
       // Initialize gallery from URL hash or default
       await initGallery();
       loading = false;
-
-      // Listen for hash changes
-      window.addEventListener('hashchange', handleHashChange);
-
-      return () => {
-        window.removeEventListener('hashchange', handleHashChange);
-        unsubGalleryId();
-        unsubManifest();
-      };
     } catch (err) {
       console.error('Failed to load:', err);
       error = err.message || 'Failed to load application';
