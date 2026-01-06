@@ -6,6 +6,7 @@
     image,
     position,
     galleryPath,
+    layoutType = 'organic',
     mobileBreakpoint,
     eagerLoad = false,
     onClick
@@ -30,7 +31,7 @@
 </script>
 
 <div
-  class="photo {image.orientation}"
+  class="photo {image.orientation} layout-{layoutType}"
   class:loaded
   style="
     left: {position.left}vw;

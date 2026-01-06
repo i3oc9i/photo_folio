@@ -367,10 +367,48 @@ body {
     text-transform: uppercase;
 }
 
-.photo:hover {
+/* ========================================
+   LAYOUT: Organic (scattered photos)
+   Base styles apply to organic layout
+   ======================================== */
+
+.photo.layout-organic:hover {
     transform: scale(1.02);
     box-shadow: 0 8px 50px rgba(0, 0, 0, 0.7);
     z-index: 50 !important;
+}
+
+/* ========================================
+   LAYOUT: Masonry (Pinterest-style)
+   Clean, aligned grid without rotation
+   ======================================== */
+
+.photo.layout-masonry {
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.3);
+}
+
+/* Masonry entry animation: fade up instead of rotation */
+.photo.layout-masonry.loaded {
+    opacity: 0;
+    transform: translateY(20px);
+}
+
+.gallery.revealed .photo.layout-masonry.loaded {
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 0.3s ease, transform 0.4s ease;
+}
+
+.photo.layout-masonry:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+    z-index: 50 !important;
+}
+
+/* Masonry gallery container adjustments */
+.gallery.layout-masonry {
+    padding-left: 1.5vw;
+    padding-right: 1.5vw;
 }
 
 /* Slide-in Panels */

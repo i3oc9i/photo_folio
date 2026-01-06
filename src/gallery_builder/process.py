@@ -78,22 +78,28 @@ def update_config_galleries(config_path: Path, galleries: list[str]) -> None:
     with open(config_path) as f:
         config = json.load(f)
 
-    existing_items = config.get('galleries', {}).get('items', {})
-    existing_default = config.get('galleries', {}).get('default')
+    existing_galleries = config.get('galleries', {})
+    existing_items = existing_galleries.get('items', {})
+    existing_default = existing_galleries.get('default')
+    existing_default_layout = existing_galleries.get('defaultLayout')
 
-    # Build new items, preserving existing display names
+    # Build new items, preserving existing display names and layout
     new_items = {}
     for i, gallery_name in enumerate(galleries, 1):
         if gallery_name in existing_items:
-            # Preserve existing display name and update order
-            new_items[gallery_name] = {
+            # Preserve existing properties and update order
+            item = {
                 'displayName': existing_items[gallery_name].get(
                     'displayName', generate_display_name(gallery_name)
                 ),
                 'order': i
             }
+            # Preserve layout if it exists
+            if 'layout' in existing_items[gallery_name]:
+                item['layout'] = existing_items[gallery_name]['layout']
+            new_items[gallery_name] = item
         else:
-            # Generate new display name
+            # Generate new display name (no layout for new galleries)
             new_items[gallery_name] = {
                 'displayName': generate_display_name(gallery_name),
                 'order': i
@@ -105,11 +111,15 @@ def update_config_galleries(config_path: Path, galleries: list[str]) -> None:
     else:
         new_default = galleries[0] if galleries else None
 
-    # Update config
-    config['galleries'] = {
+    # Update config, preserving defaultLayout if it exists
+    new_galleries = {
         'default': new_default,
         'items': new_items
     }
+    if existing_default_layout:
+        new_galleries['defaultLayout'] = existing_default_layout
+
+    config['galleries'] = new_galleries
 
     with open(config_path, 'w') as f:
         json.dump(config, f, indent=2)

@@ -2,7 +2,7 @@
   import { onMount, untrack } from 'svelte';
   import Photo from './Photo.svelte';
   import { shuffle } from '$lib/utils/shuffle.js';
-  import { computePositions, calculateGalleryHeight } from '$lib/utils/positions.js';
+  import { getLayout } from '$lib/utils/layouts/index.js';
   import { currentLayout } from '$lib/stores/breakpoint.js';
   import { clearLoadedImages } from '$lib/stores/loadedImages.js';
 
@@ -26,6 +26,16 @@
   // Gallery path for this gallery
   let galleryPath = $derived(`${config.assets.path}${galleryId}/`);
 
+  // Derived: get layout type for current gallery
+  let layoutType = $derived(
+    config.galleries.items[galleryId]?.layout || config.galleries.defaultLayout || 'organic'
+  );
+
+  // Derived: get layout-specific config
+  let layoutConfig = $derived(
+    config.gallery.layouts?.[layoutType] || config.gallery.layouts?.organic || {}
+  );
+
   // Track previous values to detect actual changes (use primitive identifiers to avoid proxy comparison issues)
   let prevManifestId = null;
   let prevLayoutMinWidth = null;
@@ -44,8 +54,11 @@
 
     revealed = false;
     const newShuffled = shuffle(manifest.images);
-    const newPositions = computePositions(newShuffled, layout, config.gallery);
-    const newHeight = calculateGalleryHeight(newPositions, layout);
+
+    // Get the appropriate layout algorithm
+    const layoutAlgo = getLayout(layoutType);
+    const newPositions = layoutAlgo.computePositions(newShuffled, layout, config.gallery, layoutConfig);
+    const newHeight = layoutAlgo.calculateHeight(newPositions, layout, config.gallery, layoutConfig);
 
     // Assign all at once to minimize reactivity triggers
     shuffledImages = newShuffled;
@@ -68,8 +81,11 @@
 
     // Use untrack to read shuffledImages without creating dependency
     const currentImages = untrack(() => shuffledImages);
-    const newPositions = computePositions(currentImages, layout, config.gallery);
-    const newHeight = calculateGalleryHeight(newPositions, layout);
+
+    // Get the appropriate layout algorithm
+    const layoutAlgo = getLayout(layoutType);
+    const newPositions = layoutAlgo.computePositions(currentImages, layout, config.gallery, layoutConfig);
+    const newHeight = layoutAlgo.calculateHeight(newPositions, layout, config.gallery, layoutConfig);
 
     positions = newPositions;
     galleryHeight = newHeight;
@@ -112,13 +128,14 @@
   }
 </script>
 
-<main class="gallery" class:revealed style="height: {galleryHeight}vw;">
+<main class="gallery layout-{layoutType}" class:revealed style="height: {galleryHeight}vw;">
   {#each shuffledImages as image, index (image.id)}
     {@const pos = positions[index] || { left: 0, top: 0, rotation: 0, startRotation: 0, delay: 0 }}
     <Photo
       {image}
       position={pos}
       {galleryPath}
+      {layoutType}
       mobileBreakpoint={config.mobileBreakpoint}
       eagerLoad={index < config.gallery.eagerLoadCount}
       onClick={onPhotoClick}
