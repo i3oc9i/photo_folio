@@ -6,7 +6,6 @@
     --color-text-muted: #666;
     --color-text-dim: #888;
     --color-text-dimmer: #555;
-    --color-text-dimmest: #444;
     --color-border: #1a1a1a;
     --color-border-light: #333;
     --color-panel-text: #bbb;
@@ -197,7 +196,7 @@ body {
 /* Gallery Bar - secondary header for gallery selection */
 .gallery-bar {
     position: fixed;
-    top: 5.25rem;
+    top: 4.85rem;
     left: 0;
     right: 0;
     z-index: 99;
@@ -206,7 +205,6 @@ body {
     align-items: center;
     padding: 0.6rem 2rem;
     background-color: var(--color-background);
-    border-top: 1px solid var(--color-border);
     border-bottom: 1px solid var(--color-border);
 }
 
@@ -304,8 +302,7 @@ body {
     position: relative;
     width: 100%;
     min-height: 100vh;
-    margin-top: 7.5rem;
-    padding: 0 2rem;
+    margin-top: 7.1rem;
 }
 
 .photo {
@@ -361,7 +358,7 @@ body {
 .gallery-footer {
     text-align: center;
     padding: 1rem 2rem 2rem;
-    color: var(--color-text-dimmest);
+    color: var(--color-text-muted);
     font-size: 0.75rem;
     font-weight: 300;
     letter-spacing: 0.15em;
@@ -406,10 +403,10 @@ body {
     z-index: 50 !important;
 }
 
-/* Masonry gallery container adjustments */
-.gallery.layout-masonry {
-    padding-left: 1.5vw;
-    padding-right: 1.5vw;
+/* Masonry photos use calculated width from layout */
+.photo.layout-masonry img {
+    width: var(--photo-width) !important;
+    height: auto !important;
 }
 
 /* Slide-in Panels */
@@ -645,7 +642,7 @@ body {
     }
 
     .gallery-bar {
-        top: 3.5rem;
+        top: 3.25rem;
         padding: 0.75rem 1rem;
     }
 
@@ -663,8 +660,7 @@ body {
     }
 
     .gallery {
-        margin-top: 6.5rem;
-        padding: 0 1rem 3rem;
+        margin-top: 6rem;
     }
 
     .panel {
@@ -716,7 +712,7 @@ body {
     }
 
     .gallery-bar {
-        top: 2.75rem;
+        top: 2.5rem;
         padding: 0.5rem 0.5rem;
     }
 
@@ -735,7 +731,6 @@ body {
     }
 
     .gallery {
-        margin-top: 4.5rem;
-        padding: 0 1rem 3rem;
+        margin-top: 4.25rem;
     }
 }

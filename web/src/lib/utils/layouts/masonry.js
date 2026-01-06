@@ -5,11 +5,15 @@
 export function computeMasonryPositions(images, breakpointLayout, galleryConfig, layoutConfig) {
   const positions = [];
   const { columns, photoSize, squareSize } = breakpointLayout;
-  const { topMargin } = galleryConfig;
+  const { topMargin, leftMargin = 1, rightMargin = 1 } = galleryConfig;
   const { gutter = 1.5, dealingDelay = 0.02 } = layoutConfig;
 
-  const columnWidth = 100 / columns;
+  const availableWidth = 100 - leftMargin - rightMargin;
+  const columnWidth = availableWidth / columns;
   const columnHeights = new Array(columns).fill(0);
+
+  // Calculate actual photo width based on column width minus gutter
+  const photoWidth = columnWidth - gutter;
 
   for (let i = 0; i < images.length; i++) {
     const image = images[i];
@@ -25,11 +29,11 @@ export function computeMasonryPositions(images, breakpointLayout, galleryConfig,
     }
 
     // Position centered within column (no random offset)
-    const left = shortestColumn * columnWidth + (gutter / 2);
+    const left = leftMargin + shortestColumn * columnWidth + (gutter / 2);
     const top = topMargin + columnHeights[shortestColumn];
 
-    // Determine size based on orientation
-    const size = image.orientation === 'square' ? squareSize : photoSize;
+    // Use calculated photo width for masonry (ignores breakpoint photoSize)
+    const size = photoWidth;
 
     // Calculate height based on aspect ratio
     let photoHeight;
@@ -50,6 +54,7 @@ export function computeMasonryPositions(images, breakpointLayout, galleryConfig,
       offsetX: 0,
       offsetY: 0,
       size,
+      width: photoWidth,
       height: photoHeight,
       rotation: 0,
       startRotation: 0,

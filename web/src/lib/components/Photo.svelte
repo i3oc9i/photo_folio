@@ -40,6 +40,7 @@
     --end-rotation: {position.rotation}deg;
     transition-delay: {position.delay}s;
     z-index: {position.zIndex || 1};
+    {position.width ? `--photo-width: ${position.width}vw;` : ''}
   "
   use:lazyload={{ rootMargin: '800px 0px', onLoad: triggerLoad, eager: eagerLoad }}
   onclick={() => onClick?.(image.id)}

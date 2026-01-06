@@ -5,7 +5,10 @@
   },
   "gallery": {
     "eagerLoadCount": 12,
-    "topMargin": 18,
+    "topMargin": 1,
+    "bottomMargin": 1,
+    "leftMargin": 3,
+    "rightMargin": 3,
     "lazyLoadMargin": 800,
     "layouts": {
       "organic": {
@@ -17,7 +20,7 @@
       },
       "masonry": {
         "gutter": 1.5,
-        "dealingDelay": 0.02
+        "dealingDelay": 0.03
       }
     }
   },
@@ -68,8 +71,7 @@
       "textMuted": "#666",
       "textDim": "#888",
       "textDimmer": "#555",
-      "textDimmest": "#444",
-      "border": "#1a1a1a",
+      "border": "#3a3a3a",
       "borderLight": "#333",
       "panelText": "#bbb",
       "overlay": "rgba(0, 0, 0, 0.7)",

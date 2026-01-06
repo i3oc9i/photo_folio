@@ -7,10 +7,11 @@ import { randomInRange } from '../shuffle.js';
 export function computeOrganicPositions(images, breakpointLayout, galleryConfig, layoutConfig) {
   const positions = [];
   const { columns, photoSize, squareSize } = breakpointLayout;
-  const { topMargin } = galleryConfig;
+  const { topMargin, leftMargin = 1, rightMargin = 1 } = galleryConfig;
   const { randomOffset, rotation, dealingRotation, dealingDelay, spacing = 2 } = layoutConfig;
 
-  const columnWidth = 100 / columns;
+  const availableWidth = 100 - leftMargin - rightMargin;
+  const columnWidth = availableWidth / columns;
   const columnHeights = new Array(columns).fill(0);
 
   // Account for negative random offset so topMargin is always respected as minimum clear space
@@ -31,7 +32,7 @@ export function computeOrganicPositions(images, breakpointLayout, galleryConfig,
 
     // Calculate base position
     // Add offsetBuffer to ensure topMargin is respected even with maximum negative offsetY
-    const baseLeft = shortestColumn * columnWidth;
+    const baseLeft = leftMargin + shortestColumn * columnWidth;
     const baseTop = topMargin + offsetBuffer + columnHeights[shortestColumn];
 
     // Add random offsets for organic feel
