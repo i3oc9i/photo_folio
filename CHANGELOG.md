@@ -28,4 +28,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Split configuration: `site.json` (content) + `theme.json` (styling)
 - Configurable gallery margins (top, bottom, left, right)
 
-[1.0.0]: https://github.com/ivano/photo_folio/releases/tag/v1.0.0
+[1.0.0]: https://github.com/i3oc9i/photo_folio/releases/tag/v1.0.0
