@@ -304,7 +304,8 @@ body {
     position: relative;
     width: 100%;
     min-height: 100vh;
-    padding: 7.5rem 2rem 0;
+    margin-top: 7.5rem;
+    padding: 0 2rem;
 }
 
 .photo {
@@ -662,6 +663,7 @@ body {
     }
 
     .gallery {
+        margin-top: 6.5rem;
         padding: 0 1rem 3rem;
     }
 
@@ -733,6 +735,7 @@ body {
     }
 
     .gallery {
+        margin-top: 4.5rem;
         padding: 0 1rem 3rem;
     }
 }

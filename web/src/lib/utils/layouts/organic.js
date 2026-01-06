@@ -13,6 +13,9 @@ export function computeOrganicPositions(images, breakpointLayout, galleryConfig,
   const columnWidth = 100 / columns;
   const columnHeights = new Array(columns).fill(0);
 
+  // Account for negative random offset so topMargin is always respected as minimum clear space
+  const offsetBuffer = Math.abs(randomOffset.min);
+
   for (let i = 0; i < images.length; i++) {
     const image = images[i];
 
@@ -27,8 +30,9 @@ export function computeOrganicPositions(images, breakpointLayout, galleryConfig,
     }
 
     // Calculate base position
+    // Add offsetBuffer to ensure topMargin is respected even with maximum negative offsetY
     const baseLeft = shortestColumn * columnWidth;
-    const baseTop = topMargin + columnHeights[shortestColumn];
+    const baseTop = topMargin + offsetBuffer + columnHeights[shortestColumn];
 
     // Add random offsets for organic feel
     const offsetX = randomInRange(randomOffset.min, randomOffset.max);
