@@ -1,0 +1,21 @@
+/* CSS Custom Properties - defaults (overridden by config.json via JS) */
+:root {
+    --color-background: #0a0a0a;
+    --color-background-alt: #111;
+    --color-text: #e8e8e8;
+    --color-text-muted: #666;
+    --color-text-dim: #888;
+    --color-text-dimmer: #555;
+    --color-border: #1a1a1a;
+    --color-border-light: #333;
+    --color-panel-text: #bbb;
+    --color-overlay: rgba(0, 0, 0, 0.7);
+    --color-lightbox-bg: rgba(0, 0, 0, 0.95);
+    --font-heading: 'Italiana', serif;
+    --font-body: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    --transition-splash: 0.8s;
+    --transition-gallery: 0.6s;
+    --transition-panel: 0.4s;
+    --transition-hover: 0.3s;
+    --transition-lightbox: 0.3s;
+}

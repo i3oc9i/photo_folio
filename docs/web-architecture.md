@@ -266,6 +266,79 @@ Theme values are converted to CSS variables at runtime:
 | `theme.fonts.heading` | `--font-heading` |
 | `theme.transitions.splash` | `--transition-splash` |
 
+## CSS Architecture
+
+Styles are organized into modular CSS files for maintainability:
+
+```
+web/src/lib/styles/
+├── global.css              # Entry point (imports only)
+├── variables.css           # CSS custom properties (defaults)
+├── base.css                # Reset, html, body base styles
+├── components/
+│   ├── splash.css          # Splash/entry page
+│   ├── header.css          # Header, nav, gallery-bar, selector
+│   ├── gallery.css         # Gallery container, photo base, footer
+│   ├── panel.css           # Slide-in panels, overlay, social links
+│   └── lightbox.css        # Lightbox modal
+└── layouts/
+    ├── organic.css         # Scattered photos layout styles
+    └── masonry.css         # Pinterest-style grid styles
+```
+
+### File Responsibilities
+
+| File | Purpose |
+|------|---------|
+| `variables.css` | CSS custom properties (colors, fonts, transitions) - defaults overridden by theme.json |
+| `base.css` | CSS reset, html/body base styles |
+| `components/*.css` | Component-specific styles with their responsive rules |
+| `layouts/*.css` | Layout algorithm styles (hover effects, entry animations, sizing) |
+
+### Import Order
+
+`global.css` imports in dependency order:
+
+```css
+/* Foundation */
+@import './variables.css';
+@import './base.css';
+
+/* Components */
+@import './components/splash.css';
+@import './components/header.css';
+@import './components/gallery.css';
+@import './components/panel.css';
+@import './components/lightbox.css';
+
+/* Layout algorithms */
+@import './layouts/organic.css';
+@import './layouts/masonry.css';
+```
+
+### Adding Component Styles
+
+Each component file owns its responsive rules. Example structure:
+
+```css
+/* components/header.css */
+
+/* Base styles */
+.header { ... }
+.logo { ... }
+.nav-link { ... }
+
+/* Responsive - component-specific breakpoints */
+@media (max-width: 767px) {
+    .header { padding: 1rem; }
+    .logo-name { font-size: 0.9rem; }
+}
+
+@media (max-width: 480px) {
+    .header { padding: 0.75rem 0.5rem; }
+}
+```
+
 ## Responsive Breakpoints
 
 Breakpoints are defined in `theme.json` as an array sorted by `minWidth` descending:
@@ -391,10 +464,15 @@ export function registerLayout(name, implementation) {
    }
    ```
 
-4. Add CSS in `global.css`:
+4. Add CSS in `layouts/newlayout.css`:
    ```css
    .photo.layout-newlayout { /* styles */ }
    .gallery.layout-newlayout { /* styles */ }
+   ```
+
+5. Import in `global.css`:
+   ```css
+   @import './layouts/newlayout.css';
    ```
 
 ## Key Technical Decisions

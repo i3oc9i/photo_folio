@@ -1,0 +1,268 @@
+/* Header */
+.header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.25rem 2.5rem;
+    background-color: var(--color-background);
+    border-bottom: 1px solid var(--color-border);
+}
+
+.logo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+    transition: opacity var(--transition-hover) ease;
+    text-align: center;
+    gap: 0.15rem;
+    cursor: pointer;
+    background: none;
+    border: none;
+}
+
+.logo:hover {
+    opacity: 0.7;
+}
+
+.logo-name {
+    font-family: var(--font-heading);
+    font-size: 1.3rem;
+    font-weight: 400;
+    letter-spacing: 0.15em;
+    color: var(--color-text);
+}
+
+.logo-subtitle {
+    font-family: var(--font-body);
+    font-size: 0.8rem;
+    font-weight: 300;
+    letter-spacing: 0.2em;
+    text-transform: lowercase;
+    color: var(--color-text-muted);
+}
+
+.nav {
+    display: flex;
+    min-width: 100px;
+}
+
+.nav-left {
+    justify-content: flex-start;
+}
+
+.nav-right {
+    justify-content: flex-end;
+}
+
+.nav-link {
+    background: none;
+    border: none;
+    font-family: inherit;
+    font-size: 0.875rem;
+    font-weight: 300;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--color-text);
+    cursor: pointer;
+    transition: opacity var(--transition-hover) ease;
+    padding: 0.5rem 0;
+}
+
+.nav-link:hover {
+    opacity: 0.7;
+}
+
+/* Gallery Bar - secondary header for gallery selection */
+.gallery-bar {
+    position: fixed;
+    top: 4.85rem;
+    left: 0;
+    right: 0;
+    z-index: 99;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0.6rem 2rem;
+    background-color: var(--color-background);
+    border-bottom: 1px solid var(--color-border);
+}
+
+/* Gallery Selector Dropdown */
+.gallery-selector {
+    position: relative;
+}
+
+.gallery-selector-btn {
+    background: none;
+    border: none;
+    font-family: inherit;
+    font-size: 0.875rem;
+    font-weight: 300;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--color-text);
+    cursor: pointer;
+    transition: opacity var(--transition-hover) ease;
+    padding: 0.25rem 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.gallery-selector-btn:hover {
+    opacity: 0.7;
+}
+
+.gallery-selector-arrow {
+    font-size: 0.6rem;
+    transition: transform var(--transition-hover) ease;
+}
+
+.gallery-selector.open .gallery-selector-arrow {
+    transform: rotate(180deg);
+}
+
+.gallery-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-10px);
+    min-width: 150px;
+    background: var(--color-background-alt);
+    border: 1px solid var(--color-border-light);
+    list-style: none;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity var(--transition-hover) ease,
+                transform var(--transition-hover) ease,
+                visibility var(--transition-hover) ease;
+    z-index: 110;
+    margin-top: 0.5rem;
+}
+
+.gallery-selector.open .gallery-dropdown {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(0);
+}
+
+.gallery-dropdown li {
+    border-bottom: 1px solid var(--color-border);
+}
+
+.gallery-dropdown li:last-child {
+    border-bottom: none;
+}
+
+.gallery-dropdown button {
+    width: 100%;
+    background: none;
+    border: none;
+    padding: 0.75rem 1rem;
+    font-family: inherit;
+    font-size: 0.8rem;
+    font-weight: 300;
+    letter-spacing: 0.1em;
+    text-align: left;
+    color: var(--color-text-dim);
+    cursor: pointer;
+    transition: background var(--transition-hover) ease,
+                color var(--transition-hover) ease;
+}
+
+.gallery-dropdown button:hover,
+.gallery-dropdown button.active {
+    background: var(--color-border);
+    color: var(--color-text);
+}
+
+/* Responsive - Small screens (<768px) */
+@media (max-width: 767px) {
+    .header {
+        padding: 1rem 1rem;
+    }
+
+    .logo-name {
+        font-size: 0.9rem;
+        letter-spacing: 0.1em;
+    }
+
+    .logo-subtitle {
+        font-size: 0.6rem;
+        letter-spacing: 0.15em;
+    }
+
+    .nav {
+        min-width: 60px;
+    }
+
+    .nav-link {
+        font-size: 0.7rem;
+    }
+
+    .gallery-bar {
+        top: 3.25rem;
+        padding: 0.75rem 1rem;
+    }
+
+    .gallery-selector-btn {
+        font-size: 0.6rem;
+    }
+
+    .gallery-dropdown {
+        min-width: 130px;
+    }
+
+    .gallery-dropdown button {
+        font-size: 0.7rem;
+        padding: 0.6rem 0.8rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .header {
+        padding: 0.75rem 0.5rem;
+    }
+
+    .logo-name {
+        font-size: 0.7rem;
+    }
+
+    .logo-subtitle {
+        font-size: 0.5rem;
+    }
+
+    .nav {
+        min-width: 50px;
+    }
+
+    .nav-link {
+        font-size: 0.65rem;
+        letter-spacing: 0.05em;
+    }
+
+    .gallery-bar {
+        top: 2.5rem;
+        padding: 0.5rem 0.5rem;
+    }
+
+    .gallery-selector-btn {
+        font-size: 0.6rem;
+        letter-spacing: 0.05em;
+        gap: 0.3rem;
+    }
+
+    .gallery-selector-arrow {
+        font-size: 0.55rem;
+    }
+
+    .gallery-dropdown button {
+        font-size: 0.75rem;
+    }
+}

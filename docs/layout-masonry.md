@@ -171,23 +171,43 @@ Each image receives a position object:
 
 ## Animation
 
-Masonry uses a simpler animation than organic - just a fade-in with stagger:
+Masonry uses a simpler animation than organic - a fade-up effect with stagger:
 
 ### CSS Implementation
 
+**File:** `web/src/lib/styles/layouts/masonry.css`
+
 ```css
 .photo.layout-masonry {
-  opacity: 0;
-  transition: opacity var(--transition-gallery) ease-out;
-  transition-delay: var(--photo-delay, 0s);
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.3);
 }
 
+/* Masonry entry animation: fade up instead of rotation */
 .photo.layout-masonry.loaded {
-  opacity: 1;
+    opacity: 0;
+    transform: translateY(20px);
+}
+
+.gallery.revealed .photo.layout-masonry.loaded {
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 0.3s ease, transform 0.4s ease;
+}
+
+.photo.layout-masonry:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+    z-index: 50 !important;
+}
+
+/* Photo sizing via CSS variable from layout algorithm */
+.photo.layout-masonry img {
+    width: var(--photo-width);
+    height: auto;
 }
 ```
 
-No rotation transformation is applied since `rotation` and `startRotation` are always 0.
+Unlike organic, masonry photos animate with a vertical translate (fade-up) rather than rotation, creating a cleaner, more professional appearance.
 
 ## Height Calculation
 

@@ -5,7 +5,7 @@ Instructions for Claude Code when working with this repository.
 ## Rules
 
 1. **Never commit automatically** - Only commit when explicitly requested.
-2. **Update technical documentation - After significant technical changes, update relevant documentation in `docs/`.
+2. **Update technical documentation** - After significant technical changes, update relevant documentation in `docs/`.
 3. **Update README.md** - After changes affecting configuration or usage.
 
 ## Project Summary

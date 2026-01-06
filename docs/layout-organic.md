@@ -203,19 +203,46 @@ Photos animate from an initial "dealing" state to their final position:
 
 ### CSS Implementation
 
+**File:** `web/src/lib/styles/layouts/organic.css`
+
 ```css
-.photo.layout-organic {
-  transform: rotate(var(--start-rotation));
-  opacity: 0;
-  transition:
-    transform var(--transition-gallery) ease-out,
-    opacity var(--transition-gallery) ease-out;
-  transition-delay: var(--photo-delay, 0s);
+.photo.layout-organic:hover {
+    transform: scale(1.02);
+    box-shadow: 0 8px 50px rgba(0, 0, 0, 0.7);
+    z-index: 50 !important;
 }
 
-.photo.layout-organic.loaded {
-  transform: rotate(var(--end-rotation));
-  opacity: 1;
+/* Photo sizing via CSS variable from layout algorithm */
+.photo.layout-organic img {
+    width: var(--photo-width);
+    height: auto;
+}
+
+.photo.layout-organic.portrait img {
+    width: auto;
+    height: var(--photo-width);
+}
+
+.photo.layout-organic.square img {
+    width: var(--photo-width);
+    height: var(--photo-width);
+}
+```
+
+The base animation is defined in `components/gallery.css`:
+
+```css
+/* Before gallery is revealed */
+.photo.loaded {
+    opacity: 0;
+    transform: scale(0.3) rotate(var(--start-rotation, 15deg));
+}
+
+/* After gallery reveal - photos deal onto table */
+.gallery.revealed .photo.loaded {
+    opacity: 1;
+    transform: rotate(var(--end-rotation, 0deg));
+    transition: opacity 0.1s ease, transform var(--transition-gallery) cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 ```
 
