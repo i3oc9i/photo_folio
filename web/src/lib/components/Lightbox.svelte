@@ -1,8 +1,7 @@
 <script>
   import { fade } from 'svelte/transition';
-  import { get } from 'svelte/store';
   import { shuffle } from '$lib/utils/shuffle.js';
-  import { loadedImageArray } from '$lib/stores/loadedImages.js';
+  import { getLoadedImageArray } from '$lib/stores/loadedImages.svelte.js';
 
   let { open = false, galleryPath, startImageId, onClose } = $props();
 
@@ -23,7 +22,7 @@
 
   function generateSequence(startId) {
     // Get all loaded images and shuffle them
-    const allImages = [...get(loadedImageArray)];
+    const allImages = [...getLoadedImageArray()];
     const shuffled = shuffle(allImages);
 
     // Move start image to front

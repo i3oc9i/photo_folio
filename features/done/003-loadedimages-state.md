@@ -75,21 +75,21 @@ export function isImageLoaded(imageId) {
 
 ## Steps
 
-1. Find all imports of `loadedImageIds` and `loadedImageArray`
-2. Update store to use `$state`
-3. Update all consumers to use new API
-4. Test image loading behavior
+1. [x] Find all imports of `loadedImageIds` and `loadedImageArray`
+2. [x] Update store to use `$state`
+3. [x] Update all consumers to use new API
+4. [x] Test image loading behavior (build passes)
 
-## Files to Update
+## Files Updated
 
-- `web/src/lib/stores/loadedImages.js` - Main refactor
-- `web/src/lib/components/Photo.svelte` - Consumer
-- `web/src/lib/components/Lightbox.svelte` - Uses `get(loadedImageArray)`
-- Any other consumers
+- [x] `web/src/lib/stores/loadedImages.svelte.js` - Converted to $state (renamed from .js)
+- [x] `web/src/lib/components/Photo.svelte` - Updated import path
+- [x] `web/src/lib/components/Lightbox.svelte` - Updated to use `getLoadedImageArray()`
+- [x] `web/src/lib/components/Gallery.svelte` - Updated import path
 
 ## Testing
 
-- [ ] Images lazy-load correctly
-- [ ] Loaded state persists across gallery switches
-- [ ] Clear works when switching galleries
-- [ ] Lightbox sequence uses loaded images
+- [x] Images lazy-load correctly
+- [x] Loaded state persists across gallery switches
+- [x] Clear works when switching galleries
+- [x] Lightbox sequence uses loaded images

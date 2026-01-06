@@ -1,6 +1,6 @@
 <script>
   import { lazyload } from '$lib/actions/lazyload.js';
-  import { markImageLoaded } from '$lib/stores/loadedImages.js';
+  import { markImageLoaded } from '$lib/stores/loadedImages.svelte.js';
 
   let {
     image,

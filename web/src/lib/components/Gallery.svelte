@@ -4,7 +4,7 @@
   import { shuffle } from '$lib/utils/shuffle.js';
   import { getLayout } from '$lib/utils/layouts/index.js';
   import { currentLayout } from '$lib/stores/breakpoint.js';
-  import { clearLoadedImages } from '$lib/stores/loadedImages.js';
+  import { clearLoadedImages } from '$lib/stores/loadedImages.svelte.js';
 
   let { config, manifest, galleryId, onPhotoClick } = $props();
 
