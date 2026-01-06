@@ -20,18 +20,16 @@ Use the slash commands in Claude Code:
 ```
 /feature-plan <idea>          # 1. Discuss & design the feature
 /feature-create <name> <desc> # 2. Create document in backlog/
-/feature-start <name>         # 3. Move to in-progress/
-/feature-implement            # 4. Implement the feature
-/feature-done                 # 5. Move to done/
+/feature-implement <number>   # 3. Implement the feature
+/feature-done                 # 4. Move to done/
 ```
 
 ### Workflow Steps
 
 1. **Plan** (`/feature-plan`) - Discuss the idea, explore code, agree on approach
 2. **Create** (`/feature-create`) - Create the feature document in `backlog/`
-3. **Start** (`/feature-start`) - Move to `in-progress/` when beginning work
-4. **Implement** (`/feature-implement`) - Build the feature following the plan
-5. **Complete** (`/feature-done`) - Move to `done/` when finished
+3. **Implement** (`/feature-implement`) - Move to `in-progress/` and build the feature
+4. **Complete** (`/feature-done`) - Move to `done/` when finished
 
 Only have **one feature in-progress at a time** when possible.
 
