@@ -15,32 +15,29 @@ features/
 
 ## Workflow
 
-### 1. Plan a Feature
+Use the slash commands in Claude Code:
 
-```bash
-# Copy template to backlog with numbered name
-cp features/_template.md features/backlog/NNN-feature-name.md
+```
+/feature-plan <idea>          # 1. Discuss & design the feature
+/feature-create <name> <desc> # 2. Create document in backlog/
+/feature-start <name>         # 3. Move to in-progress/
+/feature-implement            # 4. Implement the feature
+/feature-done                 # 5. Move to done/
 ```
 
-Fill in all sections. Think through the implementation before coding.
+### Workflow Steps
 
-### 2. Start Implementation
-
-```bash
-# Move to in-progress when starting work
-mv features/backlog/NNN-feature.md features/in-progress/
-```
+1. **Plan** (`/feature-plan`) - Discuss the idea, explore code, agree on approach
+2. **Create** (`/feature-create`) - Create the feature document in `backlog/`
+3. **Start** (`/feature-start`) - Move to `in-progress/` when beginning work
+4. **Implement** (`/feature-implement`) - Build the feature following the plan
+5. **Complete** (`/feature-done`) - Move to `done/` when finished
 
 Only have **one feature in-progress at a time** when possible.
 
-### 3. Complete Feature
+### Other Commands
 
-```bash
-# Move to done when complete
-mv features/in-progress/NNN-feature.md features/done/
-```
-
-Update checkboxes in the file to show what was completed.
+- `/feature-list` - Show current status of all features
 
 ## Naming Convention
 
@@ -55,25 +52,6 @@ Examples:
 
 - **NNN**: Sequential number (keeps order, prevents conflicts)
 - **name**: Lowercase, hyphen-separated, descriptive
-
-## Current Status
-
-### Backlog
-
-| # | Feature | Priority | Effort |
-|---|---------|----------|--------|
-| 001 | [ScrollTopButton - $effect](./backlog/001-scrolltopbutton-effect.md) | High | 15 min |
-| 002 | [App.svelte - $effect subscriptions](./backlog/002-app-effect-subscriptions.md) | Medium | 1-2h |
-| 003 | [loadedImages - $state exports](./backlog/003-loadedimages-state.md) | Low | 1-2h |
-| 004 | [gallery.js - module runes](./backlog/004-gallery-store-runes.md) | Low | 2-3h |
-
-### In Progress
-
-_None_
-
-### Recently Completed
-
-_None yet_
 
 ## Tips
 
