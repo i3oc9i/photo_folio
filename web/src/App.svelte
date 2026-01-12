@@ -84,27 +84,13 @@
   }
 
   function handleLogoClick() {
-    const delay = (config.theme.transitions.reshuffleDelay || 0) * 1000;
-
-    if (window.scrollY > 0) {
-      // Scroll to top first, then reshuffle after scroll completes + delay
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-
-      // Wait for scroll to complete before reshuffling
-      const checkScrollComplete = () => {
-        if (window.scrollY === 0) {
-          setTimeout(() => galleryComponent?.triggerReshuffle(), delay);
-        } else {
-          requestAnimationFrame(checkScrollComplete);
-        }
-      };
-      requestAnimationFrame(checkScrollComplete);
-    } else {
-      galleryComponent?.triggerReshuffle();
-    }
+    // Instant scroll to top, then reshuffle (gallery hides during reshuffle, then animates in)
+    window.scrollTo(0, 0);
+    galleryComponent?.triggerReshuffle();
   }
 
   function handleGallerySelect(galleryId) {
+    window.scrollTo(0, 0);
     switchGallery(galleryId);
   }
 
@@ -160,6 +146,8 @@
       {manifest}
       {galleryId}
       onPhotoClick={handlePhotoClick}
+      ready={!splashVisible}
+      revealDelay={800}
     />
   {:else}
     <main class="gallery">

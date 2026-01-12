@@ -6,7 +6,7 @@
   import { currentLayout } from '$lib/stores/breakpoint.js';
   import { clearLoadedImages } from '$lib/stores/loadedImages.svelte.js';
 
-  let { config, manifest, galleryId, onPhotoClick } = $props();
+  let { config, manifest, galleryId, onPhotoClick, ready = true, revealDelay = 0 } = $props();
 
   // Shuffled images
   let shuffledImages = $state([]);
@@ -40,6 +40,12 @@
   let prevManifestId = null;
   let prevLayoutMinWidth = null;
 
+  // Track if we're waiting to reveal (positions computed but not yet shown)
+  let pendingReveal = $state(false);
+
+  // Track if initial reveal has happened (to apply revealDelay only on first reveal)
+  let initialRevealDone = $state(false);
+
   // Subscribe to layout store
   onMount(() => {
     const unsubscribe = currentLayout.subscribe(value => {
@@ -65,15 +71,33 @@
     positions = newPositions;
     galleryHeight = newHeight;
 
-    // Trigger reveal animation after a short delay
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        setTimeout(() => {
-          revealed = true;
-        }, 100);
-      });
-    });
+    // Mark as pending reveal - will animate when ready
+    pendingReveal = true;
   }
+
+  // Trigger reveal animation when ready and pending
+  function triggerRevealAnimation(delay = 0) {
+    setTimeout(() => {
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          setTimeout(() => {
+            revealed = true;
+            pendingReveal = false;
+          }, 100);
+        });
+      });
+    }, delay);
+  }
+
+  // Watch for ready state to trigger pending reveal
+  $effect(() => {
+    if (ready && pendingReveal) {
+      // Apply revealDelay only on initial reveal (e.g., after splash fade)
+      const delay = initialRevealDone ? 0 : revealDelay;
+      initialRevealDone = true;
+      triggerRevealAnimation(delay);
+    }
+  });
 
   // Reposition on layout change (without reshuffling)
   function reposition() {

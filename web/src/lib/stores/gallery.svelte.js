@@ -59,13 +59,8 @@ export function getGalleryFromHash() {
   return match ? match[1] : null;
 }
 
-// Initialize gallery from URL hash or default
+// Initialize gallery with default (always starts fresh on page load)
 export async function initGallery() {
   const configValue = get(config);
-  const hashGallery = getGalleryFromHash();
-  const id = hashGallery && configValue.galleries.items[hashGallery]
-    ? hashGallery
-    : configValue.galleries.default;
-
-  await switchGallery(id);
+  await switchGallery(configValue.galleries.default);
 }
