@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.1] - 2026-01-12
+
+### Fixed
+
+- Gallery switching not updating images when galleries have same image count
+- Gallery animation now waits for splash screen fade before revealing
+- Page reload always shows default gallery (ignores URL hash)
+- Scroll to top instantly when switching galleries
+- Scroll to top instantly when clicking artist name in header
+
 ## [1.0.0] - 2026-01-06
 
 ### Added
@@ -28,4 +38,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Split configuration: `site.json` (content) + `theme.json` (styling)
 - Configurable gallery margins (top, bottom, left, right)
 
+[1.0.1]: https://github.com/i3oc9i/photo_folio/releases/tag/v1.0.1
 [1.0.0]: https://github.com/i3oc9i/photo_folio/releases/tag/v1.0.0
