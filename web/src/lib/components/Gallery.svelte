@@ -100,8 +100,8 @@
     // Only proceed if both are available
     if (!currentManifest || !currentLayout) return;
 
-    // Use primitive identifiers for comparison to avoid proxy issues
-    const manifestId = currentManifest.gallery || JSON.stringify(currentManifest.images?.length);
+    // Use galleryId for comparison (manifestId was previously using image count which fails when galleries have same size)
+    const manifestId = galleryId;
     const layoutMinWidth = currentLayout.minWidth;
 
     // Check what changed using primitives
@@ -129,7 +129,7 @@
 </script>
 
 <main class="gallery layout-{layoutType}" class:revealed style="height: {galleryHeight}vw;">
-  {#each shuffledImages as image, index (image.id)}
+  {#each shuffledImages as image, index (`${galleryId}-${image.id}`)}
     {@const pos = positions[index] || { left: 0, top: 0, rotation: 0, startRotation: 0, delay: 0 }}
     <Photo
       {image}
