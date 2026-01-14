@@ -1,6 +1,6 @@
 # photo_folio
 
-A minimal photography portfolio built with **Svelte 5** and **Vite**. Features multiple galleries with configurable layout styles (organic grid, masonry), optimized image loading, and dark theme.
+A minimalist photography portfolio built with **Svelte 5** and **Vite**. Features multiple galleries with configurable layout styles (organic grid, masonry), optimized image loading, and dark theme.
 
 ## Requirements
 
