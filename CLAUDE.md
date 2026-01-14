@@ -53,3 +53,10 @@ Detailed implementation docs are in `docs/`. **Consult these before modifying re
 **Adding a layout**: See `docs/layout-organic.md` for pattern, register in `layouts/index.js`
 
 **Config files**: `site.json` (content) + `theme.json` (styling) → merged into `config` store
+
+## Active Technologies
+- JavaScript ES2020+, Svelte 5.16.0 + Svelte 5.16.0, Vite 7.3.0 (005-gallery-random-order)
+- Static JSON configuration files (`site.json`) (005-gallery-random-order)
+
+## Recent Changes
+- 005-gallery-random-order: Added JavaScript ES2020+, Svelte 5.16.0 + Svelte 5.16.0, Vite 7.3.0
