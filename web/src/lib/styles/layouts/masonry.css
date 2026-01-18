@@ -1,34 +1,34 @@
-/* ========================================
-   LAYOUT: Masonry (Pinterest-style)
-   Clean, aligned grid without rotation
-   ======================================== */
+/*
+ * @layout Masonry (Pinterest-style)
+ * @description Clean, aligned grid without rotation
+ */
 
 .photo.layout-masonry {
-  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.3);
+	box-shadow: 0 2px 15px rgba(0, 0, 0, 0.3);
 }
 
 /* Masonry entry animation: fade up instead of rotation */
 .photo.layout-masonry.loaded {
-  opacity: 0;
-  transform: translateY(20px);
+	opacity: 0;
+	transform: translateY(20px);
 }
 
 .gallery.revealed .photo.layout-masonry.loaded {
-  opacity: 1;
-  transform: translateY(0);
-  transition:
-    opacity 0.3s ease,
-    transform 0.4s ease;
+	opacity: 1;
+	transform: translateY(0);
+	transition:
+		opacity 0.3s ease,
+		transform 0.4s ease;
 }
 
 .photo.layout-masonry:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
-  z-index: 50 !important;
+	transform: translateY(-4px);
+	box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+	z-index: 50;
 }
 
 /* Masonry photos use calculated width from layout */
 .photo.layout-masonry img {
-  width: var(--photo-width);
-  height: auto;
+	width: var(--photo-width);
+	height: auto;
 }
