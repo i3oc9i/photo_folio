@@ -56,20 +56,20 @@ Add `randomOrder` boolean option with:
 
 ### Behavior Matrix
 
-| `randomOrder` | Gallery Display            | Lightbox Navigation     | Header Click           |
-|---------------|----------------------------|-------------------------|------------------------|
-| `true`        | Shuffled                   | Shuffled                | Re-shuffles            |
-| `false`       | Alphabetical by `image.id` | Sequential (sorted)     | Disabled/no-op         |
+| `randomOrder` | Gallery Display            | Lightbox Navigation | Header Click   |
+| ------------- | -------------------------- | ------------------- | -------------- |
+| `true`        | Shuffled                   | Shuffled            | Re-shuffles    |
+| `false`       | Alphabetical by `image.id` | Sequential (sorted) | Disabled/no-op |
 
 ## Files to Modify
 
-| File | Changes |
-| ---- | ------- |
-| `web/public/site.json` | Add `galleries.randomOrder: true` global default |
-| `web/src/lib/components/Gallery.svelte` | Accept `randomOrder` prop, sort instead of shuffle when false |
-| `web/src/lib/components/Lightbox.svelte` | Accept `randomOrder` prop, sort sequence when false |
-| `web/src/App.svelte` | Compute effective `randomOrder`, pass to Gallery/Lightbox/Header |
-| `web/src/lib/components/Header.svelte` | Accept `reshuffleEnabled` prop, disable click when false |
+| File                                     | Changes                                                          |
+| ---------------------------------------- | ---------------------------------------------------------------- |
+| `web/public/site.json`                   | Add `galleries.randomOrder: true` global default                 |
+| `web/src/lib/components/Gallery.svelte`  | Accept `randomOrder` prop, sort instead of shuffle when false    |
+| `web/src/lib/components/Lightbox.svelte` | Accept `randomOrder` prop, sort sequence when false              |
+| `web/src/App.svelte`                     | Compute effective `randomOrder`, pass to Gallery/Lightbox/Header |
+| `web/src/lib/components/Header.svelte`   | Accept `reshuffleEnabled` prop, disable click when false         |
 
 ## Implementation Steps
 

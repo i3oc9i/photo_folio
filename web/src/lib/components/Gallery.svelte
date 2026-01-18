@@ -1,12 +1,19 @@
 <script>
-  import { onMount, untrack } from 'svelte';
-  import Photo from './Photo.svelte';
-  import { shuffle } from '$lib/utils/shuffle.js';
-  import { getLayout } from '$lib/utils/layouts/index.js';
-  import { currentLayout } from '$lib/stores/breakpoint.js';
-  import { clearLoadedImages } from '$lib/stores/loadedImages.svelte.js';
+  import { onMount, untrack } from "svelte";
+  import Photo from "./Photo.svelte";
+  import { shuffle } from "$lib/utils/shuffle.js";
+  import { getLayout } from "$lib/utils/layouts/index.js";
+  import { currentLayout } from "$lib/stores/breakpoint.js";
+  import { clearLoadedImages } from "$lib/stores/loadedImages.svelte.js";
 
-  let { config, manifest, galleryId, onPhotoClick, ready = true, revealDelay = 0 } = $props();
+  let {
+    config,
+    manifest,
+    galleryId,
+    onPhotoClick,
+    ready = true,
+    revealDelay = 0,
+  } = $props();
 
   // Shuffled images
   let shuffledImages = $state([]);
@@ -28,12 +35,16 @@
 
   // Derived: get layout type for current gallery
   let layoutType = $derived(
-    config.galleries.items[galleryId]?.layout || config.galleries.defaultLayout || 'organic'
+    config.galleries.items[galleryId]?.layout ||
+      config.galleries.defaultLayout ||
+      "organic",
   );
 
   // Derived: get layout-specific config
   let layoutConfig = $derived(
-    config.gallery.layouts?.[layoutType] || config.gallery.layouts?.organic || {}
+    config.gallery.layouts?.[layoutType] ||
+      config.gallery.layouts?.organic ||
+      {},
   );
 
   // Track previous values to detect actual changes (use primitive identifiers to avoid proxy comparison issues)
@@ -48,7 +59,7 @@
 
   // Subscribe to layout store
   onMount(() => {
-    const unsubscribe = currentLayout.subscribe(value => {
+    const unsubscribe = currentLayout.subscribe((value) => {
       layout = value;
     });
     return unsubscribe;
@@ -63,8 +74,18 @@
 
     // Get the appropriate layout algorithm
     const layoutAlgo = getLayout(layoutType);
-    const newPositions = layoutAlgo.computePositions(newShuffled, layout, config.gallery, layoutConfig);
-    const newHeight = layoutAlgo.calculateHeight(newPositions, layout, config.gallery, layoutConfig);
+    const newPositions = layoutAlgo.computePositions(
+      newShuffled,
+      layout,
+      config.gallery,
+      layoutConfig,
+    );
+    const newHeight = layoutAlgo.calculateHeight(
+      newPositions,
+      layout,
+      config.gallery,
+      layoutConfig,
+    );
 
     // Assign all at once to minimize reactivity triggers
     shuffledImages = newShuffled;
@@ -108,8 +129,18 @@
 
     // Get the appropriate layout algorithm
     const layoutAlgo = getLayout(layoutType);
-    const newPositions = layoutAlgo.computePositions(currentImages, layout, config.gallery, layoutConfig);
-    const newHeight = layoutAlgo.calculateHeight(newPositions, layout, config.gallery, layoutConfig);
+    const newPositions = layoutAlgo.computePositions(
+      currentImages,
+      layout,
+      config.gallery,
+      layoutConfig,
+    );
+    const newHeight = layoutAlgo.calculateHeight(
+      newPositions,
+      layout,
+      config.gallery,
+      layoutConfig,
+    );
 
     positions = newPositions;
     galleryHeight = newHeight;
@@ -152,9 +183,19 @@
   }
 </script>
 
-<main class="gallery layout-{layoutType}" class:revealed style="height: {galleryHeight}vw;">
+<main
+  class="gallery layout-{layoutType}"
+  class:revealed
+  style="height: {galleryHeight}vw;"
+>
   {#each shuffledImages as image, index (`${galleryId}-${image.id}`)}
-    {@const pos = positions[index] || { left: 0, top: 0, rotation: 0, startRotation: 0, delay: 0 }}
+    {@const pos = positions[index] || {
+      left: 0,
+      top: 0,
+      rotation: 0,
+      startRotation: 0,
+      delay: 0,
+    }}
     <Photo
       {image}
       position={pos}

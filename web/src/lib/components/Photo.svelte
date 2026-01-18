@@ -1,15 +1,15 @@
 <script>
-  import { lazyload } from '$lib/actions/lazyload.js';
-  import { markImageLoaded } from '$lib/stores/loadedImages.svelte.js';
+  import { lazyload } from "$lib/actions/lazyload.js";
+  import { markImageLoaded } from "$lib/stores/loadedImages.svelte.js";
 
   let {
     image,
     position,
     galleryPath,
-    layoutType = 'organic',
+    layoutType = "organic",
     mobileBreakpoint,
     eagerLoad = false,
-    onClick
+    onClick,
   } = $props();
 
   let loaded = $state(false);
@@ -42,24 +42,21 @@
     z-index: {position.zIndex || 1};
     {position.width ? `--photo-width: ${position.width}vw;` : ''}
   "
-  use:lazyload={{ rootMargin: '800px 0px', onLoad: triggerLoad, eager: eagerLoad }}
+  use:lazyload={{
+    rootMargin: "800px 0px",
+    onLoad: triggerLoad,
+    eager: eagerLoad,
+  }}
   onclick={() => onClick?.(image.id)}
-  onkeydown={(e) => e.key === 'Enter' && onClick?.(image.id)}
+  onkeydown={(e) => e.key === "Enter" && onClick?.(image.id)}
   role="button"
   tabindex="0"
 >
   {#if loaded}
     <picture>
-      <source
-        media="(max-width: {mobileBreakpoint}px)"
-        srcset={thumbSrc}
-      />
+      <source media="(max-width: {mobileBreakpoint}px)" srcset={thumbSrc} />
       <source srcset={mediumSrc} />
-      <img
-        src={mediumSrc}
-        alt="Fine art photograph"
-        onload={handleLoad}
-      />
+      <img src={mediumSrc} alt="Fine art photograph" onload={handleLoad} />
     </picture>
   {/if}
 </div>

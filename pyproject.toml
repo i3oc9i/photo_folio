@@ -8,32 +8,26 @@ version = "1.0.0"
 description = "Gallery builder tool for photo_folio website"
 readme = "README.md"
 license = "MIT"
-authors = [
-    { name = "i3oc9i", email = "i3oc9i@icloud.com" }
-]
+authors = [{ name = "i3oc9i", email = "i3oc9i@icloud.com" }]
 requires-python = ">=3.10"
 classifiers = [
-    "Development Status :: 4 - Beta",
-    "Environment :: Console",
-    "Intended Audience :: Developers",
-    "License :: OSI Approved :: MIT License",
-    "Programming Language :: Python :: 3.10",
-    "Topic :: Multimedia :: Graphics :: Viewers",
+  "Development Status :: 4 - Beta",
+  "Environment :: Console",
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3.10",
+  "Topic :: Multimedia :: Graphics :: Viewers",
 ]
-dependencies = [
-    "pillow>=10.0.0",
-]
+dependencies = ["pillow>=10.0.0"]
 
-[project.optional-dependencies]
-dev = [
-    "poethepoet>=0.24.0",
-]
+  [project.optional-dependencies]
+  dev = ["poethepoet>=0.24.0"]
 
-[project.urls]
-Repository = "https://github.com/i3oc9i/photo_folio"
+  [project.urls]
+  Repository = "https://github.com/i3oc9i/photo_folio"
 
-[project.scripts]
-build-gallery = "gallery_builder.process:main"
+  [project.scripts]
+  build-gallery = "gallery_builder.process:main"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/gallery_builder"]
@@ -43,7 +37,10 @@ packages = ["src/gallery_builder"]
 init = { shell = "cd web && npm install", help = "Install Node dependencies" }
 
 # Dev
-dev = { sequence = ["dev:assets", "dev:serve"], help = "Build assets and start dev server" }
+dev = { sequence = [
+  "dev:assets",
+  "dev:serve",
+], help = "Build assets and start dev server" }
 "dev:assets" = { cmd = "build-gallery -j 8", help = "Build gallery assets from source photos" }
 "dev:assets:force" = { cmd = "build-gallery --force -j 8", help = "Force rebuild all assets" }
 "dev:serve" = { shell = "cd web && npm run dev", help = "Start Vite dev server" }

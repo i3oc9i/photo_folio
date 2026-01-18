@@ -1,18 +1,18 @@
-import { computeOrganicPositions, calculateOrganicHeight } from './organic.js';
-import { computeMasonryPositions, calculateMasonryHeight } from './masonry.js';
+import { computeMasonryPositions, calculateMasonryHeight } from "./masonry.js";
+import { computeOrganicPositions, calculateOrganicHeight } from "./organic.js";
 
 /**
  * Layout registry - maps layout type to algorithm functions
  */
 const layouts = {
-  organic: {
-    computePositions: computeOrganicPositions,
-    calculateHeight: calculateOrganicHeight
-  },
-  masonry: {
-    computePositions: computeMasonryPositions,
-    calculateHeight: calculateMasonryHeight
-  }
+	organic: {
+		computePositions: computeOrganicPositions,
+		calculateHeight: calculateOrganicHeight,
+	},
+	masonry: {
+		computePositions: computeMasonryPositions,
+		calculateHeight: calculateMasonryHeight,
+	},
 };
 
 /**
@@ -21,12 +21,12 @@ const layouts = {
  * @returns {object} Layout algorithm with computePositions and calculateHeight functions
  */
 export function getLayout(layoutType) {
-  const layout = layouts[layoutType];
-  if (!layout) {
-    console.warn(`Unknown layout type: ${layoutType}, falling back to organic`);
-    return layouts.organic;
-  }
-  return layout;
+	const layout = layouts[layoutType];
+	if (!layout) {
+		console.warn(`Unknown layout type: ${layoutType}, falling back to organic`);
+		return layouts.organic;
+	}
+	return layout;
 }
 
 /**
@@ -34,7 +34,7 @@ export function getLayout(layoutType) {
  * @returns {string[]} Array of layout type names
  */
 export function getLayoutTypes() {
-  return Object.keys(layouts);
+	return Object.keys(layouts);
 }
 
 /**
@@ -43,5 +43,5 @@ export function getLayoutTypes() {
  * @param {object} implementation - Object with computePositions and calculateHeight functions
  */
 export function registerLayout(name, implementation) {
-  layouts[name] = implementation;
+	layouts[name] = implementation;
 }

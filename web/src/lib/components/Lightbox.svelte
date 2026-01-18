@@ -1,7 +1,7 @@
 <script>
-  import { fade } from 'svelte/transition';
-  import { shuffle } from '$lib/utils/shuffle.js';
-  import { getLoadedImageArray } from '$lib/stores/loadedImages.svelte.js';
+  import { fade } from "svelte/transition";
+  import { shuffle } from "$lib/utils/shuffle.js";
+  import { getLoadedImageArray } from "$lib/stores/loadedImages.svelte.js";
 
   let { open = false, galleryPath, startImageId, onClose } = $props();
 
@@ -11,7 +11,11 @@
 
   // Current image ID (encode for URL compatibility)
   let currentImageId = $derived(sequence[currentIndex] || null);
-  let imageSrc = $derived(currentImageId ? `${galleryPath}full/${encodeURIComponent(currentImageId)}.webp` : '');
+  let imageSrc = $derived(
+    currentImageId
+      ? `${galleryPath}full/${encodeURIComponent(currentImageId)}.webp`
+      : "",
+  );
 
   // Generate sequence when lightbox opens
   $effect(() => {
@@ -57,11 +61,11 @@
   function handleKeydown(event) {
     if (!open) return;
 
-    if (event.key === 'Escape') {
+    if (event.key === "Escape") {
       onClose?.();
-    } else if (event.key === 'ArrowRight') {
+    } else if (event.key === "ArrowRight") {
       showNext();
-    } else if (event.key === 'ArrowLeft') {
+    } else if (event.key === "ArrowLeft") {
       showPrev();
     }
   }
@@ -75,7 +79,9 @@
 
 {#if open}
   <div class="lightbox" transition:fade={{ duration: 300 }}>
-    <button class="lightbox-close" aria-label="Close" onclick={onClose}>&times;</button>
+    <button class="lightbox-close" aria-label="Close" onclick={onClose}
+      >&times;</button
+    >
     {#if imageSrc}
       <!-- svelte-ignore a11y_no_noninteractive_element_to_interactive_role -->
       <!-- svelte-ignore a11y_img_redundant_alt -->
@@ -84,7 +90,7 @@
         src={imageSrc}
         alt="Photo"
         onclick={handleImageClick}
-        onkeydown={(e) => e.key === 'Enter' && handleImageClick()}
+        onkeydown={(e) => e.key === "Enter" && handleImageClick()}
         role="button"
         tabindex="0"
       />

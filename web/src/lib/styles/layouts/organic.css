@@ -4,23 +4,23 @@
    ======================================== */
 
 .photo.layout-organic:hover {
-    transform: scale(1.02);
-    box-shadow: 0 8px 50px rgba(0, 0, 0, 0.7);
-    z-index: 50 !important;
+  transform: scale(1.02);
+  box-shadow: 0 8px 50px rgba(0, 0, 0, 0.7);
+  z-index: 50 !important;
 }
 
 /* Organic photos use calculated width from layout */
 .photo.layout-organic img {
-    width: var(--photo-width);
-    height: auto;
+  width: var(--photo-width);
+  height: auto;
 }
 
 .photo.layout-organic.portrait img {
-    width: auto;
-    height: var(--photo-width);
+  width: auto;
+  height: var(--photo-width);
 }
 
 .photo.layout-organic.square img {
-    width: var(--photo-width);
-    height: var(--photo-width);
+  width: var(--photo-width);
+  height: var(--photo-width);
 }
