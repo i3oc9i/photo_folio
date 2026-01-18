@@ -26,6 +26,7 @@ Add a `randomOrder` configuration option to control whether gallery images are s
 **Note**: Project constitution (`/.specify/memory/constitution.md`) is currently a template without project-specific principles defined. No gates to evaluate.
 
 **Implicit Standards** (from codebase analysis):
+
 - [x] Follows existing component prop patterns
 - [x] Uses Svelte 5 runes consistently
 - [x] Maintains separation between config (JSON) and behavior (components)
@@ -68,9 +69,9 @@ web/
 
 > No violations. Feature is a straightforward configuration option with minimal complexity.
 
-| Aspect | Assessment |
-|--------|------------|
-| Files Changed | 5 (site.json + 4 Svelte components + 1 utility) |
-| New Dependencies | None |
-| Pattern Changes | None (follows existing prop drilling pattern) |
+| Aspect           | Assessment                                               |
+| ---------------- | -------------------------------------------------------- |
+| Files Changed    | 5 (site.json + 4 Svelte components + 1 utility)          |
+| New Dependencies | None                                                     |
+| Pattern Changes  | None (follows existing prop drilling pattern)            |
 | Breaking Changes | None (new optional config, defaults to current behavior) |

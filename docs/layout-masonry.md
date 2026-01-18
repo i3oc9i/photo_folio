@@ -10,7 +10,7 @@ The masonry layout creates a clean, Pinterest-style grid where photos are aligne
 
 ## Visual Effect
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────────┐
 │                                                                   │
 │  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐         │
@@ -132,11 +132,11 @@ export function computeMasonryPositions(images, breakpointLayout, galleryConfig,
 
 ### Configuration Parameters
 
-| Parameter | Type | Default | Description |
-|-----------|------|---------|-------------|
-| `gutter` | number | 1.5 | Space between photos in vw units |
-| `dealingDelay` | number | 0.03 | Delay between each photo's fade-in (seconds) |
-| `scaleRandom` | object | `{ min: 1, max: 1 }` | Random scale range for photo sizing |
+| Parameter      | Type   | Default              | Description                                  |
+| -------------- | ------ | -------------------- | -------------------------------------------- |
+| `gutter`       | number | 1.5                  | Space between photos in vw units             |
+| `dealingDelay` | number | 0.03                 | Delay between each photo's fade-in (seconds) |
+| `scaleRandom`  | object | `{ min: 1, max: 1 }` | Random scale range for photo sizing          |
 
 ### Random Scale
 
@@ -150,14 +150,15 @@ The `scaleRandom` option adds subtle size variation to photos for a more organic
 }
 ```
 
-| Value | Effect |
-|-------|--------|
-| `min: 1, max: 1` | No scaling (default, uniform grid) |
-| `min: 0.9, max: 1` | Subtle variation (90% to 100%) |
+| Value              | Effect                             |
+| ------------------ | ---------------------------------- |
+| `min: 1, max: 1`   | No scaling (default, uniform grid) |
+| `min: 0.9, max: 1` | Subtle variation (90% to 100%)     |
 | `min: 0.8, max: 1` | Noticeable variation (80% to 100%) |
-| `min: 0.7, max: 1` | Strong variation (70% to 100%) |
+| `min: 0.7, max: 1` | Strong variation (70% to 100%)     |
 
 **Behavior:**
+
 - Scale values must be **≤ 1** (photos scale down from normal size)
 - `1.0` = full column width, smaller values = proportionally smaller
 - Scale is **deterministic** - same photo always gets same scale (based on index)
@@ -167,14 +168,14 @@ The `scaleRandom` option adds subtle size variation to photos for a more organic
 
 ## Comparison with Organic Layout
 
-| Feature | Organic | Masonry |
-|---------|---------|---------|
-| Random offsets | Yes (-3 to +3 vw) | No |
-| Rotation | Yes (-5° to +5°) | No |
-| Z-index variation | Yes (1-10) | No |
-| Dealing animation | Full rotation | Fade only |
-| Grid alignment | Approximate | Precise |
-| Visual style | Casual, scattered | Clean, organized |
+| Feature           | Organic           | Masonry          |
+| ----------------- | ----------------- | ---------------- |
+| Random offsets    | Yes (-3 to +3 vw) | No               |
+| Rotation          | Yes (-5° to +5°)  | No               |
+| Z-index variation | Yes (1-10)        | No               |
+| Dealing animation | Full rotation     | Fade only        |
+| Grid alignment    | Approximate       | Precise          |
+| Visual style      | Casual, scattered | Clean, organized |
 
 ## Position Object
 
@@ -269,7 +270,7 @@ const left = leftMargin + shortestColumn * columnWidth + (gutter / 2);
 
 This creates equal spacing on both sides of each photo:
 
-```
+```text
 ┌─────────────────────────────────────┐
 │                                     │
 │ gutter/2  ┌────────┐  gutter/2     │
@@ -284,14 +285,14 @@ This creates equal spacing on both sides of each photo:
 Same as organic layout:
 
 | Orientation | Aspect Ratio | Height Formula |
-|-------------|--------------|----------------|
-| Landscape | 3:2 (0.67) | `width * 0.67` |
-| Portrait | 2:3 (1.5) | `width * 1.5` |
-| Square | 1:1 (1.0) | `width` |
+| ----------- | ------------ | -------------- |
+| Landscape   | 3:2 (0.67)   | `width * 0.67` |
+| Portrait    | 2:3 (1.5)    | `width * 1.5`  |
+| Square      | 1:1 (1.0)    | `width`        |
 
 ## Algorithm Visualization
 
-```
+```text
 Initial: columns = 3, columnHeights = [0, 0, 0], gutter = 1.5vw
 
 Available width: 100 - 3 - 3 = 94vw
@@ -324,13 +325,13 @@ Step 4: Place image 4 (landscape)
 
 ## When to Use Masonry
 
-| Use Case | Recommendation |
-|----------|----------------|
-| Portfolio showcase | Masonry (clean, professional) |
-| Artistic gallery | Organic (creative, dynamic) |
-| Product grid | Masonry (organized) |
-| Mixed media | Organic (casual feel) |
-| Mobile-first | Masonry (better with 2 columns) |
+| Use Case           | Recommendation                  |
+| ------------------ | ------------------------------- |
+| Portfolio showcase | Masonry (clean, professional)   |
+| Artistic gallery   | Organic (creative, dynamic)     |
+| Product grid       | Masonry (organized)             |
+| Mixed media        | Organic (casual feel)           |
+| Mobile-first       | Masonry (better with 2 columns) |
 
 ## Integration with Gallery
 
@@ -384,13 +385,13 @@ If a gallery doesn't specify a layout, `defaultLayout` is used.
 Masonry adapts to different column counts:
 
 | Window Width | Columns | Photo Width (approx) |
-|--------------|---------|---------------------|
-| >= 1600px | 7 | 12vw |
-| >= 1440px | 6 | 14vw |
-| >= 1280px | 5 | 17vw |
-| >= 1024px | 4 | 22vw |
-| >= 768px | 3 | 29vw |
-| < 768px | 2 | 44vw |
+| ------------ | ------- | -------------------- |
+| >= 1600px    | 7       | 12vw                 |
+| >= 1440px    | 6       | 14vw                 |
+| >= 1280px    | 5       | 17vw                 |
+| >= 1024px    | 4       | 22vw                 |
+| >= 768px     | 3       | 29vw                 |
+| < 768px      | 2       | 44vw                 |
 
 The grid maintains consistent spacing regardless of column count.
 

@@ -9,6 +9,7 @@ Currently, the gallery always shuffles images randomly on load and reshuffle. Us
 ## Current Behavior
 
 **Gallery.svelte** always shuffles images:
+
 ```javascript
 function reshuffle() {
   const newShuffled = shuffle(manifest.images);
@@ -17,6 +18,7 @@ function reshuffle() {
 ```
 
 **Lightbox.svelte** always shuffles navigation sequence:
+
 ```javascript
 function generateSequence(startId) {
   const allImages = [...getLoadedImageArray()];
@@ -30,6 +32,7 @@ function generateSequence(startId) {
 ## Proposed Solution
 
 Add `randomOrder` boolean option with:
+
 - Global default in `galleries.randomOrder`
 - Per-gallery override in `galleries.items.<id>.randomOrder`
 
@@ -53,15 +56,15 @@ Add `randomOrder` boolean option with:
 
 ### Behavior Matrix
 
-| `randomOrder` | Gallery Display | Lightbox Navigation | Header Click |
-|---------------|-----------------|---------------------|--------------|
-| `true` | Shuffled | Shuffled | Re-shuffles |
-| `false` | Alphabetical by `image.id` | Sequential (sorted) | Disabled/no-op |
+| `randomOrder` | Gallery Display            | Lightbox Navigation     | Header Click           |
+|---------------|----------------------------|-------------------------|------------------------|
+| `true`        | Shuffled                   | Shuffled                | Re-shuffles            |
+| `false`       | Alphabetical by `image.id` | Sequential (sorted)     | Disabled/no-op         |
 
 ## Files to Modify
 
 | File | Changes |
-|------|---------|
+| ---- | ------- |
 | `web/public/site.json` | Add `galleries.randomOrder: true` global default |
 | `web/src/lib/components/Gallery.svelte` | Accept `randomOrder` prop, sort instead of shuffle when false |
 | `web/src/lib/components/Lightbox.svelte` | Accept `randomOrder` prop, sort sequence when false |

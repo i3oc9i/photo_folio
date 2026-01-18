@@ -65,11 +65,11 @@ npm run dev
 
 ## Files Changed
 
-| File | Change |
-|------|--------|
-| `web/public/site.json` | Add `galleries.randomOrder` |
-| `web/src/lib/utils/shuffle.js` | Add `sortById()` |
-| `web/src/App.svelte` | Compute `randomOrder`, conditional handler |
-| `web/src/lib/components/Gallery.svelte` | Accept prop, sort logic |
-| `web/src/lib/components/Lightbox.svelte` | Accept prop, sequence logic |
-| `web/src/lib/components/Header.svelte` | Optional click handler |
+| File                                      | Change                                    |
+| ----------------------------------------- | ----------------------------------------- |
+| `web/public/site.json`                    | Add `galleries.randomOrder`               |
+| `web/src/lib/utils/shuffle.js`            | Add `sortById()`                          |
+| `web/src/App.svelte`                      | Compute `randomOrder`, conditional handler|
+| `web/src/lib/components/Gallery.svelte`   | Accept prop, sort logic                   |
+| `web/src/lib/components/Lightbox.svelte`  | Accept prop, sequence logic               |
+| `web/src/lib/components/Header.svelte`    | Optional click handler                    |

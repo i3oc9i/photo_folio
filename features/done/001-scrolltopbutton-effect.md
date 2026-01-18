@@ -1,7 +1,9 @@
 # Feature: ScrollTopButton - Replace onMount with $effect
 
 ## Priority: High (Quick Win)
+
 ## Effort: ~15 minutes
+
 ## File: `web/src/lib/components/ScrollTopButton.svelte`
 
 ## Current Implementation

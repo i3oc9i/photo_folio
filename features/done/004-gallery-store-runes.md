@@ -1,7 +1,9 @@
 # Feature: gallery.js - Convert to Module-Level Runes
 
 ## Priority: Low
+
 ## Effort: ~2-3 hours
+
 ## File: `web/src/lib/stores/gallery.js`
 
 ## Current Implementation

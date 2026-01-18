@@ -1,7 +1,9 @@
 # Feature: loadedImages.js - Convert to $state Exports
 
 ## Priority: Low
+
 ## Effort: ~1-2 hours
+
 ## File: `web/src/lib/stores/loadedImages.js`
 
 ## Current Implementation
