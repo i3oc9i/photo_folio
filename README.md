@@ -16,7 +16,7 @@ uv run poe init         # Install Node.js dependencies
 uv run poe dev          # Process images + start dev server
 ```
 
-Open http://localhost:8080
+Open <http://localhost:8080>
 
 ## Commands
 
@@ -56,7 +56,7 @@ uv run poe clean:reset      # Full reset including .venv
 
 Each subdirectory in `gallery/` becomes a separate gallery:
 
-```
+```text
 gallery/
 ├── bw/           → Black & White gallery
 ├── colors/       → Colors gallery
@@ -289,7 +289,7 @@ Deploy `web/dist/` to any static host (GitHub Pages, Netlify, Vercel, etc.).
 
 ## Project Structure
 
-```
+```text
 photo_folio/
 ├── src/gallery_builder/    # Python image processing
 ├── gallery/                # Source photos (not in git)
