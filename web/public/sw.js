@@ -1,5 +1,5 @@
 // Service Worker for Photo Portfolio (Svelte/Vite version)
-const CACHE_VERSION = 'v5';
+const CACHE_VERSION = 'v6';
 const STATIC_CACHE = `static-${CACHE_VERSION}`;
 const IMAGE_CACHE = `images-${CACHE_VERSION}`;
 
@@ -38,7 +38,7 @@ self.addEventListener('fetch', (event) => {
   }
 
   // Config: network-first (pick up config changes)
-  if (url.pathname.includes('config.json')) {
+  if (url.pathname.includes('site.json') || url.pathname.includes('theme.json')) {
     event.respondWith(networkFirst(event.request, STATIC_CACHE));
     return;
   }

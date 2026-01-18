@@ -7,14 +7,14 @@
     "altTextTemplate": "Fine art photograph by Ivano Coltellacci"
   },
   "galleries": {
-    "default": "One",
+    "default": "Divers",
     "items": {
-      "One": {
-        "displayName": "One",
+      "Divers": {
+        "displayName": "Divers",
         "order": 1
       },
-      "Two": {
-        "displayName": "Two",
+      "colors": {
+        "displayName": "Colors",
         "order": 2,
         "layout": "masonry"
       }
