@@ -15,15 +15,15 @@ Photography portfolio: **Svelte 5 + Vite** (frontend) + **Python** (image proces
 
 ## Key Paths
 
-| Path | Purpose |
-|------|---------|
-| `gallery/<name>/` | Source photos (not in git) |
-| `web/public/assets/gallery/` | Generated WebP images |
-| `web/public/site.json` | Site content config |
-| `web/public/theme.json` | Theme/styling config |
-| `web/src/lib/` | Svelte components, stores, utils |
-| `src/gallery_builder/` | Python image processing |
-| `features/` | Feature planning files (backlog → in-progress → done) |
+| Path                         | Purpose                                               |
+| ---------------------------- | ----------------------------------------------------- |
+| `gallery/<name>/`            | Source photos (not in git)                            |
+| `web/public/assets/gallery/` | Generated WebP images                                 |
+| `web/public/site.json`       | Site content config                                   |
+| `web/public/theme.json`      | Theme/styling config                                  |
+| `web/src/lib/`               | Svelte components, stores, utils                      |
+| `src/gallery_builder/`       | Python image processing                               |
+| `features/`                  | Feature planning files (backlog → in-progress → done) |
 
 ## Commands
 
@@ -37,14 +37,14 @@ npm run build        # Production build (in web/)
 
 Detailed implementation docs are in `docs/`. **Consult these before modifying related code:**
 
-| Document | Topics |
-|----------|--------|
-| `docs/web-architecture.md` | Svelte 5 runes, stores, components, theme system |
-| `docs/lazy-loading.md` | IntersectionObserver, eager loading, loadedImages store |
-| `docs/service-worker.md` | Caching strategies, offline support |
-| `docs/layout-organic.md` | Scattered photos algorithm |
-| `docs/layout-masonry.md` | Pinterest-style grid algorithm |
-| `docs/gallery-builder.md` | Python image processing, ThreadPoolExecutor |
+| Document                   | Topics                                                  |
+| -------------------------- | ------------------------------------------------------- |
+| `docs/web-architecture.md` | Svelte 5 runes, stores, components, theme system        |
+| `docs/lazy-loading.md`     | IntersectionObserver, eager loading, loadedImages store |
+| `docs/service-worker.md`   | Caching strategies, offline support                     |
+| `docs/layout-organic.md`   | Scattered photos algorithm                              |
+| `docs/layout-masonry.md`   | Pinterest-style grid algorithm                          |
+| `docs/gallery-builder.md`  | Python image processing, ThreadPoolExecutor             |
 
 ## Quick Reference
 
@@ -55,8 +55,10 @@ Detailed implementation docs are in `docs/`. **Consult these before modifying re
 **Config files**: `site.json` (content) + `theme.json` (styling) → merged into `config` store
 
 ## Active Technologies
+
 - JavaScript ES2020+, Svelte 5.16.0 + Svelte 5.16.0, Vite 7.3.0 (005-gallery-random-order)
 - Static JSON configuration files (`site.json`) (005-gallery-random-order)
 
 ## Recent Changes
+
 - 005-gallery-random-order: Added JavaScript ES2020+, Svelte 5.16.0 + Svelte 5.16.0, Vite 7.3.0

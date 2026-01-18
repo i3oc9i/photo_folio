@@ -9,24 +9,28 @@ This document establishes the governing principles, quality standards, and techn
 ## 1. Core Principles
 
 ### 1.1 Simplicity First
+
 - Prefer simple solutions over clever ones
 - Minimize dependencies
 - Avoid premature optimization
 - Static site over dynamic when possible
 
 ### 1.2 Performance by Default
+
 - Images are the product; they must load fast
 - Progressive enhancement over blocking loads
 - Offline capability is not optional
 - Every kilobyte matters
 
 ### 1.3 Configuration over Code
+
 - Non-technical users must be able to customize
 - Split content from presentation
 - JSON configuration, not code changes
 - Sensible defaults for everything
 
 ### 1.4 Zero Runtime Dependencies
+
 - No backend servers required
 - No databases
 - No API calls to external services
@@ -38,14 +42,15 @@ This document establishes the governing principles, quality standards, and techn
 
 ### 2.1 Frontend
 
-| Layer | Technology | Rationale |
-|-------|------------|-----------|
-| Framework | Svelte 5 | Compile-time reactivity, minimal runtime |
-| Build Tool | Vite | Fast HMR, optimized production builds |
-| Styling | Vanilla CSS | No runtime overhead, CSS custom properties |
-| Caching | Service Worker | Native browser API, no library needed |
+| Layer      | Technology     | Rationale                                  |
+| ---------- | -------------- | ------------------------------------------ |
+| Framework  | Svelte 5       | Compile-time reactivity, minimal runtime   |
+| Build Tool | Vite           | Fast HMR, optimized production builds      |
+| Styling    | Vanilla CSS    | No runtime overhead, CSS custom properties |
+| Caching    | Service Worker | Native browser API, no library needed      |
 
 **Constraints:**
+
 - No CSS-in-JS libraries
 - No state management libraries (use Svelte stores)
 - No UI component libraries
@@ -53,23 +58,24 @@ This document establishes the governing principles, quality standards, and techn
 
 ### 2.2 Image Processing
 
-| Layer | Technology | Rationale |
-|-------|------------|-----------|
-| Language | Python 3.10+ | Cross-platform, excellent image libraries |
-| Image Library | Pillow | Industry standard, well-maintained |
-| Parallelism | ThreadPoolExecutor | Built-in, I/O-bound workload |
+| Layer         | Technology         | Rationale                                 |
+| ------------- | ------------------ | ----------------------------------------- |
+| Language      | Python 3.10+       | Cross-platform, excellent image libraries |
+| Image Library | Pillow             | Industry standard, well-maintained        |
+| Parallelism   | ThreadPoolExecutor | Built-in, I/O-bound workload              |
 
 **Constraints:**
+
 - Single script, no complex pipeline
 - No external services (all local processing)
 - WebP output only (universal browser support)
 
 ### 2.3 Package Management
 
-| Context | Tool |
-|---------|------|
-| Python | uv |
-| Node.js | npm |
+| Context     | Tool             |
+| ----------- | ---------------- |
+| Python      | uv               |
+| Node.js     | npm              |
 | Task Runner | Poethepoet (poe) |
 
 ---
@@ -78,7 +84,7 @@ This document establishes the governing principles, quality standards, and techn
 
 ### 3.1 Component Structure
 
-```
+```text
 App.svelte (Root orchestrator)
 ├── Splash.svelte
 ├── Header.svelte
@@ -92,6 +98,7 @@ App.svelte (Root orchestrator)
 ```
 
 **Rules:**
+
 - One component per file
 - Components in `src/lib/components/`
 - Max component size: ~200 lines
@@ -99,14 +106,15 @@ App.svelte (Root orchestrator)
 
 ### 3.2 State Management
 
-| Store | Scope | Type |
-|-------|-------|------|
-| config | Global | Writable |
-| gallery | Global | Writable + derived |
-| breakpoint | Global | Derived from window |
-| loadedImages | Global | Writable Set |
+| Store        | Scope  | Type                |
+| ------------ | ------ | ------------------- |
+| config       | Global | Writable            |
+| gallery      | Global | Writable + derived  |
+| breakpoint   | Global | Derived from window |
+| loadedImages | Global | Writable Set        |
 
 **Rules:**
+
 - Use Svelte 5 runes (`$state`, `$derived`, `$effect`)
 - Stores in `src/lib/stores/`
 - Prefer derived state over computed in components
@@ -114,7 +122,7 @@ App.svelte (Root orchestrator)
 
 ### 3.3 CSS Architecture
 
-```
+```text
 styles/
 ├── global.css          # Imports all
 ├── variables.css       # CSS custom properties
@@ -124,6 +132,7 @@ styles/
 ```
 
 **Rules:**
+
 - CSS custom properties for all theme values
 - No inline styles except dynamic positioning
 - Mobile-first media queries
@@ -143,6 +152,7 @@ export function calculateHeight(positions, breakpoint, galleryConfig, layoutConf
 ```
 
 **Rules:**
+
 - Layouts in `src/lib/utils/layouts/`
 - Pure functions, no side effects
 - Register in `layouts/index.js`
@@ -152,7 +162,7 @@ export function calculateHeight(positions, breakpoint, galleryConfig, layoutConf
 
 ## 4. Directory Structure
 
-```
+```text
 project/
 ├── gallery/                    # Source photos (gitignored)
 │   └── <gallery-name>/
@@ -192,30 +202,30 @@ project/
 
 ### 5.1 Core Web Vitals Targets
 
-| Metric | Target | Max |
-|--------|--------|-----|
-| First Contentful Paint | < 1.5s | 2.0s |
-| Largest Contentful Paint | < 2.5s | 3.0s |
-| Cumulative Layout Shift | < 0.1 | 0.15 |
-| First Input Delay | < 100ms | 200ms |
+| Metric                   | Target  | Max   |
+| ------------------------ | ------- | ----- |
+| First Contentful Paint   | < 1.5s  | 2.0s  |
+| Largest Contentful Paint | < 2.5s  | 3.0s  |
+| Cumulative Layout Shift  | < 0.1   | 0.15  |
+| First Input Delay        | < 100ms | 200ms |
 
 ### 5.2 Image Optimization
 
-| Metric | Target |
-|--------|--------|
-| File size reduction | > 70% vs source |
-| WebP quality | 85% |
-| Max full-size dimension | 1600px |
-| Max thumb dimension | 400px |
+| Metric                  | Target          |
+| ----------------------- | --------------- |
+| File size reduction     | > 70% vs source |
+| WebP quality            | 85%             |
+| Max full-size dimension | 1600px          |
+| Max thumb dimension     | 400px           |
 
 ### 5.3 Runtime Performance
 
-| Metric | Target |
-|--------|--------|
-| Gallery switch time (cached) | < 100ms |
-| Lazy load trigger margin | 800px |
-| Eager load count | 12 images |
-| Animation frame rate | 60fps |
+| Metric                       | Target    |
+| ---------------------------- | --------- |
+| Gallery switch time (cached) | < 100ms   |
+| Lazy load trigger margin     | 800px     |
+| Eager load count             | 12 images |
+| Animation frame rate         | 60fps     |
 
 ---
 
@@ -223,14 +233,14 @@ project/
 
 ### 6.1 Service Worker Rules
 
-| Resource | Strategy | Cache Name |
-|----------|----------|------------|
-| Images (webp, jpg, png, gif) | Cache-first | images-v{N} |
-| Manifests (images.json) | Network-first | static-v{N} |
+| Resource                       | Strategy      | Cache Name  |
+| ------------------------------ | ------------- | ----------- |
+| Images (webp, jpg, png, gif)   | Cache-first   | images-v{N} |
+| Manifests (images.json)        | Network-first | static-v{N} |
 | Config (site.json, theme.json) | Network-first | static-v{N} |
-| Hashed assets (JS, CSS) | Cache-first | static-v{N} |
-| HTML | Network-first | static-v{N} |
-| Other | Network-only | - |
+| Hashed assets (JS, CSS)        | Cache-first   | static-v{N} |
+| HTML                           | Network-first | static-v{N} |
+| Other                          | Network-only  | -           |
 
 ### 6.2 Cache Versioning
 
@@ -245,11 +255,11 @@ project/
 ### 7.1 Minimum Versions
 
 | Browser | Version |
-|---------|---------|
-| Chrome | 88+ |
-| Firefox | 85+ |
-| Safari | 14+ |
-| Edge | 88+ |
+| ------- | ------- |
+| Chrome  | 88+     |
+| Firefox | 85+     |
+| Safari  | 14+     |
+| Edge    | 88+     |
 
 ### 7.2 Required APIs
 
@@ -352,7 +362,7 @@ poe clean:all       # Remove assets + dist + node_modules
 
 ### 11.2 Production Build Output
 
-```
+```text
 web/dist/
 ├── index.html
 ├── _app/
@@ -364,6 +374,7 @@ web/dist/
 ### 11.3 Deployment Targets
 
 Compatible with any static host:
+
 - GitHub Pages
 - Netlify
 - Vercel
@@ -377,13 +388,13 @@ Compatible with any static host:
 
 ### 12.1 Required Documentation
 
-| Document | Purpose |
-|----------|---------|
-| README.md | Quick start, configuration |
-| CLAUDE.md | AI assistant instructions |
-| PRD.md | Functional requirements |
-| CONSTITUTION.md | Technical standards |
-| docs/*.md | Implementation details |
+| Document        | Purpose                    |
+| --------------- | -------------------------- |
+| README.md       | Quick start, configuration |
+| CLAUDE.md       | AI assistant instructions  |
+| PRD.md          | Functional requirements    |
+| CONSTITUTION.md | Technical standards        |
+| docs/*.md       | Implementation details     |
 
 ### 12.2 Code Documentation
 
@@ -398,15 +409,15 @@ Compatible with any static host:
 
 Document significant technical decisions here:
 
-| Date | Decision | Rationale |
-|------|----------|-----------|
-| - | Svelte 5 over other frameworks | Compile-time reactivity, minimal bundle |
-| - | WebP only output | Universal support, best compression |
-| - | Split site.json/theme.json | Separate content from presentation |
-| - | Service worker caching | Offline support, performance |
-| - | CSS custom properties | Runtime theme switching |
-| - | Shortest-column-first layout | O(n) performance, good visual balance |
+| Date | Decision                       | Rationale                               |
+| ---- | ------------------------------ | --------------------------------------- |
+| -    | Svelte 5 over other frameworks | Compile-time reactivity, minimal bundle |
+| -    | WebP only output               | Universal support, best compression     |
+| -    | Split site.json/theme.json     | Separate content from presentation      |
+| -    | Service worker caching         | Offline support, performance            |
+| -    | CSS custom properties          | Runtime theme switching                 |
+| -    | Shortest-column-first layout   | O(n) performance, good visual balance   |
 
 ---
 
-*End of Constitution*
+End of Constitution
