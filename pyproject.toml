@@ -51,7 +51,7 @@ dev = { sequence = ["dev:assets", "dev:serve"], help = "Build assets and start d
 "dev:build" = { shell = "cd web && npm run build", help = "Build for production" }
 
 # Clean
-clean = { shell = "rm -rf web/public/assets/*", help = "Remove generated gallery assets" }
+clean = { shell = "rm -rf web/public/assets/gallery/*", help = "Remove generated gallery images" }
 "clean:dist" = { shell = "rm -rf web/dist", help = "Remove production build output" }
-"clean:all" = { shell = "rm -rf web/public/assets/* web/dist web/node_modules && find . -type d -name __pycache__ -exec rm -rf {} + 2>/dev/null || true", help = "Remove all generated files and caches" }
-"clean:reset" = { shell = "rm -rf web/public/assets/* web/dist web/node_modules .venv && find . -type d -name __pycache__ -exec rm -rf {} + 2>/dev/null || true", help = "Full reset: remove everything including .venv" }
+"clean:all" = { shell = "rm -rf web/public/assets/gallery/* web/dist web/node_modules && find . -type d -name __pycache__ -exec rm -rf {} + 2>/dev/null || true", help = "Remove all generated files and caches" }
+"clean:reset" = { shell = "rm -rf web/public/assets/gallery/* web/dist web/node_modules .venv && find . -type d -name __pycache__ -exec rm -rf {} + 2>/dev/null || true", help = "Full reset: remove everything including .venv" }
