@@ -1,57 +1,57 @@
 {
-	"site": {
-		"title": "Ivano Coltellacci Photography",
-		"name": "Ivano Coltellacci",
-		"subtitle": "fine art photography",
-		"enterButtonText": "Enter",
-		"altTextTemplate": "Fine art photograph by Ivano Coltellacci"
-	},
-	"galleries": {
-		"default": "Divers",
-		"items": {
-			"Divers": {
-				"displayName": "Divers",
-				"order": 1
-			},
-			"colors": {
-				"displayName": "Colors",
-				"order": 2,
-				"layout": "masonry"
-			}
-		},
-		"defaultLayout": "organic"
-	},
-	"panels": {
-		"about": {
-			"title": "About",
-			"paragraphs": [
-				"Fine art photographer exploring the boundaries between reality and imagination through portraiture and conceptual imagery.",
-				"My work delves into human emotion, vulnerability, and the surreal aspects of existence. Each photograph is a carefully crafted moment that invites viewers to look beyond the surface.",
-				"Based in Toulouse/France. Available for collaborations and commissioned work."
-			],
-			"contact": {
-				"label": "Contact",
-				"email": "ivano.coltellacci@gmail.com",
-				"instagram": "@ivano.coltellacci",
-				"twitter": "",
-				"facebook": "",
-				"linkedin": "",
-				"youtube": "",
-				"pinterest": "",
-				"behance": ""
-			}
-		},
-		"credits": {
-			"title": "Credits",
-			"paragraphs": [
-				"All photographs by Ivano Coltellacci.",
-				" ",
-				"All images are protected by copyright. Unauthorized use is prohibited."
-			],
-			"copyright": {
-				"year": 2026,
-				"name": "Ivano Coltellacci"
-			}
-		}
-	}
+  "site": {
+    "title": "Ivano Coltellacci Photography",
+    "name": "Ivano Coltellacci",
+    "subtitle": "fine art photography",
+    "enterButtonText": "Enter",
+    "altTextTemplate": "Fine art photograph by Ivano Coltellacci"
+  },
+  "galleries": {
+    "default": "Divers",
+    "items": {
+      "Divers": {
+        "displayName": "Divers",
+        "order": 1
+      },
+      "colors": {
+        "displayName": "Colors",
+        "order": 2,
+        "layout": "masonry"
+      }
+    },
+    "defaultLayout": "organic"
+  },
+  "panels": {
+    "about": {
+      "title": "About",
+      "paragraphs": [
+        "Fine art photographer exploring the boundaries between reality and imagination through portraiture and conceptual imagery.",
+        "My work delves into human emotion, vulnerability, and the surreal aspects of existence. Each photograph is a carefully crafted moment that invites viewers to look beyond the surface.",
+        "Based in Toulouse/France. Available for collaborations and commissioned work."
+      ],
+      "contact": {
+        "label": "Contact",
+        "email": "ivano.coltellacci@gmail.com",
+        "instagram": "@ivano.coltellacci",
+        "twitter": "",
+        "facebook": "",
+        "linkedin": "",
+        "youtube": "",
+        "pinterest": "",
+        "behance": ""
+      }
+    },
+    "credits": {
+      "title": "Credits",
+      "paragraphs": [
+        "All photographs by Ivano Coltellacci.",
+        " ",
+        "All images are protected by copyright. Unauthorized use is prohibited."
+      ],
+      "copyright": {
+        "year": 2026,
+        "name": "Ivano Coltellacci"
+      }
+    }
+  }
 }

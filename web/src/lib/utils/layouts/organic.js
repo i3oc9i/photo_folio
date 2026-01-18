@@ -5,119 +5,119 @@ import { randomInRange } from "../shuffle.js";
  * Creates a "photos scattered on a table" effect with random offsets and rotation
  */
 export function computeOrganicPositions(
-	images,
-	breakpointLayout,
-	galleryConfig,
-	layoutConfig,
+  images,
+  breakpointLayout,
+  galleryConfig,
+  layoutConfig,
 ) {
-	const positions = [];
-	const { columns } = breakpointLayout;
-	const { topMargin, leftMargin = 1, rightMargin = 1 } = galleryConfig;
-	const {
-		randomOffset,
-		rotation,
-		dealingRotation,
-		dealingDelay,
-		spacing = 2,
-		zIndex = { min: 1, max: 10 },
-	} = layoutConfig;
+  const positions = [];
+  const { columns } = breakpointLayout;
+  const { topMargin, leftMargin = 1, rightMargin = 1 } = galleryConfig;
+  const {
+    randomOffset,
+    rotation,
+    dealingRotation,
+    dealingDelay,
+    spacing = 2,
+    zIndex = { min: 1, max: 10 },
+  } = layoutConfig;
 
-	const availableWidth = 100 - leftMargin - rightMargin;
-	const columnWidth = availableWidth / columns;
-	const columnHeights = new Array(columns).fill(0);
+  const availableWidth = 100 - leftMargin - rightMargin;
+  const columnWidth = availableWidth / columns;
+  const columnHeights = new Array(columns).fill(0);
 
-	// Calculate actual photo width based on column width minus spacing
-	const photoWidth = columnWidth - spacing;
+  // Calculate actual photo width based on column width minus spacing
+  const photoWidth = columnWidth - spacing;
 
-	// Account for negative random offset so topMargin is always respected as minimum clear space
-	const offsetBuffer = Math.abs(randomOffset.min);
+  // Account for negative random offset so topMargin is always respected as minimum clear space
+  const offsetBuffer = Math.abs(randomOffset.min);
 
-	for (let i = 0; i < images.length; i++) {
-		const image = images[i];
+  for (let i = 0; i < images.length; i++) {
+    const image = images[i];
 
-		// Find the shortest column
-		let shortestColumn = 0;
-		let minHeight = columnHeights[0];
-		for (let col = 1; col < columns; col++) {
-			if (columnHeights[col] < minHeight) {
-				minHeight = columnHeights[col];
-				shortestColumn = col;
-			}
-		}
+    // Find the shortest column
+    let shortestColumn = 0;
+    let minHeight = columnHeights[0];
+    for (let col = 1; col < columns; col++) {
+      if (columnHeights[col] < minHeight) {
+        minHeight = columnHeights[col];
+        shortestColumn = col;
+      }
+    }
 
-		// Calculate base position
-		// Add offsetBuffer to ensure topMargin is respected even with maximum negative offsetY
-		const baseLeft = leftMargin + shortestColumn * columnWidth;
-		const baseTop = topMargin + offsetBuffer + columnHeights[shortestColumn];
+    // Calculate base position
+    // Add offsetBuffer to ensure topMargin is respected even with maximum negative offsetY
+    const baseLeft = leftMargin + shortestColumn * columnWidth;
+    const baseTop = topMargin + offsetBuffer + columnHeights[shortestColumn];
 
-		// Add random offsets for organic feel
-		const offsetX = randomInRange(randomOffset.min, randomOffset.max);
-		const offsetY = randomInRange(randomOffset.min, randomOffset.max);
+    // Add random offsets for organic feel
+    const offsetX = randomInRange(randomOffset.min, randomOffset.max);
+    const offsetY = randomInRange(randomOffset.min, randomOffset.max);
 
-		// Calculate rotations for animation
-		const endRotation = randomInRange(rotation.min, rotation.max);
-		const startRotation = randomInRange(
-			dealingRotation.min,
-			dealingRotation.max,
-		);
+    // Calculate rotations for animation
+    const endRotation = randomInRange(rotation.min, rotation.max);
+    const startRotation = randomInRange(
+      dealingRotation.min,
+      dealingRotation.max,
+    );
 
-		// Use calculated photo width for all orientations
-		const size = photoWidth;
+    // Use calculated photo width for all orientations
+    const size = photoWidth;
 
-		// Generate random z-index for photo stacking effect
-		const photoZIndex = Math.floor(randomInRange(zIndex.min, zIndex.max + 1));
+    // Generate random z-index for photo stacking effect
+    const photoZIndex = Math.floor(randomInRange(zIndex.min, zIndex.max + 1));
 
-		// Estimate height for column tracking based on orientation
-		let estimatedHeight;
-		if (image.orientation === "landscape") {
-			estimatedHeight = photoWidth * 0.67;
-		} else if (image.orientation === "portrait") {
-			estimatedHeight = photoWidth * 1.5;
-		} else {
-			estimatedHeight = photoWidth;
-		}
+    // Estimate height for column tracking based on orientation
+    let estimatedHeight;
+    if (image.orientation === "landscape") {
+      estimatedHeight = photoWidth * 0.67;
+    } else if (image.orientation === "portrait") {
+      estimatedHeight = photoWidth * 1.5;
+    } else {
+      estimatedHeight = photoWidth;
+    }
 
-		columnHeights[shortestColumn] += estimatedHeight + spacing;
+    columnHeights[shortestColumn] += estimatedHeight + spacing;
 
-		positions.push({
-			id: image.id,
-			left: baseLeft + offsetX,
-			top: baseTop + offsetY,
-			offsetX,
-			offsetY,
-			size,
-			width: photoWidth,
-			height: estimatedHeight,
-			rotation: endRotation,
-			startRotation,
-			delay: i * dealingDelay,
-			zIndex: photoZIndex,
-			layoutType: "organic",
-		});
-	}
+    positions.push({
+      id: image.id,
+      left: baseLeft + offsetX,
+      top: baseTop + offsetY,
+      offsetX,
+      offsetY,
+      size,
+      width: photoWidth,
+      height: estimatedHeight,
+      rotation: endRotation,
+      startRotation,
+      delay: i * dealingDelay,
+      zIndex: photoZIndex,
+      layoutType: "organic",
+    });
+  }
 
-	return positions;
+  return positions;
 }
 
 /**
  * Calculate total gallery height for organic layout
  */
 export function calculateOrganicHeight(
-	positions,
-	_breakpointLayout,
-	galleryConfig,
+  positions,
+  _breakpointLayout,
+  galleryConfig,
 ) {
-	if (positions.length === 0) return 100;
+  if (positions.length === 0) return 100;
 
-	const { bottomMargin = 1 } = galleryConfig;
+  const { bottomMargin = 1 } = galleryConfig;
 
-	let maxBottom = 0;
-	for (const pos of positions) {
-		const bottom = pos.top + pos.height;
-		if (bottom > maxBottom) {
-			maxBottom = bottom;
-		}
-	}
+  let maxBottom = 0;
+  for (const pos of positions) {
+    const bottom = pos.top + pos.height;
+    if (bottom > maxBottom) {
+      maxBottom = bottom;
+    }
+  }
 
-	return maxBottom + bottomMargin;
+  return maxBottom + bottomMargin;
 }

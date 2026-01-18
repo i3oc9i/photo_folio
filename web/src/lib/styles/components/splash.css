@@ -1,74 +1,74 @@
 /* Splash/Entry Page */
 .splash {
-	position: fixed;
-	top: 0;
-	left: 0;
-	width: 100%;
-	height: 100%;
-	background-color: var(--color-background);
-	z-index: 500;
-	display: flex;
-	align-items: center;
-	justify-content: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: var(--color-background);
+  z-index: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .splash-content {
-	text-align: center;
+  text-align: center;
 }
 
 .splash-name {
-	font-family: var(--font-heading);
-	font-size: 3rem;
-	font-weight: 400;
-	letter-spacing: 0.2em;
-	color: var(--color-text);
-	margin-bottom: 0.5rem;
+  font-family: var(--font-heading);
+  font-size: 3rem;
+  font-weight: 400;
+  letter-spacing: 0.2em;
+  color: var(--color-text);
+  margin-bottom: 0.5rem;
 }
 
 .splash-subtitle {
-	font-family: var(--font-body);
-	font-size: 1.6rem;
-	font-weight: 300;
-	letter-spacing: 0.25em;
-	text-transform: lowercase;
-	color: var(--color-text-muted);
-	margin-bottom: 3rem;
+  font-family: var(--font-body);
+  font-size: 1.6rem;
+  font-weight: 300;
+  letter-spacing: 0.25em;
+  text-transform: lowercase;
+  color: var(--color-text-muted);
+  margin-bottom: 3rem;
 }
 
 .splash-enter {
-	background: none;
-	border: 1px solid var(--color-text-dimmer);
-	color: var(--color-text-dim);
-	font-family: var(--font-body);
-	font-size: 0.75rem;
-	font-weight: 300;
-	letter-spacing: 0.3em;
-	text-transform: uppercase;
-	padding: 0.75rem 2rem;
-	cursor: pointer;
-	transition:
-		color var(--transition-hover) ease,
-		border-color var(--transition-hover) ease;
+  background: none;
+  border: 1px solid var(--color-text-dimmer);
+  color: var(--color-text-dim);
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  font-weight: 300;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  padding: 0.75rem 2rem;
+  cursor: pointer;
+  transition:
+    color var(--transition-hover) ease,
+    border-color var(--transition-hover) ease;
 }
 
 .splash-enter:hover {
-	color: var(--color-text);
-	border-color: var(--color-text);
+  color: var(--color-text);
+  border-color: var(--color-text);
 }
 
 @media (max-width: 768px) {
-	.splash-name {
-		font-size: 2rem;
-		letter-spacing: 0.15em;
-	}
+  .splash-name {
+    font-size: 2rem;
+    letter-spacing: 0.15em;
+  }
 
-	.splash-subtitle {
-		font-size: 1.1rem;
-		letter-spacing: 0.2em;
-	}
+  .splash-subtitle {
+    font-size: 1.1rem;
+    letter-spacing: 0.2em;
+  }
 
-	.splash-enter {
-		font-size: 0.65rem;
-		padding: 0.6rem 1.5rem;
-	}
+  .splash-enter {
+    font-size: 0.65rem;
+    padding: 0.6rem 1.5rem;
+  }
 }

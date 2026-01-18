@@ -1,148 +1,148 @@
 /* Slide-in Panels */
 .panel {
-	position: fixed;
-	top: 0;
-	width: 100%;
-	max-width: 450px;
-	height: 100vh;
-	background-color: var(--color-background-alt);
-	z-index: 200;
-	overflow-y: auto;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  max-width: 450px;
+  height: 100vh;
+  background-color: var(--color-background-alt);
+  z-index: 200;
+  overflow-y: auto;
 }
 
 /* About panel - slides from left */
 .panel-left {
-	left: 0;
+  left: 0;
 }
 
 /* Credits panel - slides from right */
 .panel-right {
-	right: 0;
+  right: 0;
 }
 
 /* Close button positioning */
 .panel-left .panel-close {
-	right: 1.5rem;
+  right: 1.5rem;
 }
 
 .panel-right .panel-close {
-	left: 1.5rem;
+  left: 1.5rem;
 }
 
 .panel-close {
-	position: absolute;
-	top: 1.5rem;
-	background: none;
-	border: none;
-	color: var(--color-text);
-	font-size: 2rem;
-	cursor: pointer;
-	transition: opacity var(--transition-hover) ease;
-	line-height: 1;
-	padding: 0.5rem;
+  position: absolute;
+  top: 1.5rem;
+  background: none;
+  border: none;
+  color: var(--color-text);
+  font-size: 2rem;
+  cursor: pointer;
+  transition: opacity var(--transition-hover) ease;
+  line-height: 1;
+  padding: 0.5rem;
 }
 
 .panel-close:hover {
-	opacity: 0.7;
+  opacity: 0.7;
 }
 
 .panel-content {
-	padding: 5rem 3rem 3rem;
+  padding: 5rem 3rem 3rem;
 }
 
 .panel-content h2 {
-	font-size: 1.5rem;
-	font-weight: 300;
-	letter-spacing: 0.15em;
-	text-transform: uppercase;
-	margin-bottom: 2rem;
-	color: #fff;
+  font-size: 1.5rem;
+  font-weight: 300;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 2rem;
+  color: #fff;
 }
 
 .panel-content p {
-	margin-bottom: 1.5rem;
-	font-weight: 300;
-	color: var(--color-panel-text);
+  margin-bottom: 1.5rem;
+  font-weight: 300;
+  color: var(--color-panel-text);
 }
 
 .panel-content a {
-	color: var(--color-text);
-	text-decoration: none;
-	border-bottom: 1px solid var(--color-text-dimmer);
-	transition: border-color var(--transition-hover) ease;
+  color: var(--color-text);
+  text-decoration: none;
+  border-bottom: 1px solid var(--color-text-dimmer);
+  transition: border-color var(--transition-hover) ease;
 }
 
 .panel-content a:hover {
-	border-color: var(--color-text);
+  border-color: var(--color-text);
 }
 
 .contact,
 .credits-note {
-	margin-top: 3rem;
-	padding-top: 2rem;
-	border-top: 1px solid var(--color-border-light);
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--color-border-light);
 }
 
 .contact-label {
-	margin-bottom: 1rem;
-	color: var(--color-text-dim);
+  margin-bottom: 1rem;
+  color: var(--color-text-dim);
 }
 
 .social-links {
-	display: flex;
-	gap: 1rem;
-	flex-wrap: wrap;
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
 }
 
 .social-link {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	width: 2.5rem;
-	height: 2.5rem;
-	border: none;
-	border-radius: 50%;
-	background-color: var(--color-border-light);
-	transition:
-		background-color var(--transition-hover) ease,
-		transform var(--transition-hover) ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border: none;
+  border-radius: 50%;
+  background-color: var(--color-border-light);
+  transition:
+    background-color var(--transition-hover) ease,
+    transform var(--transition-hover) ease;
 }
 
 .social-link:hover {
-	background-color: var(--color-text-dimmer);
-	transform: scale(1.1);
+  background-color: var(--color-text-dimmer);
+  transform: scale(1.1);
 }
 
 .social-icon {
-	width: 1.25rem;
-	height: 1.25rem;
-	filter: invert(1);
-	opacity: 0.9;
-	transition: opacity var(--transition-hover) ease;
+  width: 1.25rem;
+  height: 1.25rem;
+  filter: invert(1);
+  opacity: 0.9;
+  transition: opacity var(--transition-hover) ease;
 }
 
 .social-link:hover .social-icon {
-	opacity: 1;
+  opacity: 1;
 }
 
 /* Overlay */
 .overlay {
-	position: fixed;
-	top: 0;
-	left: 0;
-	width: 100%;
-	height: 100%;
-	background-color: var(--color-overlay);
-	z-index: 150;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: var(--color-overlay);
+  z-index: 150;
 }
 
 /* Responsive - Small screens (<768px) */
 @media (max-width: 767px) {
-	.panel {
-		max-width: 100%;
-	}
+  .panel {
+    max-width: 100%;
+  }
 
-	.panel-content {
-		padding: 4rem 2rem 2rem;
-	}
+  .panel-content {
+    padding: 4rem 2rem 2rem;
+  }
 }

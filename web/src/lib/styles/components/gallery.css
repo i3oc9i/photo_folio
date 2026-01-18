@@ -1,121 +1,121 @@
 /* Gallery */
 .gallery {
-	position: relative;
-	width: 100%;
-	min-height: 100vh;
-	margin-top: 7.1rem;
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  margin-top: 7.1rem;
 }
 
 .photo {
-	position: absolute;
-	opacity: 0;
-	transition:
-		transform var(--transition-panel) ease,
-		box-shadow var(--transition-panel) ease,
-		top var(--transition-hover) ease,
-		left var(--transition-hover) ease;
-	box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
-	cursor: pointer;
+  position: absolute;
+  opacity: 0;
+  transition:
+    transform var(--transition-panel) ease,
+    box-shadow var(--transition-panel) ease,
+    top var(--transition-hover) ease,
+    left var(--transition-hover) ease;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+  cursor: pointer;
 }
 
 /* Before gallery is revealed */
 .photo.loaded {
-	opacity: 0;
-	transform: scale(0.3) rotate(var(--start-rotation, 15deg));
+  opacity: 0;
+  transform: scale(0.3) rotate(var(--start-rotation, 15deg));
 }
 
 /* After gallery reveal - photos deal onto table */
 .gallery.revealed .photo.loaded {
-	opacity: 1;
-	transform: rotate(var(--end-rotation, 0deg));
-	transition:
-		opacity 0.1s ease,
-		transform var(--transition-gallery) cubic-bezier(0.34, 1.56, 0.64, 1);
+  opacity: 1;
+  transform: rotate(var(--end-rotation, 0deg));
+  transition:
+    opacity 0.1s ease,
+    transform var(--transition-gallery) cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .photo picture {
-	display: block;
+  display: block;
 }
 
 .photo img {
-	display: block;
-	pointer-events: none;
-	max-width: 100%;
-	max-height: 100%;
-	transition:
-		width var(--transition-hover) ease,
-		height var(--transition-hover) ease;
+  display: block;
+  pointer-events: none;
+  max-width: 100%;
+  max-height: 100%;
+  transition:
+    width var(--transition-hover) ease,
+    height var(--transition-hover) ease;
 }
 
 /* Gallery footer - end indicator */
 .gallery-footer {
-	text-align: center;
-	padding: 1rem 2rem 2rem;
-	color: var(--color-text-muted);
-	font-size: 0.75rem;
-	font-weight: 300;
-	letter-spacing: 0.15em;
-	text-transform: uppercase;
+  text-align: center;
+  padding: 1rem 2rem 2rem;
+  color: var(--color-text-muted);
+  font-size: 0.75rem;
+  font-weight: 300;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
 }
 
 /* Loading indicator */
 .loading {
-	position: fixed;
-	bottom: 2rem;
-	left: 50%;
-	transform: translateX(-50%);
-	font-size: 0.75rem;
-	letter-spacing: 0.2em;
-	text-transform: uppercase;
-	color: var(--color-text-dimmer);
-	z-index: 10;
+  position: fixed;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--color-text-dimmer);
+  z-index: 10;
 }
 
 /* Scroll to top button */
 .scroll-top {
-	position: fixed;
-	bottom: 2rem;
-	right: 2rem;
-	width: 2.5rem;
-	height: 2.5rem;
-	background: none;
-	border: 1px solid var(--color-text-dimmer);
-	color: var(--color-text-dim);
-	font-size: 1rem;
-	cursor: pointer;
-	opacity: 0;
-	visibility: hidden;
-	transition:
-		opacity var(--transition-hover) ease,
-		visibility var(--transition-hover) ease,
-		color var(--transition-hover) ease,
-		border-color var(--transition-hover) ease;
-	z-index: 90;
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  width: 2.5rem;
+  height: 2.5rem;
+  background: none;
+  border: 1px solid var(--color-text-dimmer);
+  color: var(--color-text-dim);
+  font-size: 1rem;
+  cursor: pointer;
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity var(--transition-hover) ease,
+    visibility var(--transition-hover) ease,
+    color var(--transition-hover) ease,
+    border-color var(--transition-hover) ease;
+  z-index: 90;
 }
 
 .scroll-top.visible {
-	opacity: 1;
-	visibility: visible;
+  opacity: 1;
+  visibility: visible;
 }
 
 .scroll-top:hover {
-	color: var(--color-text);
-	border-color: var(--color-text);
+  color: var(--color-text);
+  border-color: var(--color-text);
 }
 
 /* Responsive - Small screens (<768px) */
 @media (max-width: 767px) {
-	.gallery {
-		margin-top: 6rem;
-	}
+  .gallery {
+    margin-top: 6rem;
+  }
 
-	.photo {
-		min-width: 150px;
-	}
+  .photo {
+    min-width: 150px;
+  }
 }
 
 @media (max-width: 480px) {
-	.gallery {
-		margin-top: 4.25rem;
-	}
+  .gallery {
+    margin-top: 4.25rem;
+  }
 }
