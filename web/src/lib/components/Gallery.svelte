@@ -1,7 +1,7 @@
 <script>
   import { onMount, untrack } from "svelte";
   import Photo from "./Photo.svelte";
-  import { shuffle } from "$lib/utils/shuffle.js";
+  import { shuffle, sortById } from "$lib/utils/shuffle.js";
   import { getLayout } from "$lib/utils/layouts/index.js";
   import { currentLayout } from "$lib/stores/breakpoint.js";
   import { clearLoadedImages } from "$lib/stores/loadedImages.svelte.js";
@@ -13,6 +13,7 @@
     onPhotoClick,
     ready = true,
     revealDelay = 0,
+    randomOrder = true,
   } = $props();
 
   // Shuffled images
@@ -65,17 +66,20 @@
     return unsubscribe;
   });
 
-  // Reshuffle function
+  // Reshuffle function (or sort if randomOrder is false)
   function reshuffle() {
     if (!manifest || !layout) return;
 
     revealed = false;
-    const newShuffled = shuffle(manifest.images);
+    // Shuffle or sort based on randomOrder setting
+    const newOrdered = randomOrder
+      ? shuffle(manifest.images)
+      : sortById(manifest.images);
 
     // Get the appropriate layout algorithm
     const layoutAlgo = getLayout(layoutType);
     const newPositions = layoutAlgo.computePositions(
-      newShuffled,
+      newOrdered,
       layout,
       config.gallery,
       layoutConfig,
@@ -88,7 +92,7 @@
     );
 
     // Assign all at once to minimize reactivity triggers
-    shuffledImages = newShuffled;
+    shuffledImages = newOrdered;
     positions = newPositions;
     galleryHeight = newHeight;
 

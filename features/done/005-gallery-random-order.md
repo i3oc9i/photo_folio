@@ -73,31 +73,31 @@ Add `randomOrder` boolean option with:
 
 ## Implementation Steps
 
-1. [ ] Add `galleries.randomOrder: true` to `site.json`
-2. [ ] Create helper function to resolve effective `randomOrder` for a gallery (per-gallery value or global fallback)
-3. [ ] Modify `Gallery.svelte`:
+1. [x] Add `galleries.randomOrder: true` to `site.json`
+2. [x] Create helper function to resolve effective `randomOrder` for a gallery (per-gallery value or global fallback)
+3. [x] Modify `Gallery.svelte`:
    - Accept `randomOrder` prop
    - In `reshuffle()`: sort by `image.id` alphabetically when `randomOrder: false`
    - Skip animation/reveal logic appropriately
-4. [ ] Modify `Lightbox.svelte`:
+4. [x] Modify `Lightbox.svelte`:
    - Accept `randomOrder` prop
    - In `generateSequence()`: sort by `image.id` when `randomOrder: false`
-5. [ ] Modify `App.svelte`:
+5. [x] Modify `App.svelte`:
    - Add `$derived` to compute `randomOrder` for current gallery
    - Pass `randomOrder` to Gallery and Lightbox components
    - Conditionally pass reshuffle handler to Header
-6. [ ] Modify `Header.svelte`:
+6. [x] Modify `Header.svelte`:
    - Accept `onReshuffle` prop (null/undefined when disabled)
    - Disable click handler and optionally adjust styling when disabled
 
 ## Testing
 
-- [ ] Default `randomOrder: true` - images shuffle on load and header click
-- [ ] Gallery with `randomOrder: false` - images sorted alphabetically, header click does nothing
-- [ ] Lightbox with `randomOrder: true` - navigation is shuffled
-- [ ] Lightbox with `randomOrder: false` - navigation follows alphabetical sequence
-- [ ] Per-gallery override works (one gallery random, another sorted)
-- [ ] Switching galleries respects each gallery's setting
+- [x] Default `randomOrder: true` - images shuffle on load and header click
+- [x] Gallery with `randomOrder: false` - images sorted alphabetically, header click does nothing
+- [x] Lightbox with `randomOrder: true` - navigation is shuffled
+- [x] Lightbox with `randomOrder: false` - navigation follows alphabetical sequence
+- [x] Per-gallery override works (one gallery random, another sorted)
+- [x] Switching galleries respects each gallery's setting
 
 ## Dependencies
 

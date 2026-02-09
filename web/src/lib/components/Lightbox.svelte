@@ -1,9 +1,15 @@
 <script>
   import { fade } from "svelte/transition";
-  import { shuffle } from "$lib/utils/shuffle.js";
+  import { shuffle, sortStrings } from "$lib/utils/shuffle.js";
   import { getLoadedImageArray } from "$lib/stores/loadedImages.svelte.js";
 
-  let { open = false, galleryPath, startImageId, onClose } = $props();
+  let {
+    open = false,
+    galleryPath,
+    startImageId,
+    onClose,
+    randomOrder = true,
+  } = $props();
 
   // Sequence of image IDs to show
   let sequence = $state([]);
@@ -25,19 +31,28 @@
   });
 
   function generateSequence(startId) {
-    // Get all loaded images and shuffle them
+    // Get all loaded images
     const allImages = [...getLoadedImageArray()];
-    const shuffled = shuffle(allImages);
 
-    // Move start image to front
-    const startIndex = shuffled.indexOf(startId);
-    if (startIndex > 0) {
-      shuffled.splice(startIndex, 1);
-      shuffled.unshift(startId);
+    // Shuffle or sort based on randomOrder setting
+    let ordered;
+    if (randomOrder) {
+      ordered = shuffle(allImages);
+      // Move start image to front for shuffled sequence
+      const startIndex = ordered.indexOf(startId);
+      if (startIndex > 0) {
+        ordered.splice(startIndex, 1);
+        ordered.unshift(startId);
+      }
+      currentIndex = 0;
+    } else {
+      ordered = sortStrings(allImages);
+      // Find the start image index for sorted sequence
+      currentIndex = ordered.indexOf(startId);
+      if (currentIndex === -1) currentIndex = 0;
     }
 
-    sequence = shuffled;
-    currentIndex = 0;
+    sequence = ordered;
   }
 
   function showNext() {

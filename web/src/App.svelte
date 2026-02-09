@@ -25,6 +25,9 @@
     getGalleryFromHash,
   } from "$lib/stores/gallery.svelte.js";
 
+  // Utils
+  import { getEffectiveRandomOrder } from "$lib/utils/shuffle.js";
+
   // State
   let config = $state(null);
   let loading = $state(true);
@@ -49,6 +52,13 @@
   // Gallery path for lightbox
   let galleryPath = $derived(
     config && galleryId ? `${config.assets.path}${galleryId}/` : "",
+  );
+
+  // Computed randomOrder for current gallery (per-gallery override or global fallback)
+  let randomOrder = $derived(
+    config && galleryId
+      ? getEffectiveRandomOrder(config.galleries, galleryId)
+      : true,
   );
 
   // Event listeners via $effect
@@ -88,9 +98,12 @@
   }
 
   function handleLogoClick() {
-    // Instant scroll to top, then reshuffle (gallery hides during reshuffle, then animates in)
-    window.scrollTo(0, 0);
-    galleryComponent?.triggerReshuffle();
+    // Only reshuffle if randomOrder is enabled for this gallery
+    if (randomOrder) {
+      // Instant scroll to top, then reshuffle (gallery hides during reshuffle, then animates in)
+      window.scrollTo(0, 0);
+      galleryComponent?.triggerReshuffle();
+    }
   }
 
   function handleGallerySelect(galleryId) {
@@ -130,7 +143,7 @@
   <!-- Header -->
   <Header
     {config}
-    onLogoClick={handleLogoClick}
+    onLogoClick={randomOrder ? handleLogoClick : null}
     onAboutClick={() => (aboutPanelOpen = true)}
     onCreditsClick={() => (creditsPanelOpen = true)}
   />
@@ -149,6 +162,7 @@
       {config}
       {manifest}
       {galleryId}
+      {randomOrder}
       onPhotoClick={handlePhotoClick}
       ready={!splashVisible}
       revealDelay={800}
@@ -184,6 +198,7 @@
   <Lightbox
     open={lightboxOpen}
     {galleryPath}
+    {randomOrder}
     startImageId={lightboxStartImageId}
     onClose={closeLightbox}
   />

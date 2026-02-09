@@ -98,9 +98,10 @@ Configuration is split into two files in `web/public/`:
   "galleries": {
     "default": "bw",
     "defaultLayout": "organic",
+    "randomOrder": true,
     "items": {
       "bw": { "displayName": "Black & White", "order": 1, "layout": "organic" },
-      "colors": { "displayName": "Colors", "order": 2, "layout": "masonry" }
+      "colors": { "displayName": "Colors", "order": 2, "layout": "masonry", "randomOrder": false }
     }
   },
   "assets": {
@@ -193,6 +194,27 @@ Each gallery can use a different layout style via `site.json`:
   "street": { "displayName": "Street", "layout": "masonry" }
 }
 ```
+
+## Image Order
+
+Control whether images display shuffled or in alphabetical order via `randomOrder`:
+
+- **Global default**: Set `galleries.randomOrder` (defaults to `true`)
+- **Per-gallery override**: Set `galleries.items.<id>.randomOrder`
+
+```json
+"galleries": {
+  "randomOrder": true,
+  "items": {
+    "portraits": { "displayName": "Portraits", "randomOrder": false }
+  }
+}
+```
+
+| `randomOrder` | Gallery Display | Lightbox Navigation | Header Click   |
+| ------------- | --------------- | ------------------- | -------------- |
+| `true`        | Shuffled        | Shuffled            | Re-shuffles    |
+| `false`       | Alphabetical    | Sequential (sorted) | Disabled/no-op |
 
 ### Organic Layout
 

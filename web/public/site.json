@@ -8,6 +8,7 @@
   },
   "galleries": {
     "default": "Divers",
+    "randomOrder": true,
     "items": {
       "Divers": {
         "displayName": "Divers",

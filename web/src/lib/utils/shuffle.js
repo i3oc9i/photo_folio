@@ -8,6 +8,16 @@ export function shuffle(array) {
   return result;
 }
 
+// Sort array of objects alphabetically by id property
+export function sortById(array) {
+  return [...array].sort((a, b) => a.id.localeCompare(b.id));
+}
+
+// Sort array of strings alphabetically
+export function sortStrings(array) {
+  return [...array].sort((a, b) => a.localeCompare(b));
+}
+
 // Random number in range (inclusive)
 export function randomInRange(min, max) {
   return Math.random() * (max - min) + min;
@@ -16,4 +26,13 @@ export function randomInRange(min, max) {
 // Random integer in range (inclusive)
 export function randomIntInRange(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+// Resolve effective randomOrder for a gallery (per-gallery override or global fallback)
+export function getEffectiveRandomOrder(galleries, galleryId) {
+  const galleryConfig = galleries.items?.[galleryId];
+  if (galleryConfig?.randomOrder !== undefined) {
+    return galleryConfig.randomOrder;
+  }
+  return galleries.randomOrder !== false; // Default to true
 }
