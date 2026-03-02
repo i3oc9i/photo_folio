@@ -3,7 +3,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "gallery-builder"
+name = "photo-folio"
 version = "1.0.0"
 description = "Gallery builder tool for photo_folio website"
 readme = "README.md"
