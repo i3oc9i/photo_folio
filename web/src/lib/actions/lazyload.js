@@ -1,6 +1,6 @@
 // Svelte action for lazy loading with IntersectionObserver
 export function lazyload(node, options = {}) {
-  const { rootMargin = '800px 0px', onLoad, eager = false } = options;
+  const { rootMargin = "800px 0px", onLoad, eager = false } = options;
 
   // If eager load, trigger immediately
   if (eager) {
@@ -10,14 +10,14 @@ export function lazyload(node, options = {}) {
 
   const observer = new IntersectionObserver(
     (entries) => {
-      entries.forEach(entry => {
+      entries.forEach((entry) => {
         if (entry.isIntersecting) {
           if (onLoad) onLoad();
           observer.unobserve(node);
         }
       });
     },
-    { rootMargin, threshold: 0 }
+    { rootMargin, threshold: 0 },
   );
 
   observer.observe(node);
@@ -32,6 +32,6 @@ export function lazyload(node, options = {}) {
         if (newOptions.onLoad) newOptions.onLoad();
         observer.disconnect();
       }
-    }
+    },
   };
 }

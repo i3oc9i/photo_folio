@@ -1,5 +1,5 @@
 <script>
-  import { fade } from 'svelte/transition';
+  import { fade } from "svelte/transition";
 
   let { config, onEnter } = $props();
   let visible = $state(true);

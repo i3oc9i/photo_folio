@@ -10,7 +10,7 @@ The gallery builder processes source photos into optimized WebP images at multip
 
 ## Architecture
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────────┐
 │                      GALLERY BUILDER                             │
 ├─────────────────────────────────────────────────────────────────┤
@@ -50,11 +50,11 @@ SIZES = {
 
 Each source image produces three WebP outputs with the longest edge at the specified pixel size.
 
-| Size | Longest Edge | Use Case | Typical File Size |
-|------|--------------|----------|-------------------|
-| thumb | 400px | Mobile gallery, thumbnails | ~20-40KB |
-| medium | 800px | Desktop gallery grid | ~80-150KB |
-| full | 1600px | Lightbox viewer | ~200-400KB |
+| Size   | Longest Edge | Use Case                   | Typical File Size |
+| ------ | ------------ | -------------------------- | ----------------- |
+| thumb  | 400px        | Mobile gallery, thumbnails | ~20-40KB          |
+| medium | 800px        | Desktop gallery grid       | ~80-150KB         |
+| full   | 1600px       | Lightbox viewer            | ~200-400KB        |
 
 ## Processing Pipeline
 
@@ -124,6 +124,7 @@ def needs_processing(source_path: Path, output_paths: list[Path]) -> bool:
 ```
 
 An image is reprocessed only if:
+
 - Any output file is missing
 - Source file is newer than any output file
 
@@ -164,11 +165,11 @@ def process_gallery(gallery_name, source_dir, output_dir, force=False, jobs=1):
 
 ### Job Configuration
 
-| `-j` Value | Workers | Description |
-|------------|---------|-------------|
-| 1 | 1 | Sequential (default) |
-| 4 | 4 | 4 parallel workers |
-| 0 | CPU count | Auto-detect (e.g., 8 on 8-core) |
+| `-j` Value | Workers   | Description                     |
+| ---------- | --------- | ------------------------------- |
+| 1          | 1         | Sequential (default)            |
+| 4          | 4         | 4 parallel workers              |
+| 0          | CPU count | Auto-detect (e.g., 8 on 8-core) |
 
 ## Gallery Discovery
 
@@ -185,7 +186,8 @@ def discover_galleries(source_base: Path) -> list[str]:
 ```
 
 Directory structure:
-```
+
+```text
 gallery/
 ├── color/          → "color" gallery
 ├── black_white/    → "black_white" gallery
@@ -224,14 +226,14 @@ Each gallery produces an `images.json` manifest:
 
 ### Manifest Fields
 
-| Field | Description |
-|-------|-------------|
-| `images[].id` | Filename without extension |
+| Field                  | Description                          |
+| ---------------------- | ------------------------------------ |
+| `images[].id`          | Filename without extension           |
 | `images[].orientation` | "landscape", "portrait", or "square" |
-| `images[].width` | Original width in pixels |
-| `images[].height` | Original height in pixels |
-| `generated` | ISO 8601 timestamp |
-| `sizes` | Output size configuration |
+| `images[].width`       | Original width in pixels             |
+| `images[].height`      | Original height in pixels            |
+| `generated`            | ISO 8601 timestamp                   |
+| `sizes`                | Output size configuration            |
 
 ## Site Configuration Updates
 
@@ -277,11 +279,11 @@ def generate_display_name(gallery_name: str) -> str:
     return gallery_name.replace('_', ' ').replace('-', ' ').title()
 ```
 
-| Directory Name | Generated Display Name |
-|----------------|----------------------|
-| `color` | "Color" |
-| `black_white` | "Black White" |
-| `street-photos` | "Street Photos" |
+| Directory Name  | Generated Display Name |
+| --------------- | ---------------------- |
+| `color`         | "Color"                |
+| `black_white`   | "Black White"          |
+| `street-photos` | "Street Photos"        |
 
 Existing display names are preserved; only new galleries get auto-generated names.
 
@@ -360,10 +362,10 @@ uv run build-gallery [--force] [-j JOBS]
 
 ### Options
 
-| Option | Description |
-|--------|-------------|
+| Option    | Description                               |
+| --------- | ----------------------------------------- |
 | `--force` | Reprocess all images, ignoring timestamps |
-| `-j N` | Number of parallel workers (0 = auto) |
+| `-j N`    | Number of parallel workers (0 = auto)     |
 
 ### Poetry Tasks
 
@@ -377,11 +379,11 @@ dev = ["dev:assets", "dev:server"]
 "dev:server" = { cmd = "npm run dev", cwd = "./web" }
 ```
 
-| Command | Description |
-|---------|-------------|
-| `poe dev` | Build assets then start dev server |
-| `poe dev:assets` | Process images with 8 workers |
-| `poe dev:assets:force` | Force reprocess all images |
+| Command                | Description                        |
+| ---------------------- | ---------------------------------- |
+| `poe dev`              | Build assets then start dev server |
+| `poe dev:assets`       | Process images with 8 workers      |
+| `poe dev:assets:force` | Force reprocess all images         |
 
 ## Supported Formats
 
@@ -398,6 +400,7 @@ WEBP_QUALITY = 85
 ```
 
 WebP at 85% quality provides a good balance:
+
 - Significantly smaller than JPEG at equivalent quality
 - Minimal visible artifacts
 - Supports transparency (though converted to RGB)
@@ -433,7 +436,7 @@ Used by layout algorithms to estimate photo dimensions.
 
 Running `poe dev:assets` on a gallery with 50 images:
 
-```
+```text
 Found 2 gallery(ies): color, portraits
 
 Updated site.json with 2 gallery(ies)
@@ -459,7 +462,7 @@ Savings: 81% reduction
 
 ## Processing Flow
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────────┐
 │                                                                   │
 │  1. Find project root (look for pyproject.toml)                  │
@@ -506,10 +509,10 @@ Errors are counted and reported, but other images continue processing.
 
 ## Performance Tips
 
-| Scenario | Recommendation |
-|----------|----------------|
-| First run | Use `-j 0` (auto workers) |
-| Few changes | Default `-j 1` is fine |
-| Large batch | Use `-j 8` or `-j 0` |
-| CI/CD | Use `--force -j 0` for clean builds |
-| Development | Run `poe dev` (builds then serves) |
+| Scenario    | Recommendation                      |
+| ----------- | ----------------------------------- |
+| First run   | Use `-j 0` (auto workers)           |
+| Few changes | Default `-j 1` is fine              |
+| Large batch | Use `-j 8` or `-j 0`                |
+| CI/CD       | Use `--force -j 0` for clean builds |
+| Development | Run `poe dev` (builds then serves)  |

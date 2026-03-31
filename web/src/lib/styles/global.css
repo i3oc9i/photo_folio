@@ -1,16 +1,16 @@
 /* Global styles - imports all CSS modules */
 
 /* Foundation */
-@import './variables.css';
-@import './base.css';
+@import "./variables.css";
+@import "./base.css";
 
 /* Components */
-@import './components/splash.css';
-@import './components/header.css';
-@import './components/gallery.css';
-@import './components/panel.css';
-@import './components/lightbox.css';
+@import "./components/splash.css";
+@import "./components/header.css";
+@import "./components/gallery.css";
+@import "./components/panel.css";
+@import "./components/lightbox.css";
 
 /* Layout algorithms */
-@import './layouts/organic.css';
-@import './layouts/masonry.css';
+@import "./layouts/organic.css";
+@import "./layouts/masonry.css";

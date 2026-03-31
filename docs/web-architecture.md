@@ -11,6 +11,7 @@ The web frontend is a Svelte 5 Single Page Application (SPA) bundled with Vite. 
 The application uses Svelte 5's runes API for reactivity:
 
 ### `$state()`
+
 Creates reactive local state within components.
 
 ```javascript
@@ -22,6 +23,7 @@ let aboutPanelOpen = $state(false);
 ```
 
 ### `$derived()`
+
 Creates computed values that update automatically when dependencies change.
 
 ```javascript
@@ -37,9 +39,11 @@ let mediumSrc = $derived(`${galleryPath}medium/${encodedId}.webp`);
 ```
 
 ### `$effect()`
+
 Runs side effects when reactive dependencies change. Used for subscriptions and cleanup.
 
 ### `$props()`
+
 Declares component props with destructuring.
 
 ```javascript
@@ -57,7 +61,7 @@ let {
 
 ## Component Hierarchy
 
-```
+```text
 App.svelte                    # Root orchestrator
 ├── Splash.svelte             # Entry overlay with fade transition
 ├── Header.svelte             # Navigation + logo (click triggers reshuffle)
@@ -76,16 +80,16 @@ The application uses Svelte stores for global state management.
 
 ### Store Files
 
-| Store | File | Purpose |
-|-------|------|---------|
-| `config` | `stores/config.js` | Site + theme configuration |
-| `currentGalleryId` | `stores/gallery.js` | Active gallery ID |
-| `manifestCache` | `stores/gallery.js` | Cached gallery manifests |
-| `currentManifest` | `stores/gallery.js` | Derived: current gallery's manifest |
-| `windowWidth` | `stores/breakpoint.js` | Reactive window width |
-| `currentLayout` | `stores/breakpoint.js` | Derived: responsive layout config |
-| `isMobile` | `stores/breakpoint.js` | Derived: mobile detection |
-| `loadedImageIds` | `stores/loadedImages.js` | Set of loaded image IDs |
+| Store              | File                     | Purpose                             |
+| ------------------ | ------------------------ | ----------------------------------- |
+| `config`           | `stores/config.js`       | Site + theme configuration          |
+| `currentGalleryId` | `stores/gallery.js`      | Active gallery ID                   |
+| `manifestCache`    | `stores/gallery.js`      | Cached gallery manifests            |
+| `currentManifest`  | `stores/gallery.js`      | Derived: current gallery's manifest |
+| `windowWidth`      | `stores/breakpoint.js`   | Reactive window width               |
+| `currentLayout`    | `stores/breakpoint.js`   | Derived: responsive layout config   |
+| `isMobile`         | `stores/breakpoint.js`   | Derived: mobile detection           |
+| `loadedImageIds`   | `stores/loadedImages.js` | Set of loaded image IDs             |
 
 ### config.js
 
@@ -227,6 +231,7 @@ export function lazyload(node, options = {}) {
 ```
 
 Usage in Photo.svelte:
+
 ```svelte
 <div use:lazyload={{ rootMargin: '800px 0px', onLoad: triggerLoad, eager: eagerLoad }}>
 ```
@@ -236,6 +241,7 @@ Usage in Photo.svelte:
 Configuration is split into two files:
 
 ### site.json (Content)
+
 ```json
 {
   "site": { "title", "name", "subtitle", "enterButtonText" },
@@ -245,6 +251,7 @@ Configuration is split into two files:
 ```
 
 ### theme.json (Styling)
+
 ```json
 {
   "assets": { "path", "manifestFile" },
@@ -257,20 +264,22 @@ Configuration is split into two files:
 
 ### CSS Custom Properties
 
+Theme values are applied as CSS variables rather than inline styles. This allows CSS transitions and keeps styling in CSS where it belongs.
+
 Theme values are converted to CSS variables at runtime:
 
-| Config Path | CSS Variable |
-|-------------|--------------|
-| `theme.colors.background` | `--color-background` |
-| `theme.colors.textMuted` | `--color-text-muted` |
-| `theme.fonts.heading` | `--font-heading` |
+| Config Path                | CSS Variable          |
+| -------------------------- | --------------------- |
+| `theme.colors.background`  | `--color-background`  |
+| `theme.colors.textMuted`   | `--color-text-muted`  |
+| `theme.fonts.heading`      | `--font-heading`      |
 | `theme.transitions.splash` | `--transition-splash` |
 
 ## CSS Architecture
 
 Styles are organized into modular CSS files for maintainability:
 
-```
+```text
 web/src/lib/styles/
 ├── global.css              # Entry point (imports only)
 ├── variables.css           # CSS custom properties (defaults)
@@ -288,12 +297,12 @@ web/src/lib/styles/
 
 ### File Responsibilities
 
-| File | Purpose |
-|------|---------|
-| `variables.css` | CSS custom properties (colors, fonts, transitions) - defaults overridden by theme.json |
-| `base.css` | CSS reset, html/body base styles |
-| `components/*.css` | Component-specific styles with their responsive rules |
-| `layouts/*.css` | Layout algorithm styles (hover effects, entry animations, sizing) |
+| File               | Purpose                                                                                |
+| ------------------ | -------------------------------------------------------------------------------------- |
+| `variables.css`    | CSS custom properties (colors, fonts, transitions) - defaults overridden by theme.json |
+| `base.css`         | CSS reset, html/body base styles                                                       |
+| `components/*.css` | Component-specific styles with their responsive rules                                  |
+| `layouts/*.css`    | Layout algorithm styles (hover effects, entry animations, sizing)                      |
 
 ### Import Order
 
@@ -358,7 +367,7 @@ The `currentLayout` store finds the first matching breakpoint for the current wi
 
 ## Data Flow
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────────┐
 │                         INITIALIZATION                           │
 ├─────────────────────────────────────────────────────────────────┤
@@ -456,6 +465,7 @@ export function registerLayout(name, implementation) {
 2. Register in `layouts/index.js`
 
 3. Add config in `theme.json`:
+
    ```json
    "gallery": {
      "layouts": {
@@ -465,12 +475,14 @@ export function registerLayout(name, implementation) {
    ```
 
 4. Add CSS in `layouts/newlayout.css`:
+
    ```css
    .photo.layout-newlayout { /* styles */ }
    .gallery.layout-newlayout { /* styles */ }
    ```
 
 5. Import in `global.css`:
+
    ```css
    @import './layouts/newlayout.css';
    ```
@@ -478,16 +490,17 @@ export function registerLayout(name, implementation) {
 ## Key Technical Decisions
 
 ### Manifest Caching
+
 Manifests are cached in-memory to prevent re-fetching when switching galleries. This provides instant gallery switching after first load.
 
-### CSS Custom Properties
-Theme values are applied as CSS variables rather than inline styles. This allows CSS transitions and keeps styling in CSS where it belongs.
-
 ### Derived Stores
+
 Computed values use derived stores rather than manual updates. This ensures consistency and reduces bugs from stale state.
 
 ### Action Pattern
+
 The lazyload behavior is encapsulated in a reusable action rather than being embedded in components. This enables easy testing and reuse.
 
 ### URL Hash Sync
+
 Gallery selection syncs with the URL hash (`#gallery=name`), enabling direct linking and browser history navigation.

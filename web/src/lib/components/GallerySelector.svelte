@@ -6,12 +6,12 @@
   let sortedGalleries = $derived(
     Object.entries(galleries.items)
       .sort((a, b) => a[1].order - b[1].order)
-      .map(([id, data]) => ({ id, ...data }))
+      .map(([id, data]) => ({ id, ...data })),
   );
 
   // Current gallery display name
   let currentDisplayName = $derived(
-    galleries.items[currentGalleryId]?.displayName || 'Gallery'
+    galleries.items[currentGalleryId]?.displayName || "Gallery",
   );
 
   function handleSelect(galleryId) {
@@ -24,13 +24,13 @@
   }
 
   function handleClickOutside(event) {
-    if (!event.target.closest('.gallery-selector')) {
+    if (!event.target.closest(".gallery-selector")) {
       isOpen = false;
     }
   }
 
   function handleKeydown(event) {
-    if (event.key === 'Escape') {
+    if (event.key === "Escape") {
       isOpen = false;
     }
   }

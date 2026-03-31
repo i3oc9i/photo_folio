@@ -1,7 +1,9 @@
 # Feature: App.svelte - Use $effect for Store Subscriptions
 
 ## Priority: Medium
+
 ## Effort: ~1-2 hours
+
 ## File: `web/src/App.svelte`
 
 ## Current Implementation

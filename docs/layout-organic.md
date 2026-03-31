@@ -10,7 +10,7 @@ The organic layout creates a "photos scattered on a table" effect with random of
 
 ## Visual Effect
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────────┐
 │                                                                   │
 │     ┌──────┐                                                     │
@@ -162,18 +162,18 @@ export function computeOrganicPositions(images, breakpointLayout, galleryConfig,
 
 ### Configuration Parameters
 
-| Parameter | Type | Default | Description |
-|-----------|------|---------|-------------|
-| `randomOffset.min` | number | -3 | Minimum offset in vw units |
-| `randomOffset.max` | number | 3 | Maximum offset in vw units |
-| `rotation.min` | number | -5 | Minimum final rotation in degrees |
-| `rotation.max` | number | 5 | Maximum final rotation in degrees |
-| `zIndex.min` | number | 1 | Minimum z-index for stacking |
-| `zIndex.max` | number | 10 | Maximum z-index for stacking |
-| `dealingRotation.min` | number | -30 | Minimum initial rotation (animation start) |
-| `dealingRotation.max` | number | 30 | Maximum initial rotation (animation start) |
-| `dealingDelay` | number | 0.03 | Delay between each photo's animation (seconds) |
-| `spacing` | number | 2 | Space between photos in vw units |
+| Parameter             | Type   | Default | Description                                    |
+| --------------------- | ------ | ------- | ---------------------------------------------- |
+| `randomOffset.min`    | number | -3      | Minimum offset in vw units                     |
+| `randomOffset.max`    | number | 3       | Maximum offset in vw units                     |
+| `rotation.min`        | number | -5      | Minimum final rotation in degrees              |
+| `rotation.max`        | number | 5       | Maximum final rotation in degrees              |
+| `zIndex.min`          | number | 1       | Minimum z-index for stacking                   |
+| `zIndex.max`          | number | 10      | Maximum z-index for stacking                   |
+| `dealingRotation.min` | number | -30     | Minimum initial rotation (animation start)     |
+| `dealingRotation.max` | number | 30      | Maximum initial rotation (animation start)     |
+| `dealingDelay`        | number | 0.03    | Delay between each photo's animation (seconds) |
+| `spacing`             | number | 2       | Space between photos in vw units               |
 
 ## Position Object
 
@@ -282,10 +282,10 @@ The gallery height is calculated as the maximum bottom edge of all photos plus a
 Since actual image dimensions may not be available during layout calculation, the algorithm estimates height based on orientation:
 
 | Orientation | Aspect Ratio | Height Formula |
-|-------------|--------------|----------------|
-| Landscape | 3:2 (0.67) | `width * 0.67` |
-| Portrait | 2:3 (1.5) | `width * 1.5` |
-| Square | 1:1 (1.0) | `width` |
+| ----------- | ------------ | -------------- |
+| Landscape   | 3:2 (0.67)   | `width * 0.67` |
+| Portrait    | 2:3 (1.5)    | `width * 1.5`  |
+| Square      | 1:1 (1.0)    | `width`        |
 
 These are approximations. The CSS ensures actual images maintain their aspect ratio regardless of estimates.
 
@@ -312,7 +312,7 @@ With `min=1` and `max=10`, photos receive z-index values 1-10, creating overlapp
 
 ## Algorithm Visualization
 
-```
+```text
 Initial: columns = 4, columnHeights = [0, 0, 0, 0]
 
 Step 1: Place image 1 (landscape)
@@ -367,14 +367,14 @@ Step 5: Place image 5 (portrait)
 
 Different breakpoints provide different column counts:
 
-| Window Width | Columns | Effect |
-|--------------|---------|--------|
-| >= 1600px | 7 | Dense, many small photos |
-| >= 1440px | 6 | |
-| >= 1280px | 5 | |
-| >= 1024px | 4 | Balanced |
-| >= 768px | 3 | |
-| < 768px | 2 | Spacious, large photos |
+| Window Width | Columns | Effect                   |
+| ------------ | ------- | ------------------------ |
+| >= 1600px    | 7       | Dense, many small photos |
+| >= 1440px    | 6       |                          |
+| >= 1280px    | 5       |                          |
+| >= 1024px    | 4       | Balanced                 |
+| >= 768px     | 3       |                          |
+| < 768px      | 2       | Spacious, large photos   |
 
 When the window resizes, positions are recalculated with the new column count, creating a fluid responsive experience.
 

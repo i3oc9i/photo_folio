@@ -1,12 +1,12 @@
-import { get } from 'svelte/store';
-import { config } from './config.js';
+import { get } from "svelte/store";
+import { config } from "./config.js";
 
 // Module-level state
 let galleryId = $state(null);
 let cache = $state({});
 
 // Derived value
-let manifest = $derived(cache[galleryId] || null);
+const manifest = $derived(cache[galleryId] || null);
 
 // Accessors for external use
 export function getCurrentGalleryId() {
@@ -49,7 +49,7 @@ export async function switchGallery(id) {
   galleryId = id;
 
   // Update URL hash
-  history.replaceState(null, '', `#gallery=${id}`);
+  history.replaceState(null, "", `#gallery=${id}`);
 }
 
 // Get gallery ID from URL hash

@@ -4,7 +4,7 @@ Feature-driven development workflow for this project.
 
 ## Structure
 
-```
+```text
 features/
 ├── README.md          # This file
 ├── _template.md       # Template for new features
@@ -17,7 +17,7 @@ features/
 
 Use the slash commands in Claude Code:
 
-```
+```text
 /feature-plan <idea>          # 1. Discuss & design the feature
 /feature-create <name> <desc> # 2. Create document in backlog/
 /feature-implement <number>   # 3. Implement the feature
@@ -39,7 +39,7 @@ Only have **one feature in-progress at a time** when possible.
 
 ## Naming Convention
 
-```
+```text
 NNN-short-descriptive-name.md
 
 Examples:

@@ -1,5 +1,5 @@
-import { computeOrganicPositions, calculateOrganicHeight } from './organic.js';
-import { computeMasonryPositions, calculateMasonryHeight } from './masonry.js';
+import { computeMasonryPositions, calculateMasonryHeight } from "./masonry.js";
+import { computeOrganicPositions, calculateOrganicHeight } from "./organic.js";
 
 /**
  * Layout registry - maps layout type to algorithm functions
@@ -7,12 +7,12 @@ import { computeMasonryPositions, calculateMasonryHeight } from './masonry.js';
 const layouts = {
   organic: {
     computePositions: computeOrganicPositions,
-    calculateHeight: calculateOrganicHeight
+    calculateHeight: calculateOrganicHeight,
   },
   masonry: {
     computePositions: computeMasonryPositions,
-    calculateHeight: calculateMasonryHeight
-  }
+    calculateHeight: calculateMasonryHeight,
+  },
 };
 
 /**

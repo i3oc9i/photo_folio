@@ -46,6 +46,7 @@ const scaledHeight = photoHeight * scale;
 ```
 
 **Key decisions:**
+
 - **Proportional scaling**: Both width and height scale together (preserves aspect ratio)
 - **Deterministic**: Same photo always gets same scale (stable layout between page loads)
 - **Centered positioning**: Scaled photos center within their column slot
@@ -53,11 +54,11 @@ const scaledHeight = photoHeight * scale;
 
 ## Files to Modify
 
-| File | Changes |
-|------|---------|
-| `web/public/theme.json` | Add `scaleRandom: { min, max }` to masonry config |
+| File                                   | Changes                                                   |
+| -------------------------------------- | --------------------------------------------------------- |
+| `web/public/theme.json`                | Add `scaleRandom: { min, max }` to masonry config         |
 | `web/src/lib/utils/layouts/masonry.js` | Add scale function, apply to dimensions, center in column |
-| `docs/layout-masonry.md` | Document the new configuration option |
+| `docs/layout-masonry.md`               | Document the new configuration option                     |
 
 ## Implementation Steps
 

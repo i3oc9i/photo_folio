@@ -30,9 +30,9 @@ MANIFEST_FILE = "images.json"
 
 # Output sizes (longest edge in pixels)
 SIZES = {
-    "thumb": 400,    # Mobile gallery
-    "medium": 800,   # Tablet/desktop gallery
-    "full": 1600,    # Lightbox view
+    "thumb": 400,  # Mobile gallery
+    "medium": 800,  # Tablet/desktop gallery
+    "full": 1600,  # Lightbox view
 }
 
 WEBP_QUALITY = 85
@@ -65,14 +65,14 @@ def discover_galleries(source_base: Path) -> list[str]:
     """Find all gallery subdirectories in input folder."""
     galleries = []
     for item in source_base.iterdir():
-        if item.is_dir() and not item.name.startswith('.'):
+        if item.is_dir() and not item.name.startswith("."):
             galleries.append(item.name)
     return sorted(galleries)
 
 
 def generate_display_name(gallery_name: str) -> str:
     """Generate display name from directory name (title case with spaces)."""
-    return gallery_name.replace('_', ' ').replace('-', ' ').title()
+    return gallery_name.replace("_", " ").replace("-", " ").title()
 
 
 def update_config_galleries(config_path: Path, galleries: list[str]) -> None:
@@ -80,10 +80,10 @@ def update_config_galleries(config_path: Path, galleries: list[str]) -> None:
     with open(config_path) as f:
         config = json.load(f)
 
-    existing_galleries = config.get('galleries', {})
-    existing_items = existing_galleries.get('items', {})
-    existing_default = existing_galleries.get('default')
-    existing_default_layout = existing_galleries.get('defaultLayout')
+    existing_galleries = config.get("galleries", {})
+    existing_items = existing_galleries.get("items", {})
+    existing_default = existing_galleries.get("default")
+    existing_default_layout = existing_galleries.get("defaultLayout")
 
     # Build new items, preserving existing display names and layout
     new_items = {}
@@ -91,20 +91,20 @@ def update_config_galleries(config_path: Path, galleries: list[str]) -> None:
         if gallery_name in existing_items:
             # Preserve existing properties and update order
             item = {
-                'displayName': existing_items[gallery_name].get(
-                    'displayName', generate_display_name(gallery_name)
+                "displayName": existing_items[gallery_name].get(
+                    "displayName", generate_display_name(gallery_name)
                 ),
-                'order': i
+                "order": i,
             }
             # Preserve layout if it exists
-            if 'layout' in existing_items[gallery_name]:
-                item['layout'] = existing_items[gallery_name]['layout']
+            if "layout" in existing_items[gallery_name]:
+                item["layout"] = existing_items[gallery_name]["layout"]
             new_items[gallery_name] = item
         else:
             # Generate new display name (no layout for new galleries)
             new_items[gallery_name] = {
-                'displayName': generate_display_name(gallery_name),
-                'order': i
+                "displayName": generate_display_name(gallery_name),
+                "order": i,
             }
 
     # Determine default gallery
@@ -114,16 +114,13 @@ def update_config_galleries(config_path: Path, galleries: list[str]) -> None:
         new_default = galleries[0] if galleries else None
 
     # Update config, preserving defaultLayout if it exists
-    new_galleries = {
-        'default': new_default,
-        'items': new_items
-    }
+    new_galleries = {"default": new_default, "items": new_items}
     if existing_default_layout:
-        new_galleries['defaultLayout'] = existing_default_layout
+        new_galleries["defaultLayout"] = existing_default_layout
 
-    config['galleries'] = new_galleries
+    config["galleries"] = new_galleries
 
-    with open(config_path, 'w') as f:
+    with open(config_path, "w") as f:
         json.dump(config, f, indent=2)
 
 
@@ -160,16 +157,10 @@ def needs_processing(source_path: Path, output_paths: list[Path]) -> bool:
 
 
 def process_image(
-    source_path: Path,
-    base_name: str,
-    output_dir: Path,
-    force: bool = False
+    source_path: Path, base_name: str, output_dir: Path, force: bool = False
 ) -> tuple[str, dict | str | None]:
     """Process a single image into multiple sizes."""
-    output_paths = {
-        size: output_dir / size / f"{base_name}.webp"
-        for size in SIZES
-    }
+    output_paths = {size: output_dir / size / f"{base_name}.webp" for size in SIZES}
 
     if not force and not needs_processing(source_path, list(output_paths.values())):
         return "skipped", None
@@ -194,7 +185,7 @@ def process_image(
                 "id": base_name,
                 "orientation": orientation,
                 "width": original_width,
-                "height": original_height
+                "height": original_height,
             }
 
     except Exception as e:
@@ -226,10 +217,11 @@ def clean_orphan_galleries(output_base: Path, valid_galleries: set[str]) -> list
         return removed
 
     for item in output_base.iterdir():
-        if item.is_dir() and not item.name.startswith('.'):
+        if item.is_dir() and not item.name.startswith("."):
             if item.name not in valid_galleries:
                 # Remove the entire gallery directory
                 import shutil
+
                 shutil.rmtree(item)
                 removed.append(item.name)
 
@@ -241,7 +233,7 @@ def process_gallery(
     source_dir: Path,
     output_dir: Path,
     force: bool = False,
-    jobs: int = 1
+    jobs: int = 1,
 ) -> tuple[int, int, int]:
     """Process a single gallery. Returns (processed, skipped, errors) counts."""
     # Create output directories
@@ -321,7 +313,7 @@ def process_gallery(
     manifest = {
         "images": manifest_images,
         "generated": datetime.now(timezone.utc).isoformat(),
-        "sizes": SIZES
+        "sizes": SIZES,
     }
 
     with open(manifest_path, "w") as f:
@@ -332,19 +324,14 @@ def process_gallery(
 
 def main() -> int:
     """Main entry point for CLI."""
-    parser = argparse.ArgumentParser(
-        description="Process images for web portfolio"
-    )
+    parser = argparse.ArgumentParser(description="Process images for web portfolio")
+    parser.add_argument("--force", action="store_true", help="Reprocess all images")
     parser.add_argument(
-        "--force",
-        action="store_true",
-        help="Reprocess all images"
-    )
-    parser.add_argument(
-        "-j", "--jobs",
+        "-j",
+        "--jobs",
         type=int,
         default=1,
-        help="Number of parallel jobs (default: 1, use 0 for auto based on CPU count)"
+        help="Number of parallel jobs (default: 1, use 0 for auto based on CPU count)",
     )
     args = parser.parse_args()
 
@@ -407,7 +394,9 @@ def main() -> int:
         for size_name in SIZES:
             size_dir = output_dir / size_name
             if size_dir.exists():
-                total_output_size += sum(p.stat().st_size for p in size_dir.glob("*.webp"))
+                total_output_size += sum(
+                    p.stat().st_size for p in size_dir.glob("*.webp")
+                )
 
         print()
 
@@ -417,8 +406,10 @@ def main() -> int:
         print(f"🗑  Removed orphaned galleries: {', '.join(removed_galleries)}\n")
 
     # Summary
-    print(f"{'='*50}")
-    print(f"Done: {total_processed} processed, {total_skipped} skipped, {total_errors} errors")
+    print(f"{'=' * 50}")
+    print(
+        f"Done: {total_processed} processed, {total_skipped} skipped, {total_errors} errors"
+    )
 
     # Size report
     source_mb = total_source_size / (1024 * 1024)

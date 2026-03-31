@@ -13,11 +13,20 @@ function getPhotoScale(index, min, max) {
  * Compute positions for masonry (Pinterest-style) layout
  * Clean, aligned grid with preserved aspect ratios and optional random scaling
  */
-export function computeMasonryPositions(images, breakpointLayout, galleryConfig, layoutConfig) {
+export function computeMasonryPositions(
+  images,
+  breakpointLayout,
+  galleryConfig,
+  layoutConfig,
+) {
   const positions = [];
-  const { columns, photoSize, squareSize } = breakpointLayout;
+  const { columns } = breakpointLayout;
   const { topMargin, leftMargin = 1, rightMargin = 1 } = galleryConfig;
-  const { gutter = 1.5, dealingDelay = 0.02, scaleRandom = { min: 1, max: 1 } } = layoutConfig;
+  const {
+    gutter = 1.5,
+    dealingDelay = 0.02,
+    scaleRandom = { min: 1, max: 1 },
+  } = layoutConfig;
 
   // Normalize scale values (swap if min > max)
   const scaleMin = Math.min(scaleRandom.min, scaleRandom.max);
@@ -51,9 +60,9 @@ export function computeMasonryPositions(images, breakpointLayout, galleryConfig,
 
     // Calculate height based on aspect ratio
     let scaledHeight;
-    if (image.orientation === 'landscape') {
+    if (image.orientation === "landscape") {
       scaledHeight = scaledWidth * 0.67;
-    } else if (image.orientation === 'portrait') {
+    } else if (image.orientation === "portrait") {
       scaledHeight = scaledWidth * 1.5;
     } else {
       scaledHeight = scaledWidth;
@@ -61,7 +70,8 @@ export function computeMasonryPositions(images, breakpointLayout, galleryConfig,
 
     // Center scaled photo within column slot
     const centerOffset = (maxPhotoWidth - scaledWidth) / 2;
-    const left = leftMargin + shortestColumn * columnWidth + (gutter / 2) + centerOffset;
+    const left =
+      leftMargin + shortestColumn * columnWidth + gutter / 2 + centerOffset;
     const top = topMargin + columnHeights[shortestColumn];
 
     columnHeights[shortestColumn] += scaledHeight + gutter;
@@ -78,7 +88,7 @@ export function computeMasonryPositions(images, breakpointLayout, galleryConfig,
       rotation: 0,
       startRotation: 0,
       delay: i * dealingDelay,
-      layoutType: 'masonry'
+      layoutType: "masonry",
     });
   }
 
@@ -88,7 +98,12 @@ export function computeMasonryPositions(images, breakpointLayout, galleryConfig,
 /**
  * Calculate total gallery height for masonry layout
  */
-export function calculateMasonryHeight(positions, breakpointLayout, galleryConfig, layoutConfig) {
+export function calculateMasonryHeight(
+  positions,
+  _breakpointLayout,
+  galleryConfig,
+  _layoutConfig,
+) {
   if (positions.length === 0) return 100;
 
   const { bottomMargin = 1 } = galleryConfig || {};

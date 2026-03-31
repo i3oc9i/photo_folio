@@ -1,25 +1,32 @@
 <script>
-  import { onMount } from 'svelte';
+  import { onMount } from "svelte";
 
   // Components
-  import Splash from '$lib/components/Splash.svelte';
-  import Header from '$lib/components/Header.svelte';
-  import GallerySelector from '$lib/components/GallerySelector.svelte';
-  import Gallery from '$lib/components/Gallery.svelte';
-  import Panel from '$lib/components/Panel.svelte';
-  import Overlay from '$lib/components/Overlay.svelte';
-  import Lightbox from '$lib/components/Lightbox.svelte';
-  import ScrollTopButton from '$lib/components/ScrollTopButton.svelte';
+  import Splash from "$lib/components/Splash.svelte";
+  import Header from "$lib/components/Header.svelte";
+  import GallerySelector from "$lib/components/GallerySelector.svelte";
+  import Gallery from "$lib/components/Gallery.svelte";
+  import Panel from "$lib/components/Panel.svelte";
+  import Overlay from "$lib/components/Overlay.svelte";
+  import Lightbox from "$lib/components/Lightbox.svelte";
+  import ScrollTopButton from "$lib/components/ScrollTopButton.svelte";
 
   // Stores
-  import { config as configStore, loadConfig, applyTheme } from '$lib/stores/config.js';
+  import {
+    config as configStore,
+    loadConfig,
+    applyTheme,
+  } from "$lib/stores/config.js";
   import {
     getCurrentGalleryId,
     getCurrentManifest,
     switchGallery,
     initGallery,
-    getGalleryFromHash
-  } from '$lib/stores/gallery.svelte.js';
+    getGalleryFromHash,
+  } from "$lib/stores/gallery.svelte.js";
+
+  // Utils
+  import { getEffectiveRandomOrder } from "$lib/utils/shuffle.js";
 
   // State
   let config = $state(null);
@@ -44,13 +51,20 @@
 
   // Gallery path for lightbox
   let galleryPath = $derived(
-    config && galleryId ? `${config.assets.path}${galleryId}/` : ''
+    config && galleryId ? `${config.assets.path}${galleryId}/` : "",
+  );
+
+  // Computed randomOrder for current gallery (per-gallery override or global fallback)
+  let randomOrder = $derived(
+    config && galleryId
+      ? getEffectiveRandomOrder(config.galleries, galleryId)
+      : true,
   );
 
   // Event listeners via $effect
   $effect(() => {
-    window.addEventListener('hashchange', handleHashChange);
-    return () => window.removeEventListener('hashchange', handleHashChange);
+    window.addEventListener("hashchange", handleHashChange);
+    return () => window.removeEventListener("hashchange", handleHashChange);
   });
 
   // Load configuration on mount (one-time initialization)
@@ -64,8 +78,8 @@
       await initGallery();
       loading = false;
     } catch (err) {
-      console.error('Failed to load:', err);
-      error = err.message || 'Failed to load application';
+      console.error("Failed to load:", err);
+      error = err.message || "Failed to load application";
       loading = false;
     }
   });
@@ -84,9 +98,12 @@
   }
 
   function handleLogoClick() {
-    // Instant scroll to top, then reshuffle (gallery hides during reshuffle, then animates in)
-    window.scrollTo(0, 0);
-    galleryComponent?.triggerReshuffle();
+    // Only reshuffle if randomOrder is enabled for this gallery
+    if (randomOrder) {
+      // Instant scroll to top, then reshuffle (gallery hides during reshuffle, then animates in)
+      window.scrollTo(0, 0);
+      galleryComponent?.triggerReshuffle();
+    }
   }
 
   function handleGallerySelect(galleryId) {
@@ -126,9 +143,9 @@
   <!-- Header -->
   <Header
     {config}
-    onLogoClick={handleLogoClick}
-    onAboutClick={() => aboutPanelOpen = true}
-    onCreditsClick={() => creditsPanelOpen = true}
+    onLogoClick={randomOrder ? handleLogoClick : null}
+    onAboutClick={() => (aboutPanelOpen = true)}
+    onCreditsClick={() => (creditsPanelOpen = true)}
   />
 
   <!-- Gallery Selector -->
@@ -145,6 +162,7 @@
       {config}
       {manifest}
       {galleryId}
+      {randomOrder}
       onPhotoClick={handlePhotoClick}
       ready={!splashVisible}
       revealDelay={800}
@@ -160,14 +178,14 @@
     side="left"
     open={aboutPanelOpen}
     content={config.panels.about}
-    onClose={() => aboutPanelOpen = false}
+    onClose={() => (aboutPanelOpen = false)}
   />
 
   <Panel
     side="right"
     open={creditsPanelOpen}
     content={config.panels.credits}
-    onClose={() => creditsPanelOpen = false}
+    onClose={() => (creditsPanelOpen = false)}
   />
 
   <!-- Overlay for panels -->
@@ -180,6 +198,7 @@
   <Lightbox
     open={lightboxOpen}
     {galleryPath}
+    {randomOrder}
     startImageId={lightboxStartImageId}
     onClose={closeLightbox}
   />

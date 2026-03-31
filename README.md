@@ -16,7 +16,7 @@ uv run poe init         # Install Node.js dependencies
 uv run poe dev          # Process images + start dev server
 ```
 
-Open http://localhost:8080
+Open <http://localhost:8080>
 
 ## Commands
 
@@ -56,7 +56,7 @@ uv run poe clean:reset      # Full reset including .venv
 
 Each subdirectory in `gallery/` becomes a separate gallery:
 
-```
+```text
 gallery/
 ├── bw/           → Black & White gallery
 ├── colors/       → Colors gallery
@@ -98,9 +98,10 @@ Configuration is split into two files in `web/public/`:
   "galleries": {
     "default": "bw",
     "defaultLayout": "organic",
+    "randomOrder": true,
     "items": {
       "bw": { "displayName": "Black & White", "order": 1, "layout": "organic" },
-      "colors": { "displayName": "Colors", "order": 2, "layout": "masonry" }
+      "colors": { "displayName": "Colors", "order": 2, "layout": "masonry", "randomOrder": false }
     }
   },
   "assets": {
@@ -193,6 +194,27 @@ Each gallery can use a different layout style via `site.json`:
   "street": { "displayName": "Street", "layout": "masonry" }
 }
 ```
+
+## Image Order
+
+Control whether images display shuffled or in alphabetical order via `randomOrder`:
+
+- **Global default**: Set `galleries.randomOrder` (defaults to `true`)
+- **Per-gallery override**: Set `galleries.items.<id>.randomOrder`
+
+```json
+"galleries": {
+  "randomOrder": true,
+  "items": {
+    "portraits": { "displayName": "Portraits", "randomOrder": false }
+  }
+}
+```
+
+| `randomOrder` | Gallery Display | Lightbox Navigation | Header Click   |
+| ------------- | --------------- | ------------------- | -------------- |
+| `true`        | Shuffled        | Shuffled            | Re-shuffles    |
+| `false`       | Alphabetical    | Sequential (sorted) | Disabled/no-op |
 
 ### Organic Layout
 
@@ -289,7 +311,7 @@ Deploy `web/dist/` to any static host (GitHub Pages, Netlify, Vercel, etc.).
 
 ## Project Structure
 
-```
+```text
 photo_folio/
 ├── src/gallery_builder/    # Python image processing
 ├── gallery/                # Source photos (not in git)

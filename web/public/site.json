@@ -8,11 +8,11 @@
   },
   "galleries": {
     "default": "Divers",
+    "randomOrder": true,
     "items": {
       "Divers": {
         "displayName": "Divers",
-        "order": 1,
-        "layout": "organic"
+        "order": 1
       },
       "colors": {
         "displayName": "Colors",

@@ -33,6 +33,7 @@ const IMAGE_CACHE = `images-${CACHE_VERSION}`;
 ```
 
 Two separate caches are maintained:
+
 - **STATIC_CACHE**: JavaScript, CSS, HTML, config files
 - **IMAGE_CACHE**: Gallery images (WebP, JPG, PNG, GIF)
 
@@ -74,14 +75,14 @@ self.addEventListener('activate', (event) => {
 
 ### Strategy Matrix
 
-| Resource Type | Strategy | Rationale |
-|---------------|----------|-----------|
-| Images (WebP, JPG, PNG, GIF) | Cache-first | Immutable assets, fast repeat loads |
-| Gallery manifests (`images.json`) | Network-first | Pick up newly added photos |
-| Config (`config.json`) | Network-first | Reflect configuration changes |
-| JS/CSS (Vite hashed) | Cache-first | Immutable filenames, never change |
-| HTML | Network-first | Get latest version |
-| Other | Network-only | Pass through to network |
+| Resource Type                     | Strategy      | Rationale                           |
+| --------------------------------- | ------------- | ----------------------------------- |
+| Images (WebP, JPG, PNG, GIF)      | Cache-first   | Immutable assets, fast repeat loads |
+| Gallery manifests (`images.json`) | Network-first | Pick up newly added photos          |
+| Config (`config.json`)            | Network-first | Reflect configuration changes       |
+| JS/CSS (Vite hashed)              | Cache-first   | Immutable filenames, never change   |
+| HTML                              | Network-first | Get latest version                  |
+| Other                             | Network-only  | Pass through to network             |
 
 ### Fetch Handler
 
@@ -154,6 +155,7 @@ async function cacheFirst(request, cacheName) {
 ```
 
 **Flow:**
+
 1. Check cache for matching request
 2. If found, return cached response immediately
 3. If not, fetch from network
@@ -186,6 +188,7 @@ async function networkFirst(request, cacheName) {
 ```
 
 **Flow:**
+
 1. Try to fetch from network
 2. If successful, cache the response
 3. Return the fresh response
@@ -231,7 +234,7 @@ HTML may contain updated references to new Vite assets. Network-first ensures us
 
 ### Cache-First (Images)
 
-```
+```text
 Request for /assets/gallery/color/medium/photo.webp
                     │
                     ▼
@@ -257,7 +260,7 @@ Request for /assets/gallery/color/medium/photo.webp
 
 ### Network-First (Manifests)
 
-```
+```text
 Request for /assets/gallery/color/images.json
                     │
                     ▼
@@ -282,13 +285,13 @@ Request for /assets/gallery/color/images.json
 
 When the network is unavailable:
 
-| Resource | Behavior |
-|----------|----------|
-| Previously viewed images | Served from cache |
-| Gallery manifest | Served from cache (may be stale) |
-| App JS/CSS | Served from cache |
-| HTML | Served from cache |
-| New images | Returns 503 error |
+| Resource                 | Behavior                         |
+| ------------------------ | -------------------------------- |
+| Previously viewed images | Served from cache                |
+| Gallery manifest         | Served from cache (may be stale) |
+| App JS/CSS               | Served from cache                |
+| HTML                     | Served from cache                |
+| New images               | Returns 503 error                |
 
 The app degrades gracefully - previously visited galleries work offline, but new content requires connectivity.
 
@@ -297,6 +300,7 @@ The app degrades gracefully - previously visited galleries work offline, but new
 When deploying updates:
 
 1. Increment `CACHE_VERSION` in `sw.js`:
+
    ```javascript
    const CACHE_VERSION = 'v6';  // was 'v5'
    ```
@@ -315,13 +319,13 @@ When deploying updates:
 
 ## Performance Characteristics
 
-| Metric | Cache-First | Network-First |
-|--------|-------------|---------------|
-| First load | Network fetch | Network fetch |
-| Repeat load | Instant (from cache) | Network latency |
-| Offline | Cached content | Cached content |
-| Freshness | May be stale | Always fresh |
-| Bandwidth | Minimal | Full request each time |
+| Metric      | Cache-First          | Network-First          |
+| ----------- | -------------------- | ---------------------- |
+| First load  | Network fetch        | Network fetch          |
+| Repeat load | Instant (from cache) | Network latency        |
+| Offline     | Cached content       | Cached content         |
+| Freshness   | May be stale         | Always fresh           |
+| Bandwidth   | Minimal              | Full request each time |
 
 ## Debug Tips
 
@@ -348,7 +352,7 @@ caches.keys().then(keys => keys.forEach(key => caches.delete(key)));
 
 ## Architecture Diagram
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────────┐
 │                       SERVICE WORKER                             │
 ├─────────────────────────────────────────────────────────────────┤

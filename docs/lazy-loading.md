@@ -8,7 +8,7 @@ The lazy loading system defers image loading until images approach the viewport,
 
 ## Architecture
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────────┐
 │                      LAZY LOADING FLOW                           │
 ├─────────────────────────────────────────────────────────────────┤
@@ -101,11 +101,11 @@ export function lazyload(node, options = {}) {
 
 ### Options
 
-| Option | Type | Default | Description |
-|--------|------|---------|-------------|
-| `rootMargin` | string | `'800px 0px'` | IntersectionObserver margin. Images load 800px before entering viewport |
-| `onLoad` | function | - | Callback when intersection triggers |
-| `eager` | boolean | `false` | If true, triggers immediately without observer |
+| Option       | Type     | Default       | Description                                                             |
+| ------------ | -------- | ------------- | ----------------------------------------------------------------------- |
+| `rootMargin` | string   | `'800px 0px'` | IntersectionObserver margin. Images load 800px before entering viewport |
+| `onLoad`     | function | -             | Callback when intersection triggers                                     |
+| `eager`      | boolean  | `false`       | If true, triggers immediately without observer                          |
 
 ### Return Object
 
@@ -230,6 +230,7 @@ export const loadedImageArray = derived(
 ### Why Track Loaded Images?
 
 The Lightbox only navigates through images that have been loaded. This ensures:
+
 - Users don't wait for images to load while navigating
 - The navigation sequence reflects what they've seen
 - Memory usage is bounded to visible content
@@ -270,6 +271,7 @@ Images with index < 12 receive `eagerLoad={true}`, causing the lazyload action t
 ### rootMargin: '800px 0px'
 
 The `800px` vertical margin means images start loading 800 pixels before they enter the viewport. This provides:
+
 - Smooth scrolling without visible loading delays
 - Buffer for fast scrolling
 - Balanced between preloading and memory usage
@@ -280,18 +282,18 @@ A threshold of 0 means the callback fires as soon as any part of the element ent
 
 ## Performance Characteristics
 
-| Aspect | Value | Effect |
-|--------|-------|--------|
-| Eager Load Count | 12 images | Initial above-fold content loads immediately |
-| Lazy Load Margin | 800px | Images prefetch before visible |
-| Intersection Threshold | 0 | Triggers on first pixel entering margin |
-| Image Format | WebP | 60% smaller than JPEG |
-| Responsive Sizes | thumb (400px) / medium (800px) | Mobile: ~30KB, Desktop: ~150KB |
-| Store Data Structure | Set | O(1) duplicate detection |
+| Aspect                 | Value                          | Effect                                       |
+| ---------------------- | ------------------------------ | -------------------------------------------- |
+| Eager Load Count       | 12 images                      | Initial above-fold content loads immediately |
+| Lazy Load Margin       | 800px                          | Images prefetch before visible               |
+| Intersection Threshold | 0                              | Triggers on first pixel entering margin      |
+| Image Format           | WebP                           | 60% smaller than JPEG                        |
+| Responsive Sizes       | thumb (400px) / medium (800px) | Mobile: ~30KB, Desktop: ~150KB               |
+| Store Data Structure   | Set                            | O(1) duplicate detection                     |
 
 ## Data Flow Diagram
 
-```
+```text
 INITIAL LOAD (index < eagerLoadCount)
 ────────────────────────────────────
 Gallery renders Photo with eagerLoad=true
@@ -389,8 +391,8 @@ This resets memory usage for the new gallery.
 
 ## Configuration Reference
 
-| Config Path | Default | Description |
-|-------------|---------|-------------|
-| `gallery.eagerLoadCount` | 12 | Number of images to load immediately |
-| `gallery.lazyLoadMargin` | 800 | Pixels before viewport to start loading |
-| `mobileBreakpoint` | 768 | Width threshold for thumb vs medium images |
+| Config Path              | Default | Description                                |
+| ------------------------ | ------- | ------------------------------------------ |
+| `gallery.eagerLoadCount` | 12      | Number of images to load immediately       |
+| `gallery.lazyLoadMargin` | 800     | Pixels before viewport to start loading    |
+| `mobileBreakpoint`       | 768     | Width threshold for thumb vs medium images |

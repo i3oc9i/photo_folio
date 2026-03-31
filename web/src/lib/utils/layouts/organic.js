@@ -1,14 +1,26 @@
-import { randomInRange } from '../shuffle.js';
+import { randomInRange } from "../shuffle.js";
 
 /**
  * Compute positions for organic (scattered) layout
  * Creates a "photos scattered on a table" effect with random offsets and rotation
  */
-export function computeOrganicPositions(images, breakpointLayout, galleryConfig, layoutConfig) {
+export function computeOrganicPositions(
+  images,
+  breakpointLayout,
+  galleryConfig,
+  layoutConfig,
+) {
   const positions = [];
-  const { columns, photoSize, squareSize } = breakpointLayout;
+  const { columns } = breakpointLayout;
   const { topMargin, leftMargin = 1, rightMargin = 1 } = galleryConfig;
-  const { randomOffset, rotation, dealingRotation, dealingDelay, spacing = 2, zIndex = { min: 1, max: 10 } } = layoutConfig;
+  const {
+    randomOffset,
+    rotation,
+    dealingRotation,
+    dealingDelay,
+    spacing = 2,
+    zIndex = { min: 1, max: 10 },
+  } = layoutConfig;
 
   const availableWidth = 100 - leftMargin - rightMargin;
   const columnWidth = availableWidth / columns;
@@ -44,7 +56,10 @@ export function computeOrganicPositions(images, breakpointLayout, galleryConfig,
 
     // Calculate rotations for animation
     const endRotation = randomInRange(rotation.min, rotation.max);
-    const startRotation = randomInRange(dealingRotation.min, dealingRotation.max);
+    const startRotation = randomInRange(
+      dealingRotation.min,
+      dealingRotation.max,
+    );
 
     // Use calculated photo width for all orientations
     const size = photoWidth;
@@ -54,9 +69,9 @@ export function computeOrganicPositions(images, breakpointLayout, galleryConfig,
 
     // Estimate height for column tracking based on orientation
     let estimatedHeight;
-    if (image.orientation === 'landscape') {
+    if (image.orientation === "landscape") {
       estimatedHeight = photoWidth * 0.67;
-    } else if (image.orientation === 'portrait') {
+    } else if (image.orientation === "portrait") {
       estimatedHeight = photoWidth * 1.5;
     } else {
       estimatedHeight = photoWidth;
@@ -77,7 +92,7 @@ export function computeOrganicPositions(images, breakpointLayout, galleryConfig,
       startRotation,
       delay: i * dealingDelay,
       zIndex: photoZIndex,
-      layoutType: 'organic'
+      layoutType: "organic",
     });
   }
 
@@ -87,7 +102,11 @@ export function computeOrganicPositions(images, breakpointLayout, galleryConfig,
 /**
  * Calculate total gallery height for organic layout
  */
-export function calculateOrganicHeight(positions, breakpointLayout, galleryConfig) {
+export function calculateOrganicHeight(
+  positions,
+  _breakpointLayout,
+  galleryConfig,
+) {
   if (positions.length === 0) return 100;
 
   const { bottomMargin = 1 } = galleryConfig;
